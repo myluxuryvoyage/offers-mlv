@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Luxury Voyage — Proposition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+    /* ... Je passe le style, garde bien celui que tu as ... */
+    :root { --navy: #1C2E4A; --gold: #C9A96E; --gold2: #B8944F; --white: #fff; --cream: #F8F6F1; --gray: #666; --light: #F2F0EC; --green: #1A6B3C; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #E5E3DE; font-family: 'Montserrat', sans-serif; color: var(--navy); }
+    .doc { max-width: 900px; margin: 0 auto; background: var(--white); box-shadow: 0 4px 40px rgba(0, 0, 0, .15); }
+    /* ... (Remets bien tout ton pavé de <style> ici) ... */
+    </style>
+</head>
+<body>
+    <div class="lang-bar">
+        <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('ar')">AR</button>
+    </div>
+
+    <div class="doc">
+        <div class="hero">
+            <div class="hero-slider" id="slider">
+                <div class="hero-slide" style="background-image:url('{{photo_hero}}')"></div>
+            </div>
+            <div class="hero-overlay"></div>
+            <img class="hero-mlv-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png">
+            <div class="hero-content">
+                <div class="hero-eyebrow">{{h-eye}}</div>
+                <div class="hero-title">{{hotel_name}}<br><em>{{room_name_title}}</em></div>
+                <div class="hero-sub">{{location}} · {{dates}}</div>
+            </div>
+        </div>
+
+        <div class="sum-bar">
+            <div class="sb-item"><div class="sb-label">Arrivée</div><div class="sb-val">{{check_in}}</div></div>
+            <div class="sb-item"><div class="sb-label">Départ</div><div class="sb-val">{{check_out}}</div></div>
+            <div class="sb-item"><div class="sb-label">Voyageurs</div><div class="sb-val">{{travelers}}</div></div>
+            <div class="sb-item"><div class="sb-label">Nuits</div><div class="sb-val">{{nights_count}}</div></div>
+            <div class="sb-item"><div class="sb-label">Hôtel</div><div class="sb-val">{{hotel_name_short}}</div></div>
+        </div>
+
+        <div class="rooms">
+            <div class="room-card">
+                <div class="room-media">
+                    <div class="room-slide" style="background-image:url('{{photo_room}}')"></div>
+                </div>
+                <div class="room-body">
+                    <div class="room-header">
+                        <div>
+                            <div class="room-name">{{room_full_name}}</div>
+                            <div class="room-type">{{room_details}}</div>
+                        </div>
+                        <div class="room-price">
+                            <div class="room-price-total">{{total_price}}</div>
+                            <div class="room-price-night">{{total_price_label}}</div>
+                        </div>
+                    </div>
+                    <div class="room-desc">{{description}}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta">
+            <p class="cta-text">{{cta_text}}</p>
+            <div class="btn-row">
+                <button class="btn-accept" onclick="openModal()">{{btn_accept_label}}</button>
+                <a class="btn-wa" href="{{whatsapp_link}}">Nous contacter</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // On laissera l'IA traduire directement les champs ci-dessus
+    </script>
+</body>
+</html>
