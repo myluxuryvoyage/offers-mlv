@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MLV — Activities & Restaurants</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --navy: #1C2E4A; --gold: #C9A96E; --gold2: #B8944F; --white: #fff; --cream: #F8F6F1; --gray: #666; --light: #F2F0EC; --green: #1A6B3C; --amber: #8B6914; --red: #C0392B; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #E5E3DE; font-family: 'Montserrat', sans-serif; color: var(--navy); }
+        .doc { max-width: 900px; margin: 0 auto; background: var(--white); box-shadow: 0 4px 40px rgba(0, 0, 0, .15); }
+        
+        /* LANG BAR */
+        .lang-bar { position: fixed; top: 0; right: 0; z-index: 200; display: flex; background: rgba(28, 46, 74, .92); backdrop-filter: blur(8px); border-bottom-left-radius: 8px; }
+        .lang-btn { padding: 8px 14px; background: transparent; border: none; color: rgba(255, 255, 255, .5); cursor: pointer; font-size: 10px; letter-spacing: .1em; transition: color .2s; }
+        .lang-btn.active { color: var(--gold); font-weight: 700; }
+
+        /* COVER */
+        .cover { position: relative; height: 60vh; overflow: hidden; display: flex; flex-direction: column; }
+        .cover-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=1400&q=80') center/cover; filter: brightness(.42); }
+        .cover-body { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; color: #fff; }
+        .cover-label { font-size: 9px; letter-spacing: .4em; color: var(--gold); text-transform: uppercase; margin-bottom: 14px; }
+        .cover-title { font-family: 'Playfair Display', serif; font-size: clamp(40px, 6vw, 60px); text-transform: uppercase; margin-bottom: 10px; }
+        
+        /* SECTIONS */
+        .cat-div { position: relative; height: 250px; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #fff; text-align: center; }
+        .cat-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(.5); z-index: 1; }
+        .cat-title { position: relative; z-index: 2; font-family: 'Playfair Display', serif; font-size: 40px; text-transform: uppercase; }
+
+        /* SUGGESTION CARD */
+        .sug-card { padding: 40px; border-bottom: 1px solid var(--light); }
+        .sug-eyebrow { font-size: 9px; color: var(--gold); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 10px; }
+        .sug-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--navy); margin-bottom: 15px; }
+        .sug-desc { font-size: 14px; line-height: 1.7; color: var(--gray); margin-bottom: 20px; }
+        
+        .photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .photos img { width: 100%; height: 150px; object-fit: cover; border-radius: 2px; }
+
+        /* VOTE SYSTEM */
+        .vote-box { display: flex; border: 1px solid var(--light); border-radius: 4px; overflow: hidden; }
+        .vote-btn { flex: 1; padding: 15px; border: none; background: #fff; cursor: pointer; transition: all 0.3s; font-family: 'Montserrat'; font-size: 11px; text-transform: uppercase; font-weight: 600; border-right: 1px solid var(--light); }
+        .vote-btn:last-child { border-right: none; }
+        
+        .vote-btn.active-yes { background: var(--green) !important; color: #fff; }
+        .vote-btn.active-opt { background: var(--amber) !important; color: #fff; }
+        .vote-btn.active-no { background: var(--red) !important; color: #fff; }
+
+        .submit-section { padding: 50px; text-align: center; background: var(--cream); }
+        .btn-submit { background: var(--navy); color: #fff; padding: 15px 40px; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; font-weight: 600; }
+
+        [dir="rtl"] { text-align: right; }
+    </style>
+</head>
+<body>
+
+    <div class="lang-bar">
+        <button class="lang-btn active" onclick="changeLang('fr')">FR</button>
+        <button class="lang-btn" onclick="changeLang('en')">EN</button>
+        <button class="lang-btn" onclick="changeLang('ar')">AR</button>
+    </div>
+
+    <div class="doc" id="main-doc">
+        <div class="cover">
+            <div class="cover-bg"></div>
+            <div class="cover-body">
+                <div class="cover-label">My Luxury Voyage</div>
+                <h1 class="cover-title">Lago di Garda</h1>
+                <p>Activités & Restaurants</p>
+            </div>
+        </div>
+
+        <div class="cat-div">
+            <div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=800')"></div>
+            <h2 class="cat-title">Expériences</h2>
+        </div>
+
+        <div class="sug-card">
+            <div class="sug-eyebrow">Suggestion #1</div>
+            <h3 class="sug-title">Isola del Garda</h3>
+            <p class="sug-desc">Découvrez une villa néo-gothique privée au milieu du lac, entourée de jardins botaniques luxuriants et d'une histoire fascinante.</p>
+            
+            <div class="photos">
+                <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=400">
+                <img src="https://images.unsplash.com/photo-1516117172878-fd2c41f4a759?w=400">
+                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400">
+            </div>
+
+            <div class="vote-box">
+                <button class="vote-btn" onclick="handleVote(this, 'yes')">Approuvé</button>
+                <button class="vote-btn" onclick="handleVote(this, 'opt')">En option</button>
+                <button class="vote-btn" onclick="handleVote(this, 'no')">Refusé</button>
+            </div>
+        </div>
+
+        <div class="submit-section">
+            <button class="btn-submit">Envoyer mes choix</button>
+        </div>
+    </div>
+
+    <script>
+        function handleVote(btn, type) {
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.vote-btn').forEach(b => {
+                b.classList.remove('active-yes', 'active-opt', 'active-no');
+            });
+            btn.classList.add('active-' + type);
+        }
+
+        function changeLang(lang) {
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            // Ici, Gemini pourra injecter les traductions dynamiquement
+        }
+    </script>
+</body>
+</html>
