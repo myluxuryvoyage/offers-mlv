@@ -6,75 +6,77 @@
     <title>My Luxury Voyage — Proposition</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-    /* ... Je passe le style, garde bien celui que tu as ... */
-    :root { --navy: #1C2E4A; --gold: #C9A96E; --gold2: #B8944F; --white: #fff; --cream: #F8F6F1; --gray: #666; --light: #F2F0EC; --green: #1A6B3C; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #E5E3DE; font-family: 'Montserrat', sans-serif; color: var(--navy); }
-    .doc { max-width: 900px; margin: 0 auto; background: var(--white); box-shadow: 0 4px 40px rgba(0, 0, 0, .15); }
-    /* ... (Remets bien tout ton pavé de <style> ici) ... */
+        :root { --navy: #1C2E4A; --gold: #C9A96E; --gold2: #B8944F; --white: #fff; --cream: #F8F6F1; --gray: #666; --light: #F2F0EC; --green: #1A6B3C; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #E5E3DE; font-family: 'Montserrat', sans-serif; color: var(--navy); }
+        .doc { max-width: 900px; margin: 0 auto; background: var(--white); box-shadow: 0 4px 40px rgba(0, 0, 0, .15); }
+        .hero { position: relative; height: 450px; overflow: hidden; color: var(--white); text-align: center; display: flex; align-items: center; justify-content: center; }
+        .hero-slide { position: absolute; top:0; left:0; width:100%; height:100%; background-size: cover; background-position: center; }
+        .hero-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(28, 46, 74, 0.4); }
+        .hero-mlv-logo { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); width: 120px; z-index: 2; }
+        .hero-content { position: relative; z-index: 2; padding: 20px; }
+        .hero-title { font-family: 'Playfair Display', serif; font-size: 42px; line-height: 1.1; margin-bottom: 10px; }
+        .hero-sub { font-size: 14px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.9; }
+        .sum-bar { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--navy); color: var(--white); padding: 20px; text-align: center; }
+        .sb-label { font-size: 10px; text-transform: uppercase; opacity: 0.6; margin-bottom: 5px; }
+        .sb-val { font-size: 13px; font-weight: 500; }
+        .rooms { padding: 40px; }
+        .room-card { border: 1px solid #eee; display: flex; flex-direction: column; }
+        .room-media { height: 300px; background: #f9f9f9; background-size: cover; background-position: center; }
+        .room-body { padding: 30px; }
+        .room-name { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 5px; }
+        .room-desc { font-size: 14px; color: var(--gray); line-height: 1.6; margin-top: 15px; white-space: pre-line; }
+        .room-price-total { font-size: 28px; color: var(--gold); font-weight: 700; }
+        .cta { text-align: center; padding: 40px; background: var(--cream); }
+        .btn-wa { display: inline-block; padding: 15px 30px; background: #25D366; color: white; text-decoration: none; border-radius: 5px; font-weight: 600; margin-top: 10px;}
     </style>
 </head>
 <body>
-    <div class="lang-bar">
-        <button class="lang-btn active" onclick="setLang('fr')">FR</button>
-        <button class="lang-btn" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" onclick="setLang('ar')">AR</button>
-    </div>
-
     <div class="doc">
         <div class="hero">
-            <div class="hero-slider" id="slider">
-                <div class="hero-slide" style="background-image:url('{{photo_hero}}')"></div>
-            </div>
+            <div class="hero-slide" id="hero-img" style="background-image:url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1000')"></div>
             <div class="hero-overlay"></div>
             <img class="hero-mlv-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png">
             <div class="hero-content">
-                <div class="hero-eyebrow">{{h-eye}}</div>
-                <div class="hero-title">{{hotel_name}}<br><em>{{room_name_title}}</em></div>
-                <div class="hero-sub">{{location}} · {{dates}}</div>
+                <div class="hero-title" id="display-client">Chargement...</div>
+                <div class="hero-sub" id="display-dest">Votre proposition sur mesure</div>
             </div>
         </div>
 
         <div class="sum-bar">
-            <div class="sb-item"><div class="sb-label">Arrivée</div><div class="sb-val">{{check_in}}</div></div>
-            <div class="sb-item"><div class="sb-label">Départ</div><div class="sb-val">{{check_out}}</div></div>
-            <div class="sb-item"><div class="sb-label">Voyageurs</div><div class="sb-val">{{travelers}}</div></div>
-            <div class="sb-item"><div class="sb-label">Nuits</div><div class="sb-val">{{nights_count}}</div></div>
-            <div class="sb-item"><div class="sb-label">Hôtel</div><div class="sb-val">{{hotel_name_short}}</div></div>
+             <div class="sb-item"><div class="sb-label">Client</div><div class="sb-val" id="sb-client">-</div></div>
+             <div class="sb-item"><div class="sb-label">Statut</div><div class="sb-val">Offre Privée</div></div>
         </div>
 
         <div class="rooms">
             <div class="room-card">
-                <div class="room-media">
-                    <div class="room-slide" style="background-image:url('{{photo_room}}')"></div>
-                </div>
                 <div class="room-body">
-                    <div class="room-header">
-                        <div>
-                            <div class="room-name">{{room_full_name}}</div>
-                            <div class="room-type">{{room_details}}</div>
-                        </div>
-                        <div class="room-price">
-                            <div class="room-price-total">{{total_price}}</div>
-                            <div class="room-price-night">{{total_price_label}}</div>
-                        </div>
-                    </div>
-                    <div class="room-desc">{{description}}</div>
+                    <div class="room-name">Détails de votre séjour</div>
+                    <div class="room-price-total" id="display-price">-</div>
+                    <div class="room-desc" id="display-notes">Analyse de vos besoins en cours...</div>
                 </div>
             </div>
         </div>
 
         <div class="cta">
-            <p class="cta-text">{{cta_text}}</p>
-            <div class="btn-row">
-                <button class="btn-accept" onclick="openModal()">{{btn_accept_label}}</button>
-                <a class="btn-wa" href="{{whatsapp_link}}">Nous contacter</a>
-            </div>
+            <a class="btn-wa" href="https://wa.me/33600000000">Valider cette offre sur WhatsApp</a>
         </div>
     </div>
 
     <script>
-        // On laissera l'IA traduire directement les champs ci-dessus
+        // LE CERVEAU QUI LIT LE LIEN DU FORMULAIRE
+        const params = new URLSearchParams(window.location.search);
+        
+        const client = params.get('client') || "Cher Client";
+        const notes = params.get('notes') || "Détails à venir...";
+        
+        // On remplit la page avec les vraies infos
+        document.getElementById('display-client').innerText = "Pour " + client;
+        document.getElementById('sb-client').innerText = client;
+        document.getElementById('display-notes').innerText = notes;
+
+        // Si tu mets un prix dans les notes, on essaie de le trouver ou on affiche un texte générique
+        document.getElementById('display-price').innerText = "Tarif Exclusif";
     </script>
 </body>
 </html>
