@@ -1,82 +1,100 @@
 <!DOCTYPE html>
-<html lang="fr" dir="ltr">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Luxury Voyage — Proposition</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <meta property="og:title" content="Votre Proposition My Luxury Voyage">
+    <meta property="og:description" content="Une offre exclusive préparée avec soin.">
+    <meta property="og:image" content="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png">
+    <meta property="og:type" content="website">
+
+    <title>My Luxury Voyage | Proposition Privée</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --navy: #1C2E4A; --gold: #C9A96E; --gold2: #B8944F; --white: #fff; --cream: #F8F6F1; --gray: #666; --light: #F2F0EC; --green: #1A6B3C; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #E5E3DE; font-family: 'Montserrat', sans-serif; color: var(--navy); }
-        .doc { max-width: 900px; margin: 0 auto; background: var(--white); box-shadow: 0 4px 40px rgba(0, 0, 0, .15); }
-        .hero { position: relative; height: 450px; overflow: hidden; color: var(--white); text-align: center; display: flex; align-items: center; justify-content: center; }
-        .hero-slide { position: absolute; top:0; left:0; width:100%; height:100%; background-size: cover; background-position: center; }
-        .hero-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(28, 46, 74, 0.4); }
-        .hero-mlv-logo { position: absolute; top: 30px; left: 50%; transform: translateX(-50%); width: 120px; z-index: 2; }
-        .hero-content { position: relative; z-index: 2; padding: 20px; }
-        .hero-title { font-family: 'Playfair Display', serif; font-size: 42px; line-height: 1.1; margin-bottom: 10px; }
-        .hero-sub { font-size: 14px; letter-spacing: 2px; text-transform: uppercase; opacity: 0.9; }
-        .sum-bar { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--navy); color: var(--white); padding: 20px; text-align: center; }
-        .sb-label { font-size: 10px; text-transform: uppercase; opacity: 0.6; margin-bottom: 5px; }
-        .sb-val { font-size: 13px; font-weight: 500; }
-        .rooms { padding: 40px; }
-        .room-card { border: 1px solid #eee; display: flex; flex-direction: column; }
-        .room-media { height: 300px; background: #f9f9f9; background-size: cover; background-position: center; }
-        .room-body { padding: 30px; }
-        .room-name { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 5px; }
-        .room-desc { font-size: 14px; color: var(--gray); line-height: 1.6; margin-top: 15px; white-space: pre-line; }
-        .room-price-total { font-size: 28px; color: var(--gold); font-weight: 700; }
-        .cta { text-align: center; padding: 40px; background: var(--cream); }
-        .btn-wa { display: inline-block; padding: 15px 30px; background: #25D366; color: white; text-decoration: none; border-radius: 5px; font-weight: 600; margin-top: 10px;}
+        :root { --navy: #1C2E4A; --gold: #C9A96E; --cream: #F8F6F1; --white: #ffffff; }
+        body { margin: 0; font-family: 'Montserrat', sans-serif; background: #E5E3DE; color: var(--navy); }
+        .container { max-width: 850px; margin: 0 auto; background: var(--white); box-shadow: 0 10px 50px rgba(0,0,0,0.1); }
+        
+        /* HERO SECTION */
+        .hero { position: relative; height: 500px; display: flex; align-items: center; justify-content: center; color: var(--white); overflow: hidden; }
+        .hero-img { position: absolute; width: 100%; height: 100%; background: url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200') center/cover; transition: transform 0.5s; }
+        .hero-overlay { position: absolute; width: 100%; height: 100%; background: rgba(28, 46, 74, 0.4); }
+        .logo { position: absolute; top: 40px; width: 150px; z-index: 10; }
+        .hero-text { z-index: 10; text-align: center; padding: 0 20px; }
+        .hero-title { font-family: 'Playfair Display', serif; font-size: 48px; margin-bottom: 10px; }
+        .hero-subtitle { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; }
+
+        /* CONTENT */
+        .details-bar { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--navy); color: var(--white); padding: 25px; text-align: center; }
+        .detail-item span { display: block; font-size: 10px; text-transform: uppercase; opacity: 0.7; margin-bottom: 5px; }
+        .detail-item strong { font-size: 16px; font-weight: 400; }
+
+        .content-section { padding: 60px; text-align: center; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--gold); margin-bottom: 20px; }
+        .description { line-height: 1.8; color: #555; font-size: 16px; white-space: pre-line; margin-bottom: 40px; }
+        
+        .price-tag { font-size: 42px; font-family: 'Playfair Display', serif; color: var(--navy); margin-bottom: 40px; }
+        .price-tag span { font-size: 18px; color: var(--gold); }
+
+        .cta-box { background: var(--cream); padding: 50px; text-align: center; }
+        .btn-wa { background: #25D366; color: white; padding: 18px 40px; text-decoration: none; border-radius: 4px; font-weight: 600; display: inline-block; transition: 0.3s; }
+        .btn-wa:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
     </style>
 </head>
 <body>
-    <div class="doc">
-        <div class="hero">
-            <div class="hero-slide" id="hero-img" style="background-image:url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1000')"></div>
+
+    <div class="container">
+        <section class="hero">
+            <div class="hero-img" id="main-img"></div>
             <div class="hero-overlay"></div>
-            <img class="hero-mlv-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png">
-            <div class="hero-content">
-                <div class="hero-title" id="display-client">Chargement...</div>
-                <div class="hero-sub" id="display-dest">Votre proposition sur mesure</div>
+            <img src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png" class="logo">
+            <div class="hero-text">
+                <div class="hero-subtitle">Proposition Exclusive</div>
+                <h1 class="hero-title" id="client-name">Chargement...</h1>
             </div>
-        </div>
+        </section>
 
-        <div class="sum-bar">
-             <div class="sb-item"><div class="sb-label">Client</div><div class="sb-val" id="sb-client">-</div></div>
-             <div class="sb-item"><div class="sb-label">Statut</div><div class="sb-val">Offre Privée</div></div>
-        </div>
+        <section class="details-bar">
+            <div class="detail-item"><span>Destination</span><strong id="dest-val">-</strong></div>
+            <div class="detail-item"><span>Dates</span><strong id="date-val">-</strong></div>
+            <div class="detail-item"><span>Chambre</span><strong id="room-val">-</strong></div>
+        </section>
 
-        <div class="rooms">
-            <div class="room-card">
-                <div class="room-body">
-                    <div class="room-name">Détails de votre séjour</div>
-                    <div class="room-price-total" id="display-price">-</div>
-                    <div class="room-desc" id="display-notes">Analyse de vos besoins en cours...</div>
-                </div>
-            </div>
-        </div>
+        <section class="content-section">
+            <h2 class="section-title">Votre Expérience</h2>
+            <p class="description" id="notes-val">Préparation de votre itinéraire sur mesure...</p>
+            
+            <div class="price-tag" id="price-val">-</div>
+        </section>
 
-        <div class="cta">
-            <a class="btn-wa" href="https://wa.me/33600000000">Valider cette offre sur WhatsApp</a>
-        </div>
+        <section class="cta-box">
+            <a href="#" class="btn-wa" id="wa-link">CONFIRMER VIA WHATSAPP</a>
+        </section>
     </div>
 
     <script>
-        // LE CERVEAU QUI LIT LE LIEN DU FORMULAIRE
         const params = new URLSearchParams(window.location.search);
         
-        const client = params.get('client') || "Cher Client";
-        const notes = params.get('notes') || "Détails à venir...";
+        // Remplissage des champs
+        document.getElementById('client-name').innerText = params.get('client') || "Cher Client";
+        document.getElementById('dest-val').innerText = params.get('dest') || "Sur mesure";
+        document.getElementById('date-val').innerText = params.get('dates') || "À définir";
+        document.getElementById('room-val').innerText = params.get('room') || "Suite Luxe";
+        document.getElementById('price-val').innerHTML = (params.get('price') || "-") + "<span> EUR</span>";
+        document.getElementById('notes-val').innerText = params.get('notes') || "";
         
-        // On remplit la page avec les vraies infos
-        document.getElementById('display-client').innerText = "Pour " + client;
-        document.getElementById('sb-client').innerText = client;
-        document.getElementById('display-notes').innerText = notes;
+        // Image dynamique (si tu mets une URL dans le formulaire)
+        if(params.get('img')) {
+            document.getElementById('main-img').style.backgroundImage = "url('" + params.get('img') + "')";
+        }
 
-        // Si tu mets un prix dans les notes, on essaie de le trouver ou on affiche un texte générique
-        document.getElementById('display-price').innerText = "Tarif Exclusif";
+        // WhatsApp Link dynamique
+        const waBase = "https://wa.me/33600000000"; // REMPLACE PAR TON NUMÉRO
+        const message = "Bonjour, je souhaite valider l'offre pour " + params.get('client') + " à " + params.get('dest');
+        document.getElementById('wa-link').href = waBase + "?text=" + encodeURIComponent(message);
     </script>
 </body>
 </html>
