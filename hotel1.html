@@ -3,98 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <meta property="og:title" content="Votre Proposition My Luxury Voyage">
-    <meta property="og:description" content="Une offre exclusive préparée avec soin.">
-    <meta property="og:image" content="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png">
-    <meta property="og:type" content="website">
-
-    <title>My Luxury Voyage | Proposition Privée</title>
-    
+    <title>Proposition My Luxury Voyage</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-    
     <style>
-        :root { --navy: #1C2E4A; --gold: #C9A96E; --cream: #F8F6F1; --white: #ffffff; }
+        :root { --navy: #1C2E4A; --gold: #C9A96E; --cream: #F8F6F1; --white: #fff; }
         body { margin: 0; font-family: 'Montserrat', sans-serif; background: #E5E3DE; color: var(--navy); }
-        .container { max-width: 850px; margin: 0 auto; background: var(--white); box-shadow: 0 10px 50px rgba(0,0,0,0.1); }
+        .wrapper { max-width: 900px; margin: 0 auto; background: var(--white); }
         
-        /* HERO SECTION */
-        .hero { position: relative; height: 500px; display: flex; align-items: center; justify-content: center; color: var(--white); overflow: hidden; }
-        .hero-img { position: absolute; width: 100%; height: 100%; background: url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200') center/cover; transition: transform 0.5s; }
-        .hero-overlay { position: absolute; width: 100%; height: 100%; background: rgba(28, 46, 74, 0.4); }
-        .logo { position: absolute; top: 40px; width: 150px; z-index: 10; }
-        .hero-text { z-index: 10; text-align: center; padding: 0 20px; }
-        .hero-title { font-family: 'Playfair Display', serif; font-size: 48px; margin-bottom: 10px; }
-        .hero-subtitle { font-size: 14px; letter-spacing: 4px; text-transform: uppercase; }
+        /* HEADER LUXE */
+        header { height: 550px; position: relative; display: flex; align-items: center; justify-content: center; color: white; text-align: center; }
+        .hero-bg { position: absolute; top:0; left:0; width:100%; height:100%; background: center/cover no-repeat; z-index: 1; }
+        .overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.3); z-index: 2; }
+        .hero-content { z-index: 3; padding: 20px; }
+        .logo { width: 150px; margin-bottom: 30px; }
+        .h-title { font-family: 'Playfair Display', serif; font-size: 50px; margin: 0; }
+        .h-sub { text-transform: uppercase; letter-spacing: 5px; font-size: 12px; margin-top: 10px; }
 
-        /* CONTENT */
-        .details-bar { display: grid; grid-template-columns: repeat(3, 1fr); background: var(--navy); color: var(--white); padding: 25px; text-align: center; }
-        .detail-item span { display: block; font-size: 10px; text-transform: uppercase; opacity: 0.7; margin-bottom: 5px; }
-        .detail-item strong { font-size: 16px; font-weight: 400; }
+        /* BARRE RÉSUMÉ */
+        .info-bar { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--navy); color: white; padding: 25px; text-align: center; }
+        .info-item span { display: block; font-size: 10px; text-transform: uppercase; opacity: 0.6; margin-bottom: 5px; }
+        .info-item strong { font-size: 14px; font-weight: 400; }
 
-        .content-section { padding: 60px; text-align: center; }
-        .section-title { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--gold); margin-bottom: 20px; }
-        .description { line-height: 1.8; color: #555; font-size: 16px; white-space: pre-line; margin-bottom: 40px; }
+        /* CORPS DE L'OFFRE */
+        .main-content { padding: 60px; }
+        .room-title { font-family: 'Playfair Display', serif; font-size: 36px; color: var(--gold); margin-bottom: 10px; }
+        .room-specs { font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: #888; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        .desc-text { line-height: 1.8; font-size: 16px; color: #444; white-space: pre-line; margin-bottom: 40px; }
         
-        .price-tag { font-size: 42px; font-family: 'Playfair Display', serif; color: var(--navy); margin-bottom: 40px; }
-        .price-tag span { font-size: 18px; color: var(--gold); }
+        /* CARTE DE PRIX */
+        .price-box { border: 1px solid #C9A96E; padding: 40px; text-align: center; margin-bottom: 40px; }
+        .price-label { font-size: 12px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 10px; }
+        .price-val { font-family: 'Playfair Display', serif; font-size: 48px; }
+        .price-val span { font-size: 18px; color: var(--gold); }
 
-        .cta-box { background: var(--cream); padding: 50px; text-align: center; }
-        .btn-wa { background: #25D366; color: white; padding: 18px 40px; text-decoration: none; border-radius: 4px; font-weight: 600; display: inline-block; transition: 0.3s; }
-        .btn-wa:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3); }
+        /* FOOTER */
+        .footer-cta { background: var(--cream); padding: 60px; text-align: center; }
+        .btn-wa { background: #25D366; color: white; padding: 20px 50px; text-decoration: none; border-radius: 2px; font-weight: 600; font-size: 14px; letter-spacing: 1px; }
     </style>
 </head>
 <body>
+    <div class="wrapper">
+        <header>
+            <div id="bg" class="hero-bg" style="background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200')"></div>
+            <div class="overlay"></div>
+            <div class="hero-content">
+                <img src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png" class="logo">
+                <h1 class="h-title" id="hotel-disp">L'Hôtel de Paris</h1>
+                <div class="h-sub" id="client-disp">Proposition pour Kenza</div>
+            </div>
+        </header>
 
-    <div class="container">
-        <section class="hero">
-            <div class="hero-img" id="main-img"></div>
-            <div class="hero-overlay"></div>
-            <img src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png" class="logo">
-            <div class="hero-text">
-                <div class="hero-subtitle">Proposition Exclusive</div>
-                <h1 class="hero-title" id="client-name">Chargement...</h1>
+        <section class="info-bar">
+            <div class="info-item"><span>Arrivée</span><strong id="in-disp">-</strong></div>
+            <div class="info-item"><span>Départ</span><strong id="out-disp">-</strong></div>
+            <div class="info-item"><span>Voyageurs</span><strong id="pax-disp">-</strong></div>
+            <div class="info-item"><span>Durée</span><strong id="night-disp">-</strong></div>
+        </section>
+
+        <section class="main-content">
+            <h2 class="room-title" id="room-disp">Junior Suite Vue Mer</h2>
+            <div class="room-specs" id="specs-disp">65 m² | Vue Méditerranée | Lit King Size</div>
+            <p class="desc-text" id="notes-disp">Chargement de votre expérience...</p>
+
+            <div class="price-box">
+                <div class="price-label">Investissement Privilégié</div>
+                <div class="price-val" id="price-disp">0<span> € / Nuit</span></div>
             </div>
         </section>
 
-        <section class="details-bar">
-            <div class="detail-item"><span>Destination</span><strong id="dest-val">-</strong></div>
-            <div class="detail-item"><span>Dates</span><strong id="date-val">-</strong></div>
-            <div class="detail-item"><span>Chambre</span><strong id="room-val">-</strong></div>
-        </section>
-
-        <section class="content-section">
-            <h2 class="section-title">Votre Expérience</h2>
-            <p class="description" id="notes-val">Préparation de votre itinéraire sur mesure...</p>
-            
-            <div class="price-tag" id="price-val">-</div>
-        </section>
-
-        <section class="cta-box">
-            <a href="#" class="btn-wa" id="wa-link">CONFIRMER VIA WHATSAPP</a>
+        <section class="footer-cta">
+            <p style="margin-bottom: 30px; font-size: 14px; color: #888;">Services inclus : <span id="extra-disp">-</span></p>
+            <a href="#" class="btn-wa" id="wa-link">VALIDER CETTE PROPOSITION</a>
         </section>
     </div>
 
     <script>
-        const params = new URLSearchParams(window.location.search);
+        const p = new URLSearchParams(window.location.search);
         
-        // Remplissage des champs
-        document.getElementById('client-name').innerText = params.get('client') || "Cher Client";
-        document.getElementById('dest-val').innerText = params.get('dest') || "Sur mesure";
-        document.getElementById('date-val').innerText = params.get('dates') || "À définir";
-        document.getElementById('room-val').innerText = params.get('room') || "Suite Luxe";
-        document.getElementById('price-val').innerHTML = (params.get('price') || "-") + "<span> EUR</span>";
-        document.getElementById('notes-val').innerText = params.get('notes') || "";
+        // Mapping des données
+        document.getElementById('hotel-disp').innerText = p.get('hotel') || "Votre Offre";
+        document.getElementById('client-disp').innerText = "Proposition pour " + (p.get('client') || "vous");
+        document.getElementById('in-disp').innerText = p.get('checkIn') || "-";
+        document.getElementById('out-disp').innerText = p.get('checkOut') || "-";
+        document.getElementById('pax-disp').innerText = p.get('pax') || "-";
+        document.getElementById('night-disp').innerText = p.get('nights') || "-";
+        document.getElementById('room-disp').innerText = p.get('room') || "Hébergement de Prestige";
+        document.getElementById('specs-disp').innerText = p.get('specs') || "";
+        document.getElementById('notes-disp').innerText = p.get('notes') || "";
+        document.getElementById('price-disp').innerHTML = (p.get('price') || "Sur devis") + "<span> € / Nuit</span>";
+        document.getElementById('extra-disp').innerText = p.get('extra') || "-";
         
-        // Image dynamique (si tu mets une URL dans le formulaire)
-        if(params.get('img')) {
-            document.getElementById('main-img').style.backgroundImage = "url('" + params.get('img') + "')";
-        }
+        if(p.get('img1')) document.getElementById('bg').style.backgroundImage = "url('"+p.get('img1')+"')";
 
-        // WhatsApp Link dynamique
-        const waBase = "https://wa.me/33600000000"; // REMPLACE PAR TON NUMÉRO
-        const message = "Bonjour, je souhaite valider l'offre pour " + params.get('client') + " à " + params.get('dest');
-        document.getElementById('wa-link').href = waBase + "?text=" + encodeURIComponent(message);
+        // WhatsApp
+        const waLink = "https://wa.me/33600000000?text=" + encodeURIComponent("Bonjour, je souhaite valider l'offre pour " + p.get('hotel') + " au nom de " + p.get('client'));
+        document.getElementById('wa-link').href = waLink;
     </script>
 </body>
 </html>
