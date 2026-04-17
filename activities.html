@@ -3,117 +3,1473 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MLV — Activities & Restaurants</title>
+    <title>My Luxury Voyage — Activities & Restaurants</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root { --navy: #1C2E4A; --gold: #C9A96E; --gold2: #B8944F; --white: #fff; --cream: #F8F6F1; --gray: #666; --light: #F2F0EC; --green: #1A6B3C; --amber: #8B6914; --red: #C0392B; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #E5E3DE; font-family: 'Montserrat', sans-serif; color: var(--navy); }
-        .doc { max-width: 900px; margin: 0 auto; background: var(--white); box-shadow: 0 4px 40px rgba(0, 0, 0, .15); }
-        
-        /* LANG BAR */
-        .lang-bar { position: fixed; top: 0; right: 0; z-index: 200; display: flex; background: rgba(28, 46, 74, .92); backdrop-filter: blur(8px); border-bottom-left-radius: 8px; }
-        .lang-btn { padding: 8px 14px; background: transparent; border: none; color: rgba(255, 255, 255, .5); cursor: pointer; font-size: 10px; letter-spacing: .1em; transition: color .2s; }
-        .lang-btn.active { color: var(--gold); font-weight: 700; }
+    :root {
+        --navy: #1C2E4A;
+        --gold: #C9A96E;
+        --gold2: #B8944F;
+        --white: #fff;
+        --cream: #F8F6F1;
+        --gray: #666;
+        --light: #F2F0EC;
+        --green: #1A6B3C;
+        --amber: #8B6914;
+        --red: #C0392B;
+    }
 
-        /* COVER */
-        .cover { position: relative; height: 60vh; overflow: hidden; display: flex; flex-direction: column; }
-        .cover-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=1400&q=80') center/cover; filter: brightness(.42); }
-        .cover-body { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; color: #fff; }
-        .cover-label { font-size: 9px; letter-spacing: .4em; color: var(--gold); text-transform: uppercase; margin-bottom: 14px; }
-        .cover-title { font-family: 'Playfair Display', serif; font-size: clamp(40px, 6vw, 60px); text-transform: uppercase; margin-bottom: 10px; }
-        
-        /* SECTIONS */
-        .cat-div { position: relative; height: 250px; display: flex; align-items: center; justify-content: center; overflow: hidden; color: #fff; text-align: center; }
-        .cat-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(.5); z-index: 1; }
-        .cat-title { position: relative; z-index: 2; font-family: 'Playfair Display', serif; font-size: 40px; text-transform: uppercase; }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        /* SUGGESTION CARD */
-        .sug-card { padding: 40px; border-bottom: 1px solid var(--light); }
-        .sug-eyebrow { font-size: 9px; color: var(--gold); letter-spacing: .2em; text-transform: uppercase; margin-bottom: 10px; }
-        .sug-title { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--navy); margin-bottom: 15px; }
-        .sug-desc { font-size: 14px; line-height: 1.7; color: var(--gray); margin-bottom: 20px; }
-        
-        .photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
-        .photos img { width: 100%; height: 150px; object-fit: cover; border-radius: 2px; }
+    body {
+        background: #E5E3DE;
+        font-family: 'Montserrat', sans-serif;
+        color: var(--navy);
+    }
 
-        /* VOTE SYSTEM */
-        .vote-box { display: flex; border: 1px solid var(--light); border-radius: 4px; overflow: hidden; }
-        .vote-btn { flex: 1; padding: 15px; border: none; background: #fff; cursor: pointer; transition: all 0.3s; font-family: 'Montserrat'; font-size: 11px; text-transform: uppercase; font-weight: 600; border-right: 1px solid var(--light); }
-        .vote-btn:last-child { border-right: none; }
-        
-        .vote-btn.active-yes { background: var(--green) !important; color: #fff; }
-        .vote-btn.active-opt { background: var(--amber) !important; color: #fff; }
-        .vote-btn.active-no { background: var(--red) !important; color: #fff; }
+    .doc {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--white);
+        box-shadow: 0 4px 40px rgba(0, 0, 0, .15);
+    }/* LANG BAR */
+    .lang-bar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 200;
+        display: flex;
+        background: rgba(28, 46, 74, .92);
+        backdrop-filter: blur(8px);
+        border-bottom-left-radius: 8px;
+    }
 
-        .submit-section { padding: 50px; text-align: center; background: var(--cream); }
-        .btn-submit { background: var(--navy); color: #fff; padding: 15px 40px; border: none; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; font-weight: 600; }
+    .lang-btn {
+        padding: 8px 14px;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, .5);
+        cursor: pointer;
+        font-size: 10px;
+        letter-spacing: .1em;
+        font-family: 'Montserrat', sans-serif;
+        transition: color .2s;
+    }
 
-        [dir="rtl"] { text-align: right; }
+    .lang-btn.active, .lang-btn:hover {
+        color: var(--gold);
+    }/* COVER */
+    .cover {
+        position: relative;
+        height: 78vh;
+        min-height: 480px;
+        max-height: 780px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cover-bg {
+        position: absolute;
+        inset: 0;
+        background: url('https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=1400&q=80') center/cover;
+        filter: brightness(.42);
+    }
+
+    .cover-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(28, 46, 74, .08) 0%, rgba(28, 46, 74, .68) 100%);
+    }
+
+    .cover-body {
+        position: relative;
+        z-index: 2;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 52px 24px 40px;
+        text-align: center;
+    }
+
+    .cover-label {
+        font-size: 9px;
+        letter-spacing: .4em;
+        color: var(--gold);
+        text-transform: uppercase;
+        margin-bottom: 14px;
+    }
+
+    .cover-eyebrow {
+        font-size: 11px;
+        letter-spacing: .2em;
+        color: rgba(255, 255, 255, .6);
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        font-weight: 300;
+    }
+
+    .cover-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(40px, 6.5vw, 68px);
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+        line-height: 1.05;
+        margin-bottom: 16px;
+    }
+
+    .cover-sub {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(15px, 2.5vw, 22px);
+        font-style: italic;
+        color: var(--gold);
+        letter-spacing: .06em;
+        margin-bottom: 18px;
+    }
+
+    .cover-divider {
+        width: 50px;
+        height: 1px;
+        background: var(--gold);
+        margin: 0 auto 16px;
+    }
+
+    .cover-dest {
+        font-size: 12px;
+        color: rgba(255, 255, 255, .6);
+        letter-spacing: .14em;
+        text-transform: uppercase;
+    }/* cover-foot removed *//* INTRO */
+    .intro {
+        padding: 32px 44px;
+        background: var(--navy);
+    }
+
+    .intro-text {
+        font-size: 13px;
+        line-height: 1.85;
+        color: rgba(255, 255, 255, .72);
+        max-width: 680px;
+    }
+
+    .intro-text strong {
+        color: var(--gold);
+    }
+
+    .intro-note {
+        margin-top: 14px;
+        font-size: 11px;
+        color: var(--gold);
+        letter-spacing: .04em;
+        font-style: italic;
+    }/* CATEGORY DIVIDER */
+    .cat-div {
+        position: relative;
+        height: 300px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cat-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        filter: brightness(.42);
+    }
+
+    .cat-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(28, 46, 74, .15) 0%, rgba(28, 46, 74, .72) 100%);
+    }
+
+    .cat-body {
+        position: relative;
+        z-index: 2;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        padding: 28px;
+    }
+
+    .cat-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(32px, 5vw, 56px);
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        line-height: 1.06;
+        margin-bottom: 5px;
+    }
+
+    .cat-sub {
+        font-size: 9px;
+        letter-spacing: .32em;
+        color: var(--gold);
+        text-transform: uppercase;
+    }
+
+    .cat-bar {
+        height: 6px;
+        background: var(--gold);
+    }/* SUGGESTION CARD */
+    .sug-card {
+        border-bottom: 3px solid var(--gold);
+        padding: 38px 44px;
+    }
+
+    .sug-eyebrow {
+        font-size: 9px;
+        letter-spacing: .28em;
+        color: var(--gold);
+        text-transform: uppercase;
+        margin-bottom: 7px;
+    }
+
+    .sug-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(19px, 2.8vw, 26px);
+        font-weight: 700;
+        color: var(--navy);
+        text-transform: uppercase;
+        letter-spacing: .05em;
+        margin-bottom: 5px;
+    }
+
+    .sug-divider {
+        width: 36px;
+        height: 1.5px;
+        background: var(--gold);
+        margin-bottom: 14px;
+    }
+
+    .sug-sub-italic {
+        font-family: 'Playfair Display', serif;
+        font-size: 13px;
+        font-style: italic;
+        color: var(--gray);
+        margin-bottom: 12px;
+    }
+
+    .sug-desc {
+        font-size: 13px;
+        line-height: 1.75;
+        color: var(--navy);
+    }
+
+    .sug-desc strong {
+        font-weight: 600;
+    }
+
+    .sug-info {
+        font-size: 12px;
+        color: var(--gray);
+        margin-top: 10px;
+        font-style: italic;
+    }
+
+    .sug-avail {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--red);
+        margin-top: 8px;
+        letter-spacing: .04em;
+    }/* PHOTOS */
+    .photos {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 7px;
+        margin: 18px 0;
+    }
+
+    .photos img {
+        width: 100%;
+        height: 165px;
+        object-fit: cover;
+        border-radius: 2px;
+    }/* ── PRICE LINE ── */
+    .price-line {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--light);
+        border-left: 2px solid var(--gold);
+        padding: 12px 16px;
+        margin: 14px 0;
+        flex-wrap: wrap;
+    }
+
+    .price-line-label {
+        font-size: 9px;
+        letter-spacing: .2em;
+        color: var(--gold);
+        text-transform: uppercase;
+        font-weight: 600;
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    .price-line-amount {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--navy);
+        flex-shrink: 0;
+    }
+
+    .price-line-input {
+        flex: 1;
+        min-width: 160px;
+        padding: 6px 10px;
+        border: 1px solid rgba(201, 169, 110, .35);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 12px;
+        color: var(--navy);
+        background: var(--white);
+        border-radius: 1px;
+        outline: none;
+        transition: border-color .2s;
+    }
+
+    .price-line-input:focus {
+        border-color: var(--gold);
+    }
+
+    .price-line-input::placeholder {
+        color: #aaa;
+    }/* VOTE BOX */
+    .vote-box {
+        border: 1px solid rgba(201, 169, 110, .38);
+        border-radius: 1px;
+        padding: 16px 18px;
+        margin-top: 16px;
+        display: flex;
+        gap: 0;
+    }
+
+    .vote-btn {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 6px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        border-right: 1px solid rgba(201, 169, 110, .28);
+        transition: background .2s;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .vote-btn:last-child {
+        border-right: none;
+    }
+
+    .vote-btn:hover {
+        background: var(--light);
+    }
+
+    .vote-btn.sel-yes {
+        background: #EAF5EF;
+    }
+
+    .vote-btn.sel-opt {
+        background: #FFF8E7;
+    }
+
+    .vote-btn.sel-no {
+        background: #FEF0F0;
+    }
+
+    .vote-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--navy);
+    }
+
+    .vote-check {
+        width: 26px;
+        height: 26px;
+        border: 1.5px solid rgba(201, 169, 110, .45);
+        border-radius: 1px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        transition: all .2s;
+        font-style: normal;
+    }
+
+    .vote-btn.sel-yes .vote-check {
+        background: var(--green);
+        border-color: var(--green);
+        color: #fff;
+    }
+
+    .vote-btn.sel-opt .vote-check {
+        background: var(--amber);
+        border-color: var(--amber);
+        color: #fff;
+    }
+
+    .vote-btn.sel-no .vote-check {
+        background: var(--red);
+        border-color: var(--red);
+        color: #fff;
+    }/* RESTAURANT SPECIFIC */
+    .rest-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
+    }
+
+    .rest-type {
+        font-size: 11px;
+        font-style: italic;
+        color: var(--gray);
+    }
+
+    .google-rating {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .g-logo {
+        font-size: 12px;
+        font-weight: 700;
+        color: #4285F4;
+    }
+
+    .g-score {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--navy);
+    }
+
+    .g-stars {
+        color: #FBBC04;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    .rest-menu-link {
+        font-size: 11px;
+        color: var(--gold);
+        text-decoration: underline;
+        cursor: pointer;
+    }/* SUBMIT */
+    .submit-section {
+        padding: 46px 44px;
+        text-align: center;
+        background: var(--cream);
+    }
+
+    .submit-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 22px;
+        color: var(--navy);
+        margin-bottom: 8px;
+    }
+
+    .submit-sub {
+        font-size: 13px;
+        color: var(--gray);
+        line-height: 1.75;
+        margin-bottom: 26px;
+    }
+
+    .btn-row {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-submit-main {
+        background: var(--navy);
+        color: #fff;
+        border: none;
+        padding: 14px 36px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        border-radius: 1px;
+        transition: background .2s;
+    }
+
+    .btn-submit-main:hover {
+        background: var(--gold2);
+    }
+
+    .btn-wa {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #25D366;
+        color: #fff;
+        padding: 13px 28px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 2px;
+        transition: opacity .2s;
+    }
+
+    .btn-wa:hover {
+        opacity: .9;
+    }
+
+    .wa-svg {
+        width: 16px;
+        height: 16px;
+        fill: #fff;
+    }
+
+    .success-bar {
+        display: none;
+        background: #EAF5EF;
+        border: 1px solid var(--green);
+        padding: 14px 22px;
+        border-radius: 1px;
+        margin-top: 18px;
+        font-size: 13px;
+        color: var(--green);
+        font-weight: 500;
+    }/* FOOTER */
+    .doc-footer {
+        background: var(--navy);
+        padding: 22px 44px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .footer-logo {
+        height: 30px;
+        filter: brightness(0) invert(1);
+        opacity: .65;
+    }
+
+    .footer-txt {
+        font-size: 10px;
+        color: rgba(255, 255, 255, .38);
+        letter-spacing: .06em;
+        line-height: 1.7;
+        text-align: right;
+    }/* RTL adjustments */
+    [dir="rtl"] .price-line {
+        border-left: none;
+        border-right: 2px solid var(--gold);
+    }
+
+    [dir="rtl"] .vote-btn {
+        border-right: none;
+        border-left: 1px solid rgba(201, 169, 110, .28);
+    }
+
+    [dir="rtl"] .vote-btn:last-child {
+        border-left: none;
+    }
+
+    [dir="rtl"] .footer-txt {
+        text-align: left;
+    }/* Arabic numerals & price — keep LTR direction for numbers */
+
+    [dir="rtl"] .price-line-amount, [dir="rtl"] .g-score, [dir="rtl"] .price-line-input {
+        direction: ltr;
+        text-align: right;
+    }/* Arabic — increase size of small gold/light text for readability */
+
+    [dir="rtl"] .cover-label {
+        font-size: 13px;
+        letter-spacing: .1em;
+    }
+
+    [dir="rtl"] .cover-eyebrow {
+        font-size: 15px;
+        letter-spacing: .08em;
+    }
+
+    [dir="rtl"] .cover-dest {
+        font-size: 15px;
+        letter-spacing: .04em;
+    }
+
+    [dir="rtl"] .cover-sub {
+        font-size: clamp(18px, 3vw, 26px);
+    }
+
+    [dir="rtl"] .price-line-label {
+        font-size: 13px;
+        letter-spacing: .08em;
+    }
+
+    [dir="rtl"] .sug-eyebrow {
+        font-size: 12px;
+        letter-spacing: .1em;
+    }
+
+    [dir="rtl"] .cat-sub {
+        font-size: 12px;
+        letter-spacing: .12em;
+    }
+
+    [dir="rtl"] .intro-note {
+        font-size: 13px;
+    }
+
+    [dir="rtl"] .sug-avail {
+        font-size: 13px;
+    }
+
+    [dir="rtl"] .vote-label {
+        font-size: 12px;
+        letter-spacing: .04em;
+    }
+
+    [dir="rtl"] .rest-menu-link {
+        font-size: 13px;
+    }
+
+    @media (max-width: 620px) {
+        .sug-card {
+            padding: 26px 20px;
+        }
+
+        .photos {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .photos img:last-child {
+            grid-column: 1/-1;
+            height: 140px;
+        }
+
+        .intro, .submit-section {
+            padding: 24px 20px;
+        }
+
+        .doc-footer {
+            padding: 20px;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .footer-txt {
+            text-align: center;
+        }
+
+        .price-line {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .price-line-input {
+            width: 100%;
+        }
+    }
     </style>
 </head>
 <body>
 
     <div class="lang-bar">
-        <button class="lang-btn active" onclick="changeLang('fr')">FR</button>
-        <button class="lang-btn" onclick="changeLang('en')">EN</button>
-        <button class="lang-btn" onclick="changeLang('ar')">AR</button>
+        <button class="lang-btn active" onclick="setLang('fr')">FR</button>
+        <button class="lang-btn" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('ar')">AR</button>
     </div>
 
-    <div class="doc" id="main-doc">
+    <div class="doc">
+
+        <!-- COVER -->
         <div class="cover">
             <div class="cover-bg"></div>
+            <div class="cover-overlay"></div>
             <div class="cover-body">
-                <div class="cover-label">My Luxury Voyage</div>
-                <h1 class="cover-title">Lago di Garda</h1>
-                <p>Activités & Restaurants</p>
+                <img src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png" alt="My Luxury Voyage" style="height:52px;margin-bottom:28px;filter:brightness(0) invert(1);opacity:.92;" onerror="this.outerHTML='<span style=&quot;color:#C9A96E;font-family:Playfair Display,serif;font-size:18px;letter-spacing:.1em;margin-bottom:28px;display:block;&quot;>MY LUXURY VOYAGE</span>'">
+                <div class="cover-label" data-k="c-label">My Luxury Voyage · Sélection curatée</div>
+                <div class="cover-eyebrow" data-k="c-eye">Italie</div>
+                <div class="cover-title" data-k="c-title">Lago di Garda</div>
+                <div class="cover-sub" data-k="c-sub">Activités &amp; Restaurants</div>
+                <div class="cover-divider"></div>
+                <div class="cover-dest" data-k="c-dest">Veuillez indiquer vos préférences ci-dessous</div>
             </div>
+            <div style="position:relative;z-index:2;background:var(--cream);padding:14px 32px;border-top:3px solid var(--gold);"></div>
         </div>
 
+        <!-- INTRO -->
+        <div class="intro">
+            <div class="intro-text" data-k="intro-text">
+                Nous avons sélectionné pour vous une série d'
+                <strong>activités, d'expériences culturelles et de restaurants</strong>
+                 pour votre séjour au Lago di Garda. Consultez chaque suggestion et indiquez votre préférence. Vos choix nous permettront de construire votre programme personnalisé idéal.
+            </div>
+            <div class="intro-note" data-k="intro-note">Toutes les suggestions sont soumises à disponibilité au moment de la réservation.</div>
+        </div>
+
+        <!-- ═══ LAKE EXPERIENCES ═══ -->
         <div class="cat-div">
-            <div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=800')"></div>
-            <h2 class="cat-title">Expériences</h2>
+            <div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?w=1400&q=80')"></div>
+            <div class="cat-overlay"></div>
+            <div class="cat-body">
+                <div class="cat-sub" data-k="cat1-sub">Catégorie 01</div>
+                <div class="cat-title" data-k="cat1-title">
+                    Lake
+                    <br>
+                    Experiences
+                </div>
+            </div>
         </div>
+        <div class="cat-bar"></div>
 
+        <!-- Suggestion 1 -->
         <div class="sug-card">
-            <div class="sug-eyebrow">Suggestion #1</div>
-            <h3 class="sug-title">Isola del Garda</h3>
-            <p class="sug-desc">Découvrez une villa néo-gothique privée au milieu du lac, entourée de jardins botaniques luxuriants et d'une histoire fascinante.</p>
-            
+            <div class="sug-eyebrow" data-k="sug-eye">MY LUXURY VOYAGE · Suggestion n°1</div>
+            <div class="sug-title">Isola del Garda</div>
+            <div class="sug-divider"></div>
+            <div class="sug-sub-italic" data-k="s1-sub">Visite de l'île privée · Expérience sur le lac</div>
+            <div class="sug-desc" data-k="s1-desc">L'île est située du côté bressan du lac de Garde, non loin des rives de San Felice del Benaco. Elle doit son charme à l'extraordinaire villa de style néo-gothique vénitien, conçue par l'architecte Luigi Rovelli au début des années 1900 — une construction imposante riche en détails architecturaux surprenants et une belle toile du XVIIIe siècle de Carlo Carloni.</div>
+            <div class="sug-info">
+                <strong data-k="s1-info-bold">Durée :</strong>
+                <span data-k="s1-info">2 à 2h30 sur l'île · Transfert : 15 à 40 min selon le port de départ</span>
+            </div>
+
+            <div class="price-line">
+                <span class="price-line-label" data-k="price-lbl">Tarif</span>
+                <span class="price-line-amount">45 €</span>
+                <input class="price-line-input" type="text" data-price-key="p1" value="par personne · enfants -12 ans : 20 €" placeholder="ex : par personne, par groupe...">
+            </div>
+
+            <div class="sug-avail" data-k="avail">Cette suggestion est soumise à disponibilité</div>
             <div class="photos">
-                <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=400">
-                <img src="https://images.unsplash.com/photo-1516117172878-fd2c41f4a759?w=400">
-                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400">
+                <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=400&q=80" alt="Isola del Garda">
+                <img src="https://images.unsplash.com/photo-1516117172878-fd2c41f4a759?w=400&q=80" alt="Villa">
+                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80" alt="Lake">
             </div>
-
-            <div class="vote-box">
-                <button class="vote-btn" onclick="handleVote(this, 'yes')">Approuvé</button>
-                <button class="vote-btn" onclick="handleVote(this, 'opt')">En option</button>
-                <button class="vote-btn" onclick="handleVote(this, 'no')">Refusé</button>
+            <div class="vote-box" id="vote-1">
+                <button class="vote-btn" onclick="vote(1,'yes')">
+                    <span class="vote-label" data-k="v-yes">Approuvé</span>
+                    <span class="vote-check" id="vc-1-yes"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(1,'opt')">
+                    <span class="vote-label" data-k="v-opt">En option</span>
+                    <span class="vote-check" id="vc-1-opt"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(1,'no')">
+                    <span class="vote-label" data-k="v-no">Refusé</span>
+                    <span class="vote-check" id="vc-1-no"></span>
+                </button>
             </div>
         </div>
 
+        <!-- ═══ CULTURE & HERITAGE ═══ -->
+        <div class="cat-div">
+            <div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1555993539-1732b0258235?w=1400&q=80')"></div>
+            <div class="cat-overlay"></div>
+            <div class="cat-body">
+                <div class="cat-sub" data-k="cat2-sub">Catégorie 02</div>
+                <div class="cat-title" data-k="cat2-title">
+                    Culture &amp;
+                    <br>
+                    Patrimoine
+                </div>
+            </div>
+        </div>
+        <div class="cat-bar"></div>
+
+        <!-- Suggestion 2 -->
+        <div class="sug-card">
+            <div class="sug-eyebrow" data-k="sug-eye">MY LUXURY VOYAGE · Suggestion n°2</div>
+            <div class="sug-title">Riva del Garda — City Walk</div>
+            <div class="sug-divider"></div>
+            <div class="sug-sub-italic" data-k="s2-sub">Découverte culturelle · Promenade guidée</div>
+            <div class="sug-desc" data-k="s2-desc">
+                <strong>Riva del Garda</strong>
+                , charmante ville à la pointe nord du lac de Garde, mêle parfaitement nature et culture. Idéale pour les amateurs de sports nautiques, de randonnée et de cyclisme, elle séduit aussi par sa vieille ville historique, ses ruelles pittoresques, ses cafés animés et ses vues époustouflantes sur le lac.
+            </div>
+
+            <div class="price-line">
+                <span class="price-line-label" data-k="price-lbl">Tarif</span>
+                <span class="price-line-amount" data-k="gratuit">Gratuit</span>
+                <input class="price-line-input" type="text" data-price-key="p2" value="visite libre · guide optionnel sur demande" placeholder="ex : par personne, par groupe...">
+            </div>
+
+            <div class="sug-avail" data-k="avail">Cette suggestion est soumise à disponibilité</div>
+            <div class="photos">
+                <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=400&q=80" alt="Riva del Garda">
+                <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=400&q=80" alt="Old town">
+                <img src="https://images.unsplash.com/photo-1519922639192-e73293ca430e?w=400&q=80" alt="Architecture">
+            </div>
+            <div class="vote-box" id="vote-2">
+                <button class="vote-btn" onclick="vote(2,'yes')">
+                    <span class="vote-label" data-k="v-yes">Approuvé</span>
+                    <span class="vote-check" id="vc-2-yes"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(2,'opt')">
+                    <span class="vote-label" data-k="v-opt">En option</span>
+                    <span class="vote-check" id="vc-2-opt"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(2,'no')">
+                    <span class="vote-label" data-k="v-no">Refusé</span>
+                    <span class="vote-check" id="vc-2-no"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Suggestion 3 -->
+        <div class="sug-card">
+            <div class="sug-eyebrow" data-k="sug-eye">MY LUXURY VOYAGE · Suggestion n°3</div>
+            <div class="sug-title">MAG — Museo Alto Garda</div>
+            <div class="sug-divider"></div>
+            <div class="sug-sub-italic" data-k="s3-sub">Musée · Archéologie &amp; Art</div>
+            <div class="sug-desc" data-k="s3-desc">
+                Situé dans la Rocca médiévale de Riva del Garda, le MAG propose un voyage à travers l'archéologie, l'art et l'histoire locale. Points forts : artefacts préhistoriques, peintures du XIXe siècle inspirées du lac de Garde, et vues panoramiques depuis la tour du château. Le musée comprend trois sections : 
+                <strong>Archéologie</strong>
+                , 
+                <strong>Galerie d'Art</strong>
+                 et 
+                <strong>Histoire</strong>
+                .
+            </div>
+            <div class="sug-info">
+                <strong data-k="s3-info-bold">Horaires :</strong>
+                <span data-k="s3-info">Mardi – Dimanche · 10h00 – 18h00</span>
+            </div>
+
+            <div class="price-line">
+                <span class="price-line-label" data-k="price-lbl">Tarif</span>
+                <span class="price-line-amount">10 €</span>
+                <input class="price-line-input" type="text" data-price-key="p3" value="par personne · réduit 6 € (étudiants, seniors)" placeholder="ex : par personne, par groupe...">
+            </div>
+
+            <div class="sug-avail" data-k="avail">Cette suggestion est soumise à disponibilité</div>
+            <div class="photos">
+                <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=400&q=80" alt="MAG">
+                <img src="https://images.unsplash.com/photo-1554907984-15263bfd63bd?w=400&q=80" alt="Art gallery">
+                <img src="https://images.unsplash.com/photo-1545987796-200677ee1011?w=400&q=80" alt="Museum">
+            </div>
+            <div class="vote-box" id="vote-3">
+                <button class="vote-btn" onclick="vote(3,'yes')">
+                    <span class="vote-label" data-k="v-yes">Approuvé</span>
+                    <span class="vote-check" id="vc-3-yes"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(3,'opt')">
+                    <span class="vote-label" data-k="v-opt">En option</span>
+                    <span class="vote-check" id="vc-3-opt"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(3,'no')">
+                    <span class="vote-label" data-k="v-no">Refusé</span>
+                    <span class="vote-check" id="vc-3-no"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Suggestion 4 -->
+        <div class="sug-card">
+            <div class="sug-eyebrow" data-k="sug-eye">MY LUXURY VOYAGE · Suggestion n°4</div>
+            <div class="sug-title">Limone sul Garda — City Walk</div>
+            <div class="sug-divider"></div>
+            <div class="sug-sub-italic" data-k="s4-sub">Village pittoresque · Promenade au bord du lac</div>
+            <div class="sug-desc" data-k="s4-desc">
+                <strong>Limone sul Garda</strong>
+                 est un charmant village lacustre connu pour ses citronniers et ses vues époustouflantes. Flânez dans des ruelles étroites, visitez le 
+                <strong>Musée de la Limonaia</strong>
+                 et profitez des cafés au bord du lac. Les amateurs de plein air peuvent randonner sur le Sentiero del Sole ou explorer les rives en bateau.
+            </div>
+
+            <div class="price-line">
+                <span class="price-line-label" data-k="price-lbl">Tarif</span>
+                <span class="price-line-amount" data-k="gratuit">Gratuit</span>
+                <input class="price-line-input" type="text" data-price-key="p4" value="visite libre · entrée Limonaia : 5 € / personne" placeholder="ex : par personne, par groupe...">
+            </div>
+
+            <div class="sug-avail" data-k="avail">Cette suggestion est soumise à disponibilité</div>
+            <div class="photos">
+                <img src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=400&q=80" alt="Limone">
+                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80" alt="Village">
+                <img src="https://images.unsplash.com/photo-1471623432079-b009d30b6729?w=400&q=80" alt="Street">
+            </div>
+            <div class="vote-box" id="vote-4">
+                <button class="vote-btn" onclick="vote(4,'yes')">
+                    <span class="vote-label" data-k="v-yes">Approuvé</span>
+                    <span class="vote-check" id="vc-4-yes"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(4,'opt')">
+                    <span class="vote-label" data-k="v-opt">En option</span>
+                    <span class="vote-check" id="vc-4-opt"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(4,'no')">
+                    <span class="vote-label" data-k="v-no">Refusé</span>
+                    <span class="vote-check" id="vc-4-no"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Suggestion 5 -->
+        <div class="sug-card">
+            <div class="sug-eyebrow" data-k="sug-eye">MY LUXURY VOYAGE · Suggestion n°5</div>
+            <div class="sug-title">Verona Tour</div>
+            <div class="sug-divider"></div>
+            <div class="sug-sub-italic" data-k="s5-sub">Visite guidée · Histoire &amp; Romance</div>
+            <div class="sug-desc" data-k="s5-desc">
+                Découvrez le charme intemporel de 
+                <strong>Vérone</strong>
+                 lors d'une visite guidée. Explorez l'emblématique 
+                <strong>Arena di Verona</strong>
+                , visitez la romantique 
+                <strong>Casa di Giulietta</strong>
+                , flânez sur la 
+                <strong>Piazza delle Erbe</strong>
+                 et admirez les Arches Scaligères et les vues panoramiques depuis le Castel San Pietro.
+            </div>
+
+            <div class="price-line">
+                <span class="price-line-label" data-k="price-lbl">Tarif</span>
+                <span class="price-line-amount">28 €</span>
+                <input class="price-line-input" type="text" data-price-key="p5" value="par personne · guide privé disponible sur devis" placeholder="ex : par personne, par groupe...">
+            </div>
+
+            <div class="sug-avail" data-k="avail">Cette suggestion est soumise à disponibilité</div>
+            <div class="photos">
+                <img src="https://images.unsplash.com/photo-1583779457094-ab6f77f7bf57?w=400&q=80" alt="Arena">
+                <img src="https://images.unsplash.com/photo-1534430480872-3498386e7856?w=400&q=80" alt="Juliet">
+                <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Verona">
+            </div>
+            <div class="vote-box" id="vote-5">
+                <button class="vote-btn" onclick="vote(5,'yes')">
+                    <span class="vote-label" data-k="v-yes">Approuvé</span>
+                    <span class="vote-check" id="vc-5-yes"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(5,'opt')">
+                    <span class="vote-label" data-k="v-opt">En option</span>
+                    <span class="vote-check" id="vc-5-opt"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(5,'no')">
+                    <span class="vote-label" data-k="v-no">Refusé</span>
+                    <span class="vote-check" id="vc-5-no"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ═══ NATURE & WELLNESS ═══ -->
+        <div class="cat-div">
+            <div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1400&q=80')"></div>
+            <div class="cat-overlay"></div>
+            <div class="cat-body">
+                <div class="cat-sub" data-k="cat3-sub">Catégorie 03</div>
+                <div class="cat-title" data-k="cat3-title">
+                    Nature
+                    <br>
+                    Wellness &amp; Loisirs
+                </div>
+            </div>
+        </div>
+        <div class="cat-bar"></div>
+
+        <!-- Suggestion 6 -->
+        <div class="sug-card">
+            <div class="sug-eyebrow" data-k="sug-eye">MY LUXURY VOYAGE · Suggestion n°6</div>
+            <div class="sug-title">Activités Nautiques</div>
+            <div class="sug-divider"></div>
+            <div class="sug-sub-italic" data-k="s6-sub">Sports nautiques · Lac de Garde</div>
+            <div class="sug-desc" data-k="s6-desc">
+                Le lac de Garde est une destination de premier plan pour les amateurs de sports nautiques. Profitez d'activités comme le 
+                <strong>kitesurf</strong>
+                 et le 
+                <strong>wakeboard</strong>
+                 dans la partie nord venteuse, ou optez pour le 
+                <strong>stand-up paddle</strong>
+                , le 
+                <strong>kayak</strong>
+                 ou la 
+                <strong>planche à voile</strong>
+                 sur les rives sud plus calmes.
+            </div>
+
+            <div class="price-line">
+                <span class="price-line-label" data-k="price-lbl">Tarif</span>
+                <span class="price-line-amount">80 €</span>
+                <input class="price-line-input" type="text" data-price-key="p6" value="par personne / 2h · matériel inclus" placeholder="ex : par personne, par groupe...">
+            </div>
+
+            <div class="sug-avail" data-k="avail">Cette suggestion est soumise à disponibilité</div>
+            <div class="photos">
+                <img src="https://images.unsplash.com/photo-1530541930197-ff16ac917b0e?w=400&q=80" alt="Kitesurf">
+                <img src="https://images.unsplash.com/photo-1601139083195-76c3b2d57ac8?w=400&q=80" alt="Windsurf">
+                <img src="https://images.unsplash.com/photo-1529925947-4e6e94ab6c35?w=400&q=80" alt="Paddle">
+            </div>
+            <div class="vote-box" id="vote-6">
+                <button class="vote-btn" onclick="vote(6,'yes')">
+                    <span class="vote-label" data-k="v-yes">Approuvé</span>
+                    <span class="vote-check" id="vc-6-yes"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(6,'opt')">
+                    <span class="vote-label" data-k="v-opt">En option</span>
+                    <span class="vote-check" id="vc-6-opt"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(6,'no')">
+                    <span class="vote-label" data-k="v-no">Refusé</span>
+                    <span class="vote-check" id="vc-6-no"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Suggestion 7 -->
+        <div class="sug-card">
+            <div class="sug-eyebrow" data-k="sug-eye">MY LUXURY VOYAGE · Suggestion n°7</div>
+            <div class="sug-title">Wellbeing — EALA Luxury Spa</div>
+            <div class="sug-divider"></div>
+            <div class="sug-sub-italic" data-k="s7-sub">Spa &amp; Bien-être · 1 500 m²</div>
+            <div class="sug-desc" data-k="s7-desc">
+                Bienvenue à l'EALA Luxury Spa, 1 500 m² de bien-être conçus exclusivement pour vous. L'équipe de thérapeutes prendra soin de vous avec des soins uniques, via une approche 
+                <strong>holistique, sensorielle et naturelle</strong>
+                , en valorisant les produits locaux.
+            </div>
+
+            <div class="price-line">
+                <span class="price-line-label" data-k="price-lbl">Tarif</span>
+                <span class="price-line-amount">120 €</span>
+                <input class="price-line-input" type="text" data-price-key="p7" value="par personne / 60min · duo disponible : 220 €" placeholder="ex : par personne, par groupe...">
+            </div>
+
+            <div class="sug-avail" data-k="avail">Cette suggestion est soumise à disponibilité</div>
+            <div class="photos">
+                <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=400&q=80" alt="Spa">
+                <img src="https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400&q=80" alt="Pool">
+                <img src="https://images.unsplash.com/photo-1583241475880-083f84372725?w=400&q=80" alt="Treatment">
+            </div>
+            <div class="vote-box" id="vote-7">
+                <button class="vote-btn" onclick="vote(7,'yes')">
+                    <span class="vote-label" data-k="v-yes">Approuvé</span>
+                    <span class="vote-check" id="vc-7-yes"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(7,'opt')">
+                    <span class="vote-label" data-k="v-opt">En option</span>
+                    <span class="vote-check" id="vc-7-opt"></span>
+                </button>
+                <button class="vote-btn" onclick="vote(7,'no')">
+                    <span class="vote-label" data-k="v-no">Refusé</span>
+                    <span class="vote-check" id="vc-7-no"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- ═══ RESTAURANTS ═══ -->
+        <div class="cat-div">
+            <div class="cat-bg" style="background-image:url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=80')"></div>
+            <div class="cat-overlay"></div>
+            <div class="cat-body">
+                <div class="cat-sub" data-k="cat4-sub">Sélection Restaurants</div>
+                <div class="cat-title" data-k="cat4-title">
+                    Restaurant
+                    <br>
+                    Suggestions
+                </div>
+            </div>
+        </div>
+        <div class="cat-bar"></div>
+
+        <!-- Restaurant 1 -->
+        <div class="sug-card">
+            <div class="sug-eyebrow" data-k="sug-eye">MY LUXURY VOYAGE · Restaurant n°1</div>
+            <div class="sug-title">Capo Nord</div>
+            <div class="sug-divider"></div>
+            <div class="rest-meta">
+                <div class="rest-type" data-k="r1-type">Fruits de mer</div>
+                <div class="google-rating">
+                    <span class="g-logo">G</span>
+                    <span class="g-score">4.5</span>
+                    <span class="g-stars">★★★★½</span>
+                </div>
+                <span class="rest-menu-link" onclick="alert('Lien menu — à compléter')" data-k="menu-link">📋 Voir le menu</span>
+            </div>
+            <div class="sug-desc" data-k="r1-desc">Restaurant de fruits de mer perché au bord de l'eau, offrant une sélection exceptionnelle de poissons et crustacés frais de Méditerranée avec des vues imprenables sur le lac.</div>
+
+            <div class="price-line">
+                <span class="price-line-label" data-k="price-lbl">Tarif moyen</span>
+                <span class="price-line-amount">65 €</span>
+                <input class="price-line-input" type="text" data-price-key="r1" value="par personne (hors boissons) · réservation recommandée" placeholder="ex : par personne, par groupe...">
+            </div>
+
+            <div class="photos">
+                <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="Capo Nord">
+                <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80" alt="Seafood">
+                <img src="https://images.unsplash.com/photo-1533929736458-ca588d08c8be?w=400&q=80" alt="Lake view">
+            </div>
+            <div class="vote-box" id="vote-r1">
+                <button class="vote-btn" onclick="vote('r1','yes')">
+                    <span class="vote-label" data-k="v-yes">Approuvé</span>
+                    <span class="vote-check" id="vc-r1-yes"></span>
+                </button>
+                <button class="vote-btn" onclick="vote('r1','opt')">
+                    <span class="vote-label" data-k="v-opt">En option</span>
+                    <span class="vote-check" id="vc-r1-opt"></span>
+                </button>
+                <button class="vote-btn" onclick="vote('r1','no')">
+                    <span class="vote-label" data-k="v-no">Refusé</span>
+                    <span class="vote-check" id="vc-r1-no"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Restaurant 2 -->
+        <div class="sug-card">
+            <div class="sug-eyebrow" data-k="sug-eye">MY LUXURY VOYAGE · Restaurant n°2</div>
+            <div class="sug-title">La Terrazza, A Belmond</div>
+            <div class="sug-divider"></div>
+            <div class="rest-meta">
+                <div class="rest-type" data-k="r2-type">Cuisine italienne</div>
+                <div class="google-rating">
+                    <span class="g-logo">G</span>
+                    <span class="g-score">4.6</span>
+                    <span class="g-stars">★★★★½</span>
+                </div>
+                <span class="rest-menu-link" onclick="alert('Lien menu — à compléter')" data-k="menu-link">📋 Voir le menu</span>
+            </div>
+            <div class="sug-desc" data-k="r2-desc">Une expérience gastronomique exceptionnelle au Belmond Hotel Splendido. Cuisine italienne raffinée avec vues panoramiques sur la baie de Portofino — l'un des cadres de restaurant les plus emblématiques au monde.</div>
+
+            <div class="price-line">
+                <span class="price-line-label" data-k="price-lbl">Tarif moyen</span>
+                <span class="price-line-amount">120 €</span>
+                <input class="price-line-input" type="text" data-price-key="r2" value="par personne (hors boissons) · tenue correcte exigée" placeholder="ex : par personne, par groupe...">
+            </div>
+
+            <div class="photos">
+                <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80" alt="La Terrazza">
+                <img src="https://images.unsplash.com/photo-1566454544259-f4b94c3d758c?w=400&q=80" alt="Italian cuisine">
+                <img src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&q=80" alt="View">
+            </div>
+            <div class="vote-box" id="vote-r2">
+                <button class="vote-btn" onclick="vote('r2','yes')">
+                    <span class="vote-label" data-k="v-yes">Approuvé</span>
+                    <span class="vote-check" id="vc-r2-yes"></span>
+                </button>
+                <button class="vote-btn" onclick="vote('r2','opt')">
+                    <span class="vote-label" data-k="v-opt">En option</span>
+                    <span class="vote-check" id="vc-r2-opt"></span>
+                </button>
+                <button class="vote-btn" onclick="vote('r2','no')">
+                    <span class="vote-label" data-k="v-no">Refusé</span>
+                    <span class="vote-check" id="vc-r2-no"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- SUBMIT -->
         <div class="submit-section">
-            <button class="btn-submit">Envoyer mes choix</button>
+            <div class="submit-title" data-k="submit-title">Envoyer vos sélections</div>
+            <div class="submit-sub" data-k="submit-sub">Une fois toutes les suggestions consultées, cliquez ci-dessous pour envoyer vos préférences à notre équipe. Nous construirons votre programme personnalisé en conséquence.</div>
+            <div class="btn-row">
+                <button class="btn-submit-main" onclick="submitSelections()" data-k="btn-submit">Envoyer mes sélections</button>
+                <a class="btn-wa" href="https://wa.me/{{WA_NUMBER}}?text=Bonjour%20MLV%2C%20j'ai%20une%20question%20sur%20les%20activit%C3%A9s%20propos%C3%A9es." target="_blank" rel="noopener">
+                    <svg class="wa-svg" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                    <span data-k="btn-wa">Poser une question</span>
+                </a>
+            </div>
+            <div class="success-bar" id="success-bar" data-k="success-msg">✓ Merci ! Vos sélections ont été envoyées à l'équipe My Luxury Voyage. Nous revenons vers vous très prochainement.</div>
         </div>
+
+        <!-- FOOTER -->
+        <div class="doc-footer">
+            <img class="footer-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png" alt="MLV" onerror="this.style.display='none'">
+            <div class="footer-txt">
+
+                    66 av. Valéry Giscard D'Estaing, 06200 Nice · 14 rue Pasteur, 06400 Cannes
+                <br>
+                <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e88b87869c898b9ca88591849d909d9a919e8791898f8dc68b8785">[email&#160;protected]</a>
+                 · myluxuryvoyage.com
+                  
+            </div>
+        </div>
+
     </div>
 
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script>
-        function handleVote(btn, type) {
-            const parent = btn.parentElement;
-            parent.querySelectorAll('.vote-btn').forEach(b => {
-                b.classList.remove('active-yes', 'active-opt', 'active-no');
-            });
-            btn.classList.add('active-' + type);
-        }
+    /* ── VOTES ── */
+    const votes = {};
+    const labels = {
+        1: 'Isola del Garda',
+        2: 'Riva del Garda City Walk',
+        3: 'MAG Museo Alto Garda',
+        4: 'Limone City Walk',
+        5: 'Verona Tour',
+        6: 'Activités Nautiques',
+        7: 'EALA Spa',
+        r1: 'Capo Nord',
+        r2: 'La Terrazza Belmond'
+    };
 
-        function changeLang(lang) {
-            document.documentElement.lang = lang;
-            document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            // Ici, Gemini pourra injecter les traductions dynamiquement
+    function vote(id, val) {
+        votes[id] = val;
+        ['yes', 'opt', 'no'].forEach(v => {
+            const el = document.getElementById(`vc-${id}-${v}`);
+            if (!el)
+                return;
+            el.closest('.vote-btn').className = 'vote-btn';
+            el.textContent = '';
+        });
+        const el = document.getElementById(`vc-${id}-${val}`);
+        const btn = el.closest('.vote-btn');
+        el.textContent = val === 'yes' ? '✓' : val === 'opt' ? '◈' : '✕';
+        btn.classList.add(val === 'yes' ? 'sel-yes' : val === 'opt' ? 'sel-opt' : 'sel-no');
+    }
+
+    function submitSelections() {
+        let msg = 'Lago di Garda — Sélections Activités & Restaurants :\n\n';
+        Object.keys(labels).forEach(k => {
+            const v = votes[k];
+            const s = v === 'yes' ? '✓ Approuvé' : v === 'opt' ? '◈ En option' : v === 'no' ? '✕ Refusé' : '— Sans réponse';
+            msg += `${labels[k]}: ${s}\n`;
+        });
+        window.open(`https://wa.me/{{WA_NUMBER}}?text=${encodeURIComponent(msg)}`, '_blank');
+        document.getElementById('success-bar').style.display = 'block';
+    }
+
+    /* ── TRANSLATIONS ──
+       Arabic rules applied:
+       - dir="rtl" on html element for layout
+       - Numbers (prices, ratings, timetables) keep dir="ltr" via CSS
+       - No inline numeric content is reversed
+       - Suggestion numbers (n°1, n°2...) stay as-is (universal)
+       - Vote buttons: ✓ ✕ symbols work in both directions
+    */
+    const T = {
+        fr: {
+            'c-label': 'My Luxury Voyage · Sélection curatée',
+            'c-eye': 'Italie',
+            'c-title': 'Lago di Garda',
+            'c-sub': 'Activités &amp; Restaurants',
+            'c-dest': 'Veuillez indiquer vos préférences ci-dessous',
+            'intro-text': 'Nous avons sélectionné pour vous une série d\'<strong>activités, d\'expériences culturelles et de restaurants</strong> pour votre séjour au Lago di Garda. Consultez chaque suggestion et indiquez votre préférence.',
+            'intro-note': 'Toutes les suggestions sont soumises à disponibilité au moment de la réservation.',
+            'cat1-sub': 'Catégorie 01',
+            'cat1-title': 'Lake<br>Experiences',
+            'cat2-sub': 'Catégorie 02',
+            'cat2-title': 'Culture &amp;<br>Patrimoine',
+            'cat3-sub': 'Catégorie 03',
+            'cat3-title': 'Nature<br>Wellness &amp; Loisirs',
+            'cat4-sub': 'Sélection Restaurants',
+            'cat4-title': 'Restaurant<br>Suggestions',
+            'sug-eye': 'MY LUXURY VOYAGE · Suggestion n°',
+            's1-sub': 'Visite de l\'île privée · Expérience sur le lac',
+            's1-desc': 'L\'île est située du côté bressan du lac de Garde. Elle doit son charme à l\'extraordinaire villa de style néo-gothique vénitien, conçue par Luigi Rovelli au début des années 1900.',
+            's1-info-bold': 'Durée :',
+            's1-info': '2 à 2h30 sur l\'île · Transfert : 15 à 40 min selon le port',
+            's2-sub': 'Découverte culturelle · Promenade guidée',
+            's2-desc': '<strong>Riva del Garda</strong>, charmante ville à la pointe nord du lac de Garde, mêle parfaitement nature et culture. Idéale pour les amateurs de sports nautiques, randonnée et cyclisme.',
+            's3-sub': 'Musée · Archéologie &amp; Art',
+            's3-desc': 'Situé dans la Rocca médiévale de Riva del Garda, le MAG propose un voyage à travers l\'archéologie, l\'art et l\'histoire locale. Trois sections : <strong>Archéologie</strong>, <strong>Galerie d\'Art</strong>, <strong>Histoire</strong>.',
+            's3-info-bold': 'Horaires :',
+            's3-info': 'Mardi – Dimanche · 10h00 – 18h00',
+            's4-sub': 'Village pittoresque · Promenade au bord du lac',
+            's4-desc': '<strong>Limone sul Garda</strong> est un charmant village lacustre connu pour ses citronniers. Visitez le <strong>Musée de la Limonaia</strong> et profitez des cafés au bord du lac.',
+            's5-sub': 'Visite guidée · Histoire &amp; Romance',
+            's5-desc': 'Découvrez le charme intemporel de <strong>Vérone</strong>. Explorez l\'<strong>Arena di Verona</strong>, la <strong>Casa di Giulietta</strong> et la <strong>Piazza delle Erbe</strong>.',
+            's6-sub': 'Sports nautiques · Lac de Garde',
+            's6-desc': 'Le lac de Garde est une destination de premier plan pour les amateurs de sports nautiques : <strong>kitesurf</strong>, <strong>wakeboard</strong>, <strong>stand-up paddle</strong> et <strong>kayak</strong>.',
+            's7-sub': 'Spa &amp; Bien-être · 1 500 m²',
+            's7-desc': 'Bienvenue à l\'EALA Luxury Spa, 1 500 m² de bien-être conçus pour vous. Soins uniques via une approche <strong>holistique, sensorielle et naturelle</strong>.',
+            'r1-type': 'Fruits de mer',
+            'r2-type': 'Cuisine italienne',
+            'r1-desc': 'Restaurant de fruits de mer perché au bord de l\'eau, avec une sélection exceptionnelle de poissons frais et des vues imprenables sur le lac.',
+            'r2-desc': 'Une expérience gastronomique exceptionnelle au Belmond Hotel Splendido. Cuisine italienne raffinée avec vues panoramiques sur la baie de Portofino.',
+            'menu-link': '📋 Voir le menu',
+            'price-lbl': 'Tarif',
+            'avail': 'Cette suggestion est soumise à disponibilité',
+            'v-yes': 'Approuvé',
+            'v-opt': 'Pas certain',
+            'v-no': 'Refusé',
+            'p1': 'par personne · enfants -12 ans : 20 €',
+            'gratuit': 'Gratuit',
+            'p2': 'visite libre · guide optionnel sur demande',
+            'p3': 'par personne · réduit 6 € (étudiants, seniors)',
+            'p4': 'visite libre · entrée Limonaia : 5 € / personne',
+            'p5': 'par personne · guide privé disponible sur devis',
+            'p6': 'par personne / 2h · matériel inclus',
+            'p7': 'par personne / 60min · duo disponible : 220 €',
+            'r1': 'par personne (hors boissons) · réservation recommandée',
+            'r2': 'par personne (hors boissons) · tenue correcte exigée',
+            'submit-title': 'Envoyer vos sélections',
+            'submit-sub': 'Une fois toutes les suggestions consultées, cliquez ci-dessous pour envoyer vos préférences à notre équipe.',
+            'btn-submit': 'Envoyer mes sélections',
+            'btn-wa': 'Poser une question',
+            'success-msg': '✓ Merci ! Vos sélections ont été envoyées à l\'équipe My Luxury Voyage.'
+        },
+        en: {
+            'c-label': 'My Luxury Voyage · Curated Selection',
+            'c-eye': 'Italy',
+            'c-title': 'Lago di Garda',
+            'c-sub': 'Activities &amp; Restaurants',
+            'c-dest': 'Please indicate your preferences below',
+            'intro-text': 'We have curated a selection of <strong>activities, cultural experiences and restaurants</strong> for your stay at Lago di Garda. Review each suggestion and indicate your preference.',
+            'intro-note': 'All suggestions are subject to availability at time of booking.',
+            'cat1-sub': 'Category 01',
+            'cat1-title': 'Lake<br>Experiences',
+            'cat2-sub': 'Category 02',
+            'cat2-title': 'Culture &amp;<br>Heritage',
+            'cat3-sub': 'Category 03',
+            'cat3-title': 'Nature<br>Wellness &amp; Leisure',
+            'cat4-sub': 'Dining Selection',
+            'cat4-title': 'Restaurant<br>Suggestions',
+            'sug-eye': 'MY LUXURY VOYAGE · Suggestion n°',
+            's1-sub': 'Private island visit · Lake experience',
+            's1-desc': 'The island is located on the Brescian side of Lake Garda. It owes its charm to the extraordinary Venetian neo-Gothic style villa designed by Luigi Rovelli in the early 1900s.',
+            's1-info-bold': 'Duration:',
+            's1-info': '2–2.5h on the island · Transfer: 15–40 min depending on departure port',
+            's2-sub': 'Cultural discovery · Guided walk',
+            's2-desc': '<strong>Riva del Garda</strong>, a charming town at the northern tip of Lake Garda, blends nature and culture. Ideal for water sports, hiking and cycling enthusiasts.',
+            's3-sub': 'Museum · Archaeology &amp; Art',
+            's3-desc': 'Located in the medieval Rocca of Riva del Garda, MAG Museo Alto Garda offers a journey through archaeology, art and local history. Three sections: <strong>Archaeology</strong>, <strong>Art Gallery</strong>, <strong>History</strong>.',
+            's3-info-bold': 'Hours:',
+            's3-info': 'Tuesday – Sunday · 10:00 – 18:00',
+            's4-sub': 'Picturesque village · Lakeside walk',
+            's4-desc': '<strong>Limone sul Garda</strong> is a charming lakeside village known for its lemon groves. Visit the <strong>Lemon House Museum</strong> and enjoy lakeside cafés.',
+            's5-sub': 'Guided tour · History &amp; Romance',
+            's5-desc': 'Discover the timeless charm of <strong>Verona</strong>. Explore the iconic <strong>Arena di Verona</strong>, the romantic <strong>Casa di Giulietta</strong> and the <strong>Piazza delle Erbe</strong>.',
+            's6-sub': 'Water sports · Lake Garda',
+            's6-desc': 'Lake Garda is a top destination for water sports: <strong>kitesurfing</strong>, <strong>wakeboarding</strong>, <strong>stand-up paddleboarding</strong> and <strong>kayaking</strong>.',
+            's7-sub': 'Spa &amp; Wellness · 1,500 m²',
+            's7-desc': 'Welcome to EALA Luxury Spa, 1,500 m² of wellness designed for you. Unique treatments through a <strong>holistic, sensory and natural approach</strong>.',
+            'r1-type': 'Seafood',
+            'r2-type': 'Italian cuisine',
+            'r1-desc': 'A stunning seafood restaurant perched at the water\'s edge, with an exceptional selection of fresh Mediterranean fish and breathtaking lake views.',
+            'r2-desc': 'An extraordinary dining experience at Belmond Hotel Splendido. Refined Italian cuisine with panoramic views over the Portofino bay.',
+            'menu-link': '📋 View Menu',
+            'price-lbl': 'Rate',
+            'avail': 'This suggestion is subject to availability',
+            'v-yes': 'Approved',
+            'v-opt': 'Not Sure',
+            'v-no': 'Refused',
+            'p1': 'per person · children under 12: €20',
+            'gratuit': 'Free',
+            'p2': 'free visit · optional guide on request',
+            'p3': 'per person · reduced €6 (students, seniors)',
+            'p4': 'free visit · Limonaia entrance: €5 / person',
+            'p5': 'per person · private guide available on request',
+            'p6': 'per person / 2h · equipment included',
+            'p7': 'per person / 60min · duo available: €220',
+            'r1': 'per person (drinks not included) · reservation recommended',
+            'r2': 'per person (drinks not included) · smart dress required',
+            'submit-title': 'Send your selections',
+            'submit-sub': 'Once you have reviewed all suggestions, click below to send your preferences to our team.',
+            'btn-submit': 'Send my selections',
+            'btn-wa': 'Ask a question',
+            'success-msg': '✓ Thank you! Your selections have been sent to the My Luxury Voyage team.'
+        },
+        ar: {
+            /* Arabic: numbers & prices keep LTR via CSS (direction:ltr on .price-line-amount etc.)
+                   Dates, hours, ratings all styled with dir=ltr in CSS.
+                   Vote symbols ✓ ✕ ◈ are direction-neutral. */
+            'c-label': 'ماي لاكشري فوياج · اختيار حصري',
+            'c-eye': 'إيطاليا',
+            'c-title': 'لاغو دي غاردا',
+            'c-sub': 'الأنشطة والمطاعم',
+            'c-dest': 'يُرجى الإشارة إلى تفضيلاتكم أدناه',
+            'intro-text': 'قمنا بتنظيم مجموعة من <strong>الأنشطة والتجارب الثقافية والمطاعم</strong> لإقامتكم في لاغو دي غاردا. راجعوا كل اقتراح وأشيروا إلى تفضيلاتكم.',
+            'intro-note': 'جميع الاقتراحات رهينة بالتوفر لحظة الحجز.',
+            'cat1-sub': 'الفئة الأولى',
+            'cat1-title': 'تجارب<br>البحيرة',
+            'cat2-sub': 'الفئة الثانية',
+            'cat2-title': 'الثقافة<br>والتراث',
+            'cat3-sub': 'الفئة الثالثة',
+            'cat3-title': 'الطبيعة<br>والعافية والترفيه',
+            'cat4-sub': 'اختيار المطاعم',
+            'cat4-title': 'اقتراحات<br>المطاعم',
+            'sug-eye': 'ماي لاكشري فوياج · اقتراح رقم',
+            's1-sub': 'زيارة الجزيرة الخاصة · تجربة على البحيرة',
+            's1-desc': 'تقع الجزيرة على الجانب البريشياني من بحيرة غاردا. تستمد سحرها من الفيلا الفنيسية النيو-قوطية الرائعة التي صممها المعماري لويجي روفيلي في مطلع القرن العشرين.',
+            's1-info-bold': 'المدة:',
+            's1-info': 'ساعتان إلى ساعتين ونصف على الجزيرة · نقل: ١٥ إلى ٤٠ دقيقة حسب ميناء المغادرة',
+            's2-sub': 'اكتشاف ثقافي · جولة مشي',
+            's2-desc': '<strong>ريفا ديل غاردا</strong>، بلدة ساحرة عند الطرف الشمالي للبحيرة، تجمع بين الطبيعة والثقافة. مثالية لعشاق الرياضات المائية والمشي.',
+            's3-sub': 'متحف · علم الآثار والفن',
+            's3-desc': 'يقع MAG Museo Alto Garda في قلعة ريفا ديل غاردا الوسطى. يضم ثلاثة أقسام: <strong>الآثار</strong> و<strong>المعرض الفني</strong> و<strong>التاريخ</strong>.',
+            's3-info-bold': 'مواعيد الزيارة:',
+            's3-info': 'الثلاثاء – الأحد · ١٠:٠٠ – ١٨:٠٠',
+            's4-sub': 'قرية ساحرة · نزهة على ضفاف البحيرة',
+            's4-desc': '<strong>ليموني سول غاردا</strong> قرية جميلة على الشاطئ مشهورة بأشجار الليمون. زوروا <strong>متحف ليمونايا</strong> واستمتعوا بالمقاهي المطلة على البحيرة.',
+            's5-sub': 'جولة مع مرشد · تاريخ ورومانسية',
+            's5-desc': 'اكتشفوا سحر <strong>فيرونا</strong> الخالد. استكشفوا <strong>أمفيثيتر فيرونا</strong> الشهير، وبيت <strong>روميو وجولييت</strong>، و<strong>بياتسا ديلي إربي</strong>.',
+            's6-sub': 'رياضات مائية · بحيرة غاردا',
+            's6-desc': 'بحيرة غاردا وجهة مثالية لعشاق الرياضات المائية: <strong>الكايت سرف</strong> و<strong>الويك بورد</strong> و<strong>الباددل بورد</strong> و<strong>الكاياك</strong>.',
+            's7-sub': 'سبا وعافية · ١٥٠٠ م²',
+            's7-desc': 'مرحباً بكم في EALA Luxury Spa، ١٥٠٠ م² من العافية المصممة لكم. علاجات فريدة عبر نهج <strong>شامل وحسي وطبيعي</strong>.',
+            'r1-type': 'المأكولات البحرية',
+            'r2-type': 'المطبخ الإيطالي',
+            'r1-desc': 'مطعم مأكولات بحرية مميز على حافة المياه، يقدم تشكيلة استثنائية من الأسماك الطازجة مع إطلالات رائعة على البحيرة.',
+            'r2-desc': 'تجربة طعام استثنائية في فندق Belmond Hotel Splendido. مطبخ إيطالي راقٍ مع إطلالات بانورامية على خليج بورتوفينو.',
+            'menu-link': '📋 عرض القائمة',
+            'price-lbl': 'السعر',
+            'avail': 'هذا الاقتراح رهين بالتوفر',
+            'v-yes': 'موافق',
+            'v-opt': 'غير متأكد',
+            'v-no': 'مرفوض',
+            'p1': 'للشخص · الأطفال دون 12 سنة: 20 €',
+            'gratuit': 'مجاني',
+            'p2': 'زيارة حرة · مرشد اختياري عند الطلب',
+            'p3': 'للشخص · مخفض 6 € (طلاب، كبار السن)',
+            'p4': 'زيارة حرة · دخول ليمونايا: 5 € / للشخص',
+            'p5': 'للشخص · مرشد خاص متاح عند الطلب',
+            'p6': 'للشخص / ساعتان · المعدات مشمولة',
+            'p7': 'للشخص / 60 دقيقة · ثنائي متاح: 220 €',
+            'r1': 'للشخص (المشروبات غير مشمولة) · الحجز موصى به',
+            'r2': 'للشخص (المشروبات غير مشمولة) · اللباس الأنيق مطلوب',
+            'submit-title': 'إرسال اختياراتكم',
+            'submit-sub': 'بعد مراجعة جميع الاقتراحات، انقروا أدناه لإرسال تفضيلاتكم إلى فريقنا.',
+            'btn-submit': 'إرسال اختياراتي',
+            'btn-wa': 'طرح سؤال',
+            'success-msg': '✓ شكراً ! تم إرسال اختياراتكم إلى فريق ماي لاكشري فوياج.'
         }
+    };
+
+    function setLang(l) {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
+        document.documentElement.lang = l;
+        document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+        const t = T[l];
+        document.querySelectorAll('[data-k]').forEach(el => {
+            const key = el.getAttribute('data-k');
+            if (t[key] !== undefined)
+                el.innerHTML = t[key];
+        });
+        // Translate price input values
+        document.querySelectorAll('[data-price-key]').forEach(el => {
+            const key = el.getAttribute('data-price-key');
+            if (t[key] !== undefined)
+                el.value = t[key];
+        });
+        document.getElementById('success-bar').innerHTML = t['success-msg'] || '';
+    }
     </script>
 </body>
 </html>
