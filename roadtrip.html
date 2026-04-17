@@ -1,112 +1,1756 @@
 <!DOCTYPE html>
-<html lang="fr" dir="ltr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MLV — Road Trip</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-    :root { --navy: #1C2E4A; --gold: #C9A96E; --gold2: #B8944F; --white: #fff; --cream: #F8F6F1; --gray: #666; --light: #F2F0EC; --red: #C0392B; }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #E5E3DE; font-family: 'Montserrat', sans-serif; color: var(--navy); }
-    .doc { max-width: 900px; margin: 0 auto; background: var(--white); box-shadow: 0 4px 40px rgba(0, 0, 0, .15); }
-    .cover { position: relative; height: 82vh; min-height: 520px; max-height: 840px; overflow: hidden; display: flex; flex-direction: column; }
-    .cover-bg { position: absolute; inset: 0; background-size: cover; background-position: center; filter: brightness(.48); background-image: url('{{photo_cover}}'); }
-    .cover-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(28, 46, 74, .05) 0%, rgba(28, 46, 74, .62) 100%); }
-    .cover-body { position: relative; z-index: 2; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; text-align: center; }
-    .mlv-logo { height: 48px; filter: brightness(0) invert(1); opacity: .88; margin-bottom: 32px; }
-    .cover-label { font-size: 9px; letter-spacing: .4em; color: var(--gold); text-transform: uppercase; margin-bottom: 16px; }
-    .cover-title { font-family: 'Playfair Display', serif; font-size: clamp(44px, 7vw, 76px); font-weight: 700; color: #fff; letter-spacing: .04em; text-transform: uppercase; line-height: 1.05; margin-bottom: 10px; }
-    .cover-divider { width: 56px; height: 1px; background: var(--gold); margin: 16px auto; }
-    .cover-route { font-size: 14px; font-weight: 500; color: #fff; letter-spacing: .06em; margin-bottom: 8px; }
-    .cover-dates { font-size: 11px; color: rgba(255, 255, 255, .6); letter-spacing: .14em; text-transform: uppercase; }
-    .cover-foot { position: relative; z-index: 2; background: var(--cream); padding: 18px 32px; display: flex; align-items: center; justify-content: center; border-top: 3px solid var(--gold); }
-    .cover-foot-logo { height: 46px; }
-    .overview { background: var(--navy); display: grid; grid-template-columns: repeat(4, 1fr); }
-    .ov-item { padding: 20px 12px; text-align: center; border-right: 1px solid rgba(255, 255, 255, .1); }
-    .ov-item:last-child { border-right: none; }
-    .ov-label { font-size: 8px; letter-spacing: .22em; color: var(--gold); text-transform: uppercase; margin-bottom: 5px; }
-    .ov-val { font-size: 12px; font-weight: 500; color: #fff; line-height: 1.3; }
-    .day-block { border-bottom: 2px solid rgba(201, 169, 110, .25); }
-    .day-header { padding: 30px 44px 20px; }
-    .day-eye { font-size: 9px; letter-spacing: .3em; color: var(--gold); text-transform: uppercase; margin-bottom: 6px; }
-    .day-title { font-family: 'Playfair Display', serif; font-size: clamp(22px, 3.5vw, 34px); font-weight: 700; color: var(--navy); letter-spacing: .04em; text-transform: uppercase; }
-    .events { padding: 0 44px 32px; }
-    .event { display: flex; padding: 26px 0 0; }
-    .ev-tl { width: 24px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding-top: 5px; }
-    .ev-dot { width: 9px; height: 9px; border: 2px solid var(--gold); border-radius: 50%; background: #fff; flex-shrink: 0; z-index: 2; }
-    .ev-line { width: 1px; flex: 1; min-height: 22px; margin-top: 4px; background: repeating-linear-gradient(to bottom, var(--gold) 0, var(--gold) 4px, transparent 4px, transparent 9px); }
-    .ev-photo { width: 160px; min-width: 160px; height: 122px; object-fit: cover; border-radius: 2px; margin: 0 18px 0 10px; flex-shrink: 0; }
-    .ev-content { flex: 1; padding-top: 2px; }
-    .ev-time { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
-    .ev-name { font-size: 13px; color: var(--navy); line-height: 1.35; }
-    .ev-name .hl { color: var(--gold); font-weight: 700; }
-    .ev-desc { font-size: 12px; font-style: italic; color: var(--gray); margin-top: 7px; line-height: 1.6; }
-    .hotel-card { margin: 0 44px 28px; background: var(--cream); border-left: 3px solid var(--gold); padding: 14px 18px; display: flex; align-items: center; gap: 14px; }
-    .hc-name { font-size: 13px; font-weight: 700; color: var(--navy); }
-    .hc-photo { width: 68px; height: 50px; object-fit: cover; border-radius: 2px; margin-left: auto; flex-shrink: 0; }
-    .vehicles-separator { background: var(--navy); padding: 40px 24px; text-align: center; }
-    .vs-title { font-family: 'Playfair Display', serif; font-size: clamp(18px, 3vw, 30px); font-weight: 700; color: #fff; text-transform: uppercase; }
-    .vs-sub { font-size: 10px; letter-spacing: .18em; color: var(--gold); text-transform: uppercase; }
-    .cars-wrap { padding: 32px 44px; }
-    .car-card { border: 1px solid rgba(201, 169, 110, .28); margin-bottom: 28px; }
-    .car-slider-wrap { position: relative; height: 280px; overflow: hidden; }
-    .car-slide { width: 100%; height: 100%; background-size: cover; background-position: center; }
-    .car-body { padding: 22px 26px 28px; }
-    .car-name { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--navy); }
-    .car-price-box { background: var(--navy); padding: 18px 22px; display: flex; justify-content: space-between; margin-bottom: 20px; }
-    .cp-label { font-size: 8px; color: rgba(255, 255, 255, 0.5); text-transform: uppercase; }
-    .cp-val { font-size: 13px; color: #fff; font-weight: 600; }
-    .cta { padding: 44px; text-align: center; background: var(--cream); }
-    .btn-wa { background: #25D366; color: #fff; padding: 13px 28px; text-decoration: none; font-size: 10px; font-weight: 600; text-transform: uppercase; display: inline-flex; align-items: center; gap: 10px; }
-    @media (max-width: 620px) { .overview { grid-template-columns: repeat(2, 1fr); } .ev-photo { width: 100px; height: 86px; } }
+    :root {
+        --navy: #1C2E4A;
+        --gold: #C9A96E;
+        --gold2: #B8944F;
+        --white: #fff;
+        --cream: #F8F6F1;
+        --gray: #666;
+        --light: #F2F0EC;
+        --red: #C0392B;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #E5E3DE;
+        font-family: 'Montserrat', sans-serif;
+        color: var(--navy);
+    }
+
+    .doc {
+        max-width: 900px;
+        margin: 0 auto;
+        background: var(--white);
+        box-shadow: 0 4px 40px rgba(0, 0, 0, .15);
+    }/* COVER */
+    .cover {
+        position: relative;
+        height: 82vh;
+        min-height: 520px;
+        max-height: 840px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cover-bg {
+        position: absolute;
+        inset: 0;
+        background: url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1400&q=80') center/cover;
+        filter: brightness(.48);
+    }
+
+    .cover-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba(28, 46, 74, .05) 0%, rgba(28, 46, 74, .62) 100%);
+    }
+
+    .cover-body {
+        position: relative;
+        z-index: 2;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 24px;
+        text-align: center;
+    }
+
+    .cover-logos {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        margin-bottom: 32px;
+    }
+
+    .partner-logo {
+        height: 40px;
+        filter: brightness(0) invert(1);
+        opacity: .8;
+    }
+
+    .sep-line {
+        width: 1px;
+        height: 36px;
+        background: rgba(201, 169, 110, .45);
+    }
+
+    .mlv-logo {
+        height: 48px;
+        filter: brightness(0) invert(1);
+        opacity: .88;
+    }
+
+    .cover-label {
+        font-size: 9px;
+        letter-spacing: .4em;
+        color: var(--gold);
+        text-transform: uppercase;
+        margin-bottom: 16px;
+    }
+
+    .cover-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(44px, 7vw, 76px);
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        line-height: 1.05;
+        margin-bottom: 10px;
+    }
+
+    .cover-divider {
+        width: 56px;
+        height: 1px;
+        background: var(--gold);
+        margin: 16px auto;
+    }
+
+    .cover-route {
+        font-size: 14px;
+        font-weight: 500;
+        color: #fff;
+        letter-spacing: .06em;
+        margin-bottom: 8px;
+    }
+
+    .cover-dates {
+        font-size: 11px;
+        color: rgba(255, 255, 255, .6);
+        letter-spacing: .14em;
+        text-transform: uppercase;
+    }
+
+    .cover-foot {
+        position: relative;
+        z-index: 2;
+        background: var(--cream);
+        padding: 18px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-top: 3px solid var(--gold);
+    }
+
+    .cover-foot-logo {
+        height: 46px;
+    }/* OVERVIEW */
+    .overview {
+        background: var(--navy);
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .ov-item {
+        padding: 20px 12px;
+        text-align: center;
+        border-right: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .ov-item:last-child {
+        border-right: none;
+    }
+
+    .ov-label {
+        font-size: 8px;
+        letter-spacing: .22em;
+        color: var(--gold);
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    .ov-val {
+        font-size: 12px;
+        font-weight: 500;
+        color: #fff;
+        line-height: 1.3;
+    }/* DAY SECTION */
+    .day-block {
+        border-bottom: 2px solid rgba(201, 169, 110, .25);
+    }
+
+    .day-header {
+        padding: 30px 44px 20px;
+    }
+
+    .day-eye {
+        font-size: 9px;
+        letter-spacing: .3em;
+        color: var(--gold);
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+
+    .day-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(22px, 3.5vw, 34px);
+        font-weight: 700;
+        color: var(--navy);
+        letter-spacing: .04em;
+        text-transform: uppercase;
+    }
+
+    .day-title sup {
+        font-size: .42em;
+        vertical-align: super;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 400;
+        color: var(--gold);
+    }/* EVENTS */
+    .events {
+        padding: 0 44px 32px;
+    }
+
+    .event {
+        display: flex;
+        padding: 26px 0 0;
+    }
+
+    .ev-tl {
+        width: 24px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 5px;
+    }
+
+    .ev-dot {
+        width: 9px;
+        height: 9px;
+        border: 2px solid var(--gold);
+        border-radius: 50%;
+        background: #fff;
+        flex-shrink: 0;
+        z-index: 2;
+    }
+
+    .ev-line {
+        width: 1px;
+        flex: 1;
+        min-height: 22px;
+        margin-top: 4px;
+        background: repeating-linear-gradient(to bottom, var(--gold) 0, var(--gold) 4px, transparent 4px, transparent 9px);
+    }
+
+    .ev-photo {
+        width: 160px;
+        min-width: 160px;
+        height: 122px;
+        object-fit: cover;
+        border-radius: 2px;
+        margin: 0 18px 0 10px;
+        flex-shrink: 0;
+    }
+
+    .ev-content {
+        flex: 1;
+        padding-top: 2px;
+    }
+
+    .ev-time {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 3px;
+    }
+
+    .ev-name {
+        font-size: 13px;
+        color: var(--navy);
+        line-height: 1.35;
+    }
+
+    .ev-name .hl {
+        color: var(--gold);
+        font-weight: 700;
+    }
+
+    .ev-desc {
+        font-size: 12px;
+        font-style: italic;
+        color: var(--gray);
+        margin-top: 7px;
+        line-height: 1.6;
+    }
+
+    .ev-extra {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--navy);
+        margin-top: 5px;
+    }
+
+    .travel {
+        display: flex;
+        padding: 0;
+    }
+
+    .tr-tl {
+        width: 24px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .tr-line {
+        width: 1px;
+        height: 34px;
+        background: repeating-linear-gradient(to bottom, var(--gold) 0, var(--gold) 4px, transparent 4px, transparent 9px);
+    }
+
+    .tr-label {
+        font-size: 11px;
+        font-style: italic;
+        color: var(--gold);
+        line-height: 34px;
+        padding-left: 52px;
+        font-weight: 300;
+    }
+
+    .hotel-card {
+        margin: 0 44px 28px;
+        background: var(--cream);
+        border-left: 3px solid var(--gold);
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .hc-icon {
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+
+    .hc-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--navy);
+        margin-bottom: 2px;
+    }
+
+    .hc-detail {
+        font-size: 11px;
+        color: var(--gray);
+        font-style: italic;
+    }
+
+    .hc-photo {
+        width: 68px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 2px;
+        margin-left: auto;
+        flex-shrink: 0;
+    }/* ═══════ VEHICLE SECTION SEPARATOR ═══════ */
+    .vehicles-separator {
+        background: var(--navy);
+        padding: 40px 24px;
+        text-align: center;
+    }
+
+    .vs-line {
+        width: 40px;
+        height: 1px;
+        background: rgba(201, 169, 110, .45);
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0 12px;
+    }
+
+    .vs-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(18px, 3vw, 30px);
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    .vs-sub {
+        font-size: 10px;
+        letter-spacing: .18em;
+        color: var(--gold);
+        text-transform: uppercase;
+        line-height: 1.6;
+    }
+
+    .vs-icon {
+        display: none;
+    }/* CAR CARDS */
+    .cars-wrap {
+        padding: 32px 44px;
+    }
+
+    .car-card {
+        border: 1px solid rgba(201, 169, 110, .28);
+        margin-bottom: 28px;
+        transition: box-shadow .2s;
+    }
+
+    .car-card:hover {
+        box-shadow: 0 4px 22px rgba(201, 169, 110, .18);
+    }
+
+    .car-card.booked {
+        opacity: .5;
+        pointer-events: none;
+        background: #f6f6f6;
+    }/* CAR SLIDER */
+    .car-slider-wrap {
+        position: relative;
+        height: 280px;
+        overflow: hidden;
+    }
+
+    .car-slider {
+        display: flex;
+        height: 100%;
+        transition: transform .5s ease;
+    }
+
+    .car-slide {
+        min-width: 100%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .cs-prev, .cs-next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, .38);
+        border: none;
+        color: #fff;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 17px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 5;
+        transition: background .2s;
+    }
+
+    .cs-prev:hover, .cs-next:hover {
+        background: rgba(0, 0, 0, .62);
+    }
+
+    .cs-prev {
+        left: 14px;
+    }
+
+    .cs-next {
+        right: 14px;
+    }
+
+    .cs-dots {
+        position: absolute;
+        bottom: 12px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 6px;
+    }
+
+    .csdot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, .42);
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+    .csdot.active {
+        background: var(--gold);
+    }
+
+    .booked-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 0, 0, .42);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .booked-badge-img {
+        background: rgba(0, 0, 0, .6);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: .18em;
+        text-transform: uppercase;
+        padding: 8px 20px;
+        border-radius: 2px;
+    }/* CAR BODY */
+    .car-body {
+        padding: 22px 26px 28px;
+    }
+
+    .car-top {
+        margin-bottom: 16px;
+    }
+
+    .car-name {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(18px, 2.5vw, 24px);
+        font-weight: 700;
+        color: var(--navy);
+    }
+
+    .car-name em {
+        font-style: normal;
+        color: var(--gold);
+    }
+
+    .car-km-note {
+        font-size: 11px;
+        color: var(--gray);
+        font-style: italic;
+        margin-top: 3px;
+    }/* BULLET POINTS */
+    .car-bullets {
+        list-style: none;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 7px 20px;
+        margin-bottom: 20px;
+    }
+
+    .car-bullets li {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        font-size: 12px;
+        color: var(--navy);
+    }
+
+    .cb-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--gold);
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .cb-label {
+        color: var(--gray);
+        font-size: 11px;
+    }/* PRICE BOX */
+    .car-price-box {
+        background: var(--navy);
+        padding: 18px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .cp-item {
+        text-align: center;
+    }
+
+    .cp-label {
+        font-size: 8px;
+        letter-spacing: .18em;
+        color: rgba(255, 255, 255, .45);
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+
+    .cp-val {
+        font-size: 13px;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .cp-total {
+        text-align: center;
+    }
+
+    .cp-total .cp-label {
+        color: var(--gold);
+    }
+
+    .cp-total .cp-val {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--gold);
+    }
+
+    .cp-deposit {
+        font-size: 11px;
+        color: rgba(255, 255, 255, .5);
+        text-align: center;
+        margin-top: 2px;
+    }
+
+    .cp-deposit strong {
+        color: #fff;
+    }/* RESERVE BUTTON */
+    .btn-reserve-wrap {
+        text-align: center;
+    }
+
+    .btn-reserve {
+        background: var(--gold);
+        color: var(--navy);
+        border: none;
+        padding: 13px 40px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .15em;
+        text-transform: uppercase;
+        cursor: pointer;
+        border-radius: 1px;
+        transition: background .2s, transform .15s;
+    }
+
+    .btn-reserve:hover {
+        background: var(--gold2);
+        transform: translateY(-2px);
+    }/* CTA */
+    .cta {
+        padding: 44px;
+        text-align: center;
+        background: var(--cream);
+    }
+
+    .cta p {
+        font-size: 13px;
+        color: var(--gray);
+        line-height: 1.8;
+        max-width: 480px;
+        margin: 0 auto 26px;
+    }
+
+    .btn-wa {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: #25D366;
+        color: #fff;
+        padding: 13px 28px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        text-decoration: none;
+        border-radius: 2px;
+        transition: opacity .2s;
+    }
+
+    .btn-wa:hover {
+        opacity: .9;
+    }
+
+    .wa-svg {
+        width: 16px;
+        height: 16px;
+        fill: #fff;
+    }/* BOOKING MODAL */
+    .modal-bg {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, .76);
+        z-index: 300;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(4px);
+    }
+
+    .modal-bg.open {
+        display: flex;
+    }
+
+    .modal {
+        background: #fff;
+        border-top: 3px solid var(--gold);
+        border-radius: 2px;
+        padding: 38px;
+        max-width: 450px;
+        width: 90%;
+    }
+
+    .modal h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 20px;
+        color: var(--navy);
+        margin-bottom: 4px;
+    }
+
+    .modal .car-sel {
+        font-size: 12px;
+        color: var(--gold);
+        font-weight: 600;
+        margin-bottom: 22px;
+    }
+
+    .form-row {
+        margin-bottom: 14px;
+    }
+
+    .form-row label {
+        display: block;
+        font-size: 9px;
+        letter-spacing: .15em;
+        color: var(--gray);
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    .form-row input {
+        width: 100%;
+        padding: 10px 13px;
+        border: 1px solid #ddd;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 13px;
+        color: var(--navy);
+        outline: none;
+        border-radius: 1px;
+        transition: border-color .2s;
+    }
+
+    .form-row input:focus {
+        border-color: var(--gold);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .btn-submit {
+        width: 100%;
+        background: var(--gold);
+        color: #fff;
+        border: none;
+        padding: 13px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-top: 8px;
+        border-radius: 1px;
+        transition: background .2s;
+    }
+
+    .btn-submit:hover {
+        background: var(--gold2);
+    }
+
+    .btn-cancel {
+        width: 100%;
+        background: transparent;
+        color: var(--gray);
+        border: 1px solid #ddd;
+        padding: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-top: 8px;
+        border-radius: 1px;
+    }
+
+    .success-msg {
+        display: none;
+        text-align: center;
+        padding: 16px 0;
+    }
+
+    .success-msg .check {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    .success-msg h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 20px;
+        color: var(--navy);
+        margin-bottom: 8px;
+    }
+
+    .success-msg p {
+        font-size: 12px;
+        color: var(--gray);
+        line-height: 1.6;
+    }/* FOOTER */
+    .doc-footer {
+        background: var(--navy);
+        padding: 22px 44px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .footer-logo {
+        height: 30px;
+        filter: brightness(0) invert(1);
+        opacity: .65;
+    }
+
+    .footer-txt {
+        font-size: 10px;
+        color: rgba(255, 255, 255, .38);
+        letter-spacing: .06em;
+        line-height: 1.7;
+        text-align: right;
+    }
+
+    @media (max-width: 620px) {
+        .events, .cars-wrap, .cta {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .day-header, .hotel-card {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .hotel-card {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .vehicles-separator {
+            padding: 28px 20px;
+        }
+
+        .car-bullets {
+            grid-template-columns: 1fr;
+        }
+
+        .car-price-box {
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .overview {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .doc-footer {
+            padding: 20px;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .footer-txt {
+            text-align: center;
+        }
+
+        .ev-photo {
+            width: 100px;
+            min-width: 100px;
+            height: 86px;
+        }
+    }
     </style>
 </head>
 <body>
     <div class="doc">
+
+        <!-- COVER -->
         <div class="cover">
             <div class="cover-bg"></div>
             <div class="cover-overlay"></div>
             <div class="cover-body">
-                <img class="mlv-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png">
-                <div class="cover-label">{{rt_label}}</div>
-                <div class="cover-title">{{rt_title_line1}}<br>{{rt_title_line2}}</div>
+                <img class="mlv-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png" alt="MLV" style="margin-bottom:32px;" onerror="this.outerHTML='<span style=&quot;color:#C9A96E;font-family:Playfair Display,serif;font-size:20px;letter-spacing:.1em;margin-bottom:32px;display:block;&quot;>MY LUXURY VOYAGE</span>'">
+                <div class="cover-label">Road Trip · My Luxury Voyage</div>
+                <div class="cover-title">
+                    RT Jamon
+                    <br>
+                    &amp; Hielo
+                </div>
                 <div class="cover-divider"></div>
-                <div class="cover-route">{{rt_route}}</div>
-                <div class="cover-dates">{{rt_dates}} · {{rt_duration}}</div>
+                <div class="cover-route">Lisboa, PT → Gardona, SP</div>
+                <div class="cover-dates">25 – 29 January 2026 · 4 Days</div>
             </div>
             <div class="cover-foot">
-                <img class="cover-foot-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2025/02/MLV-logo-white-1024x724.png">
+                <img class="cover-foot-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2025/02/MLV-logo-white-1024x724.png" alt="MLV" onerror="this.outerHTML='<span style=&quot;color:#C9A96E;font-family:Playfair Display,serif;font-size:18px;letter-spacing:.1em;&quot;>MY LUXURY VOYAGE</span>'">
             </div>
         </div>
 
+        <!-- OVERVIEW -->
         <div class="overview">
-            <div class="ov-item"><div class="ov-label">Route</div><div class="ov-val">{{rt_route_short}}</div></div>
-            <div class="ov-item"><div class="ov-label">Dates</div><div class="ov-val">{{rt_dates_short}}</div></div>
-            <div class="ov-item"><div class="ov-label">Durée</div><div class="ov-val">{{rt_duration}}</div></div>
-            <div class="ov-item"><div class="ov-label">Pays</div><div class="ov-val">{{rt_countries}}</div></div>
+            <div class="ov-item">
+                <div class="ov-label">Route</div>
+                <div class="ov-val">Lisboa → Gardona</div>
+            </div>
+            <div class="ov-item">
+                <div class="ov-label">Dates</div>
+                <div class="ov-val">25–29 Jan 2026</div>
+            </div>
+            <div class="ov-item">
+                <div class="ov-label">Duration</div>
+                <div class="ov-val">4 Days</div>
+            </div>
+            <div class="ov-item">
+                <div class="ov-label">Countries</div>
+                <div class="ov-val">Portugal · Spain</div>
+            </div>
         </div>
 
-        <div id="itinerary-content">
-            {{itinerary_html}}
+        <!-- DAY 1 -->
+        <div class="day-block">
+            <div class="day-header">
+                <div class="day-eye">Day 1</div>
+                <div class="day-title">25 JAN — LISBOA</div>
+            </div>
+            <div class="events">
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                        <div class="ev-line"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=400&q=80" alt="Lisboa">
+                    <div class="ev-content">
+                        <div class="ev-time">General Arrivals</div>
+                        <div class="ev-name">
+                            <span class="hl">Lisboa, Portugal</span>
+                        </div>
+                        <div class="ev-desc">Welcome to Lisbon — the starting point of an extraordinary road trip through the Iberian Peninsula.</div>
+                    </div>
+                </div>
+                <div class="travel">
+                    <div class="tr-tl">
+                        <div class="tr-line"></div>
+                    </div>
+                    <div class="tr-label">Transfer to venue</div>
+                </div>
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="Dinner">
+                    <div class="ev-content">
+                        <div class="ev-time">20:00</div>
+                        <div class="ev-name">
+                            Special Dinner at 
+                            <span class="hl">Manuel Queiroz Pereira House</span>
+                        </div>
+                        <div class="ev-desc">An exclusive private dinner at the iconic Palácio do Governador, where history and gastronomy unite.</div>
+                        <div class="ev-extra">Palácio do Governador</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hotel-card">
+                <div class="hc-icon">🏨</div>
+                <div>
+                    <div class="hc-name">Palácio do Governador — Lisboa</div>
+                    <div class="hc-detail">Check-in upon arrival · Historic 16th century palace</div>
+                </div>
+                <img class="hc-photo" src="https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=200&q=80" alt="Hotel">
+            </div>
         </div>
 
+        <!-- DAY 2 -->
+        <div class="day-block">
+            <div class="day-header">
+                <div class="day-eye">Day 2</div>
+                <div class="day-title">26 JAN — ALENTEJO</div>
+            </div>
+            <div class="events">
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                        <div class="ev-line"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1601918774946-25832a4be0d6?w=400&q=80" alt="Breakfast">
+                    <div class="ev-content">
+                        <div class="ev-time">10:00</div>
+                        <div class="ev-name">
+                            <span class="hl">Wake-up, Breakfast &amp; Checkout</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="travel">
+                    <div class="tr-tl">
+                        <div class="tr-line"></div>
+                    </div>
+                    <div class="tr-label">100km · 1h drive</div>
+                </div>
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                        <div class="ev-line"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1516594798947-e65505dbb29d?w=400&q=80" alt="Quinta">
+                    <div class="ev-content">
+                        <div class="ev-time">12:30</div>
+                        <div class="ev-name">
+                            Visit &amp; Lunch at 
+                            <span class="hl">Quinta de São José de Peramanca</span>
+                        </div>
+                        <div class="ev-desc">An immersive experience at one of Alentejo's most prestigious estates, combining wine discovery with authentic Portuguese cuisine.</div>
+                    </div>
+                </div>
+                <div class="travel">
+                    <div class="tr-tl">
+                        <div class="tr-line"></div>
+                    </div>
+                    <div class="tr-label">400km · 4h drive</div>
+                </div>
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&q=80" alt="Dinner">
+                    <div class="ev-content">
+                        <div class="ev-time">20:00</div>
+                        <div class="ev-name">
+                            Dinner at 
+                            <span class="hl">Hotel Hospes Palacio de Arenales</span>
+                        </div>
+                        <div class="ev-desc">A refined evening dinner in the palatial setting of the Hospes Palacio de Arenales.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hotel-card">
+                <div class="hc-icon">🏨</div>
+                <div>
+                    <div class="hc-name">Hospes Palacio de Arenales · Coimbra</div>
+                    <div class="hc-detail">Check-in · 15:00</div>
+                </div>
+                <img class="hc-photo" src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=200&q=80" alt="Hotel">
+            </div>
+        </div>
+
+        <!-- DAY 3 -->
+        <div class="day-block">
+            <div class="day-header">
+                <div class="day-eye">Day 3</div>
+                <div class="day-title">27 JAN — VIEJA, SPAIN</div>
+            </div>
+            <div class="events">
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                        <div class="ev-line"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1601918774946-25832a4be0d6?w=400&q=80" alt="Morning">
+                    <div class="ev-content">
+                        <div class="ev-time">08:00</div>
+                        <div class="ev-name">
+                            <span class="hl">Wake-up, Breakfast &amp; Checkout</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="travel">
+                    <div class="tr-tl">
+                        <div class="tr-line"></div>
+                    </div>
+                    <div class="tr-label">250km · 3h drive into Spain</div>
+                </div>
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                        <div class="ev-line"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1574484284002-952d92456975?w=400&q=80" alt="Jamon">
+                    <div class="ev-content">
+                        <div class="ev-time">12:00</div>
+                        <div class="ev-name">
+                            Visit &amp; Lunch at 
+                            <span class="hl">Jamón Joselito</span>
+                        </div>
+                        <div class="ev-desc">A sensory journey at one of Spain's most legendary Iberian ham producers. Tour the estate and indulge in an exceptional tasting lunch.</div>
+                    </div>
+                </div>
+                <div class="travel">
+                    <div class="tr-tl">
+                        <div class="tr-line"></div>
+                    </div>
+                    <div class="tr-label">200km · 2h drive to Rioja</div>
+                </div>
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=400&q=80" alt="Winery">
+                    <div class="ev-content">
+                        <div class="ev-time">20:00</div>
+                        <div class="ev-name">
+                            Dinner, Visit &amp; Tasting at 
+                            <span class="hl">Vega Sicilia Winery</span>
+                        </div>
+                        <div class="ev-desc">An extraordinary evening at Spain's most iconic winery. Private tour, vertical tasting, and a gourmet dinner in the heart of Ribera del Duero.</div>
+                        <div class="ev-extra">Castilla Thermal · Overnight</div>
+                    </div>
+                </div>
+            </div>
+            <div class="hotel-card">
+                <div class="hc-icon">🏨</div>
+                <div>
+                    <div class="hc-name">Castilla Termal · Rioja</div>
+                    <div class="hc-detail">Check-in · 18:00 · Thermal spa included</div>
+                </div>
+                <img class="hc-photo" src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=200&q=80" alt="Hotel">
+            </div>
+        </div>
+
+        <!-- DAY 4 -->
+        <div class="day-block">
+            <div class="day-header">
+                <div class="day-eye">Day 4</div>
+                <div class="day-title">28 JAN — BARCELONA</div>
+            </div>
+            <div class="events">
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                        <div class="ev-line"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1601918774946-25832a4be0d6?w=400&q=80" alt="Morning">
+                    <div class="ev-content">
+                        <div class="ev-time">08:00</div>
+                        <div class="ev-name">
+                            <span class="hl">Wake-up, Breakfast &amp; Checkout</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="travel">
+                    <div class="tr-tl">
+                        <div class="tr-line"></div>
+                    </div>
+                    <div class="tr-label">600km · 6h drive to Barcelona</div>
+                </div>
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                        <div class="ev-line"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Factory">
+                    <div class="ev-content">
+                        <div class="ev-time">15:00</div>
+                        <div class="ev-name">
+                            Visit 
+                            <span class="hl">Braid Wheels Factory</span>
+                        </div>
+                        <div class="ev-desc">An exclusive behind-the-scenes tour of one of the world's most prestigious custom wheel manufacturers.</div>
+                    </div>
+                </div>
+                <div class="travel">
+                    <div class="tr-tl">
+                        <div class="tr-line"></div>
+                    </div>
+                    <div class="tr-label">50km · 30min to Hotel</div>
+                </div>
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80" alt="Dinner">
+                    <div class="ev-content">
+                        <div class="ev-time">20:00</div>
+                        <div class="ev-name">
+                            Dinner at 
+                            <span class="hl">Olivia Balmes Hotel</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hotel-card">
+                <div class="hc-icon">🏨</div>
+                <div>
+                    <div class="hc-name">Olivia Balmes Hotel · Barcelona</div>
+                    <div class="hc-detail">Check-in · 15:00</div>
+                </div>
+                <img class="hc-photo" src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=200&q=80" alt="Hotel">
+            </div>
+        </div>
+
+        <!-- DAY 5 -->
+        <div class="day-block" style="border-bottom:none;">
+            <div class="day-header">
+                <div class="day-eye">Day 5</div>
+                <div class="day-title">29 JAN — GARDONA · DEPARTURE</div>
+            </div>
+            <div class="events">
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                        <div class="ev-line"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1601918774946-25832a4be0d6?w=400&q=80" alt="Morning">
+                    <div class="ev-content">
+                        <div class="ev-time">08:00</div>
+                        <div class="ev-name">
+                            <span class="hl">Wake-up, Breakfast &amp; Checkout</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="travel">
+                    <div class="tr-tl">
+                        <div class="tr-line"></div>
+                    </div>
+                    <div class="tr-label">150km · 2h drive to Gardone</div>
+                </div>
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                        <div class="ev-line"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" alt="Hispano Suiza">
+                    <div class="ev-content">
+                        <div class="ev-time">09:00</div>
+                        <div class="ev-name">
+                            Visit at 
+                            <span class="hl">Hispano Suiza Cars</span>
+                        </div>
+                        <div class="ev-desc">A private visit to one of the world's most exclusive automotive manufacturers — the perfect finale to this extraordinary road trip.</div>
+                    </div>
+                </div>
+                <div class="travel">
+                    <div class="tr-tl">
+                        <div class="tr-line"></div>
+                    </div>
+                    <div class="tr-label">Transfer to airport</div>
+                </div>
+                <div class="event">
+                    <div class="ev-tl">
+                        <div class="ev-dot"></div>
+                    </div>
+                    <img class="ev-photo" src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=400&q=80" alt="Flight">
+                    <div class="ev-content">
+                        <div class="ev-time">13:00</div>
+                        <div class="ev-name">
+                            <span class="hl">Private Flight to KTT · Kittilä</span>
+                        </div>
+                        <div class="ev-desc">Departure for your next adventure.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══ VEHICLE SEPARATOR ═══ -->
         <div class="vehicles-separator">
-            <div class="vs-title">{{vs_title}}</div>
-            <div class="vs-sub">{{vs_sub}}</div>
+            <div class="vs-title">
+                <span class="vs-line"></span>
+                Choose Your Car
+                <span class="vs-line"></span>
+            </div>
+            <div class="vs-sub">250km per day included · Reserve your car for the full road trip</div>
         </div>
 
+        <!-- CAR CARDS -->
         <div class="cars-wrap">
-            {{cars_html}}
+
+            <!-- CAR 1 — Lamborghini Urus SE -->
+            <div class="car-card" id="car1">
+                <div class="car-slider-wrap">
+                    <div class="car-slider" id="cs-1">
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=900&q=80')"></div>
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=900&q=80')"></div>
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=900&q=80')"></div>
+                    </div>
+                    <button class="cs-prev" onclick="cSlide(1,-1)">‹</button>
+                    <button class="cs-next" onclick="cSlide(1,1)">›</button>
+                    <div class="cs-dots" id="cd-1"></div>
+                </div>
+                <div class="car-body">
+                    <div class="car-top">
+                        <div class="car-name">
+                            <em>Lamborghini</em>
+                             Urus SE
+                        </div>
+                        <div class="car-km-note">250km per day included</div>
+                    </div>
+                    <ul class="car-bullets">
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Daily rate:</span>
+                                 2 400 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Delivery / Collection:</span>
+                                 3 250 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Extra mileage pkg (750km):</span>
+                                 4 125 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Extra km:</span>
+                                 11 € / km
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="car-price-box">
+                        <div class="cp-total">
+                            <div class="cp-label">TOTAL Special Price</div>
+                            <div class="cp-val">16 975 €</div>
+                            <div class="cp-deposit">
+                                Deposit: 
+                                <strong>30 000 €</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-reserve-wrap">
+                        <button class="btn-reserve" onclick="openModal('car1','Lamborghini Urus SE','16 975 €')">Reserve this vehicle</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAR 2 — Lamborghini Urus Performante -->
+            <div class="car-card" id="car2">
+                <div class="car-slider-wrap">
+                    <div class="car-slider" id="cs-2">
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=900&q=80')"></div>
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=900&q=80')"></div>
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1617788138017-80ad40651399?w=900&q=80')"></div>
+                    </div>
+                    <button class="cs-prev" onclick="cSlide(2,-1)">‹</button>
+                    <button class="cs-next" onclick="cSlide(2,1)">›</button>
+                    <div class="cs-dots" id="cd-2"></div>
+                </div>
+                <div class="car-body">
+                    <div class="car-top">
+                        <div class="car-name">
+                            <em>Lamborghini</em>
+                             Urus Performante
+                        </div>
+                        <div class="car-km-note">250km per day included</div>
+                    </div>
+                    <ul class="car-bullets">
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Daily rate:</span>
+                                 2 200 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Delivery / Collection:</span>
+                                 3 250 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Extra mileage pkg (750km):</span>
+                                 4 125 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Extra km:</span>
+                                 11 € / km
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="car-price-box">
+                        <div class="cp-total">
+                            <div class="cp-label">TOTAL Special Price</div>
+                            <div class="cp-val">16 175 €</div>
+                            <div class="cp-deposit">
+                                Deposit: 
+                                <strong>30 000 €</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-reserve-wrap">
+                        <button class="btn-reserve" onclick="openModal('car2','Lamborghini Urus Performante','16 175 €')">Reserve this vehicle</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAR 3 — Lamborghini Urus S -->
+            <div class="car-card" id="car3">
+                <div class="car-slider-wrap">
+                    <div class="car-slider" id="cs-3">
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=900&q=80')"></div>
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1590000953851-b8c1721a0f89?w=900&q=80')"></div>
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1617788138017-80ad40651399?w=900&q=80')"></div>
+                    </div>
+                    <button class="cs-prev" onclick="cSlide(3,-1)">‹</button>
+                    <button class="cs-next" onclick="cSlide(3,1)">›</button>
+                    <div class="cs-dots" id="cd-3"></div>
+                </div>
+                <div class="car-body">
+                    <div class="car-top">
+                        <div class="car-name">
+                            <em>Lamborghini</em>
+                             Urus S
+                        </div>
+                        <div class="car-km-note">250km per day included</div>
+                    </div>
+                    <ul class="car-bullets">
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Daily rate:</span>
+                                 1 900 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Delivery / Collection:</span>
+                                 3 250 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Extra mileage pkg (750km):</span>
+                                 4 125 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Extra km:</span>
+                                 11 € / km
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="car-price-box">
+                        <div class="cp-total">
+                            <div class="cp-label">TOTAL Special Price</div>
+                            <div class="cp-val">14 975 €</div>
+                            <div class="cp-deposit">
+                                Deposit: 
+                                <strong>30 000 €</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-reserve-wrap">
+                        <button class="btn-reserve" onclick="openModal('car3','Lamborghini Urus S','14 975 €')">Reserve this vehicle</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAR 4 — Aston Martin DBX 707 -->
+            <div class="car-card" id="car4">
+                <div class="car-slider-wrap">
+                    <div class="car-slider" id="cs-4">
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1555652736-e92021d28a10?w=900&q=80')"></div>
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=900&q=80')"></div>
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1617788138017-80ad40651399?w=900&q=80')"></div>
+                    </div>
+                    <button class="cs-prev" onclick="cSlide(4,-1)">‹</button>
+                    <button class="cs-next" onclick="cSlide(4,1)">›</button>
+                    <div class="cs-dots" id="cd-4"></div>
+                </div>
+                <div class="car-body">
+                    <div class="car-top">
+                        <div class="car-name">
+                            <em>Aston Martin</em>
+                             DBX 707
+                        </div>
+                        <div class="car-km-note">250km per day included</div>
+                    </div>
+                    <ul class="car-bullets">
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Daily rate:</span>
+                                 2 000 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Delivery / Collection:</span>
+                                 3 250 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Extra mileage pkg (750km):</span>
+                                 4 125 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Extra km:</span>
+                                 11 € / km
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="car-price-box">
+                        <div class="cp-total">
+                            <div class="cp-label">TOTAL Special Price</div>
+                            <div class="cp-val">15 375 €</div>
+                            <div class="cp-deposit">
+                                Deposit: 
+                                <strong>30 000 €</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-reserve-wrap">
+                        <button class="btn-reserve" onclick="openModal('car4','Aston Martin DBX 707','15 375 €')">Reserve this vehicle</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAR 5 — Mercedes GLS 600 Maybach -->
+            <div class="car-card" id="car5">
+                <div class="car-slider-wrap">
+                    <div class="car-slider" id="cs-5">
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=900&q=80')"></div>
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=900&q=80')"></div>
+                        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1590000953851-b8c1721a0f89?w=900&q=80')"></div>
+                    </div>
+                    <button class="cs-prev" onclick="cSlide(5,-1)">‹</button>
+                    <button class="cs-next" onclick="cSlide(5,1)">›</button>
+                    <div class="cs-dots" id="cd-5"></div>
+                </div>
+                <div class="car-body">
+                    <div class="car-top">
+                        <div class="car-name">
+                            <em>Mercedes</em>
+                             GLS 600 Maybach
+                        </div>
+                        <div class="car-km-note">250km per day included</div>
+                    </div>
+                    <ul class="car-bullets">
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Daily rate:</span>
+                                 1 200 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Delivery / Collection:</span>
+                                 3 250 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Extra mileage pkg (750km):</span>
+                                 1 875 €
+                            </span>
+                        </li>
+                        <li>
+                            <div class="cb-dot"></div>
+                            <span>
+                                <span class="cb-label">Extra km:</span>
+                                 5 € / km
+                            </span>
+                        </li>
+                    </ul>
+                    <div class="car-price-box">
+                        <div class="cp-total">
+                            <div class="cp-label">TOTAL Special Price</div>
+                            <div class="cp-val">9 925 €</div>
+                            <div class="cp-deposit">
+                                Deposit: 
+                                <strong>20 000 €</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-reserve-wrap">
+                        <button class="btn-reserve" onclick="openModal('car5','Mercedes GLS 600 Maybach','9 925 €')">Reserve this vehicle</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
+        <!-- CTA -->
         <div class="cta">
-            <p>{{cta_text}}</p>
-            <a class="btn-wa" href="{{whatsapp_link}}">
-                <svg class="wa-svg" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.539 2.016 2.126-.54c1.029.563 2.025.921 3.162.921l.001.001c3.181 0 5.768-2.586 5.768-5.766 0-3.18-2.587-5.765-5.769-5.765zm3.425 8.127c-.142.399-.713.731-1.124.814-.29.058-.669.103-1.648-.282-1.25-.491-2.031-1.743-2.093-1.826-.062-.083-.505-.672-.505-1.284 0-.612.316-.913.442-1.036.126-.123.273-.154.364-.154h.243c.091 0 .212.001.319.255.109.258.375.913.408.98.033.067.054.145.011.233-.042.088-.063.142-.126.216-.063.074-.131.165-.187.221-.063.064-.128.134-.055.258.073.123.325.535.697.865.48.425.883.557 1.006.619.123.062.194.052.265-.031.071-.083.305-.355.387-.476.082-.122.164-.103.276-.062.112.041.713.336.836.398.123.062.205.093.236.145.031.052.031.305-.111.704zM12 2C6.477 2 2 6.477 2 12c0 2.136.67 4.113 1.812 5.736L2.347 23.26l5.704-1.422C9.522 22.564 10.72 23 12 23c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>
-                Discuter sur WhatsApp
+            <p>Any questions about this road trip or the vehicle selection? Our team is available immediately on WhatsApp.</p>
+            <a class="btn-wa" href="https://wa.me/{{WA_NUMBER}}?text=Bonjour%20My%20Luxury%20Voyage%2C%20j'ai%20une%20question%20sur%20le%20Road%20Trip%20Jamon%20%26%20Hielo." target="_blank" rel="noopener">
+                <svg class="wa-svg" viewBox="0 0 24 24">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+
+                    Contact us on WhatsApp
+                  
             </a>
         </div>
+
+        <!-- FOOTER -->
+        <div class="doc-footer">
+            <img class="footer-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png" alt="MLV" onerror="this.style.display='none'">
+            <div class="footer-txt">
+
+                    66 av. Valéry Giscard D'Estaing, 06200 Nice · 14 rue Pasteur, 06400 Cannes
+                <br>
+                <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3b5854554f5a584f7b5642574e434e49424d54425a5c5e15585456">[email&#160;protected]</a>
+                 · myluxuryvoyage.com
+                  
+            </div>
+        </div>
+
     </div>
+
+    <!-- BOOKING MODAL -->
+    <div class="modal-bg" id="modal">
+        <div class="modal">
+            <div id="modal-form">
+                <h2>Reserve your vehicle</h2>
+                <div class="car-sel" id="modal-car-name"></div>
+                <div class="form-grid">
+                    <div class="form-row">
+                        <label>First name</label>
+                        <input type="text" id="f-first" placeholder="John">
+                    </div>
+                    <div class="form-row">
+                        <label>Last name</label>
+                        <input type="text" id="f-last" placeholder="Doe">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label>Mobile</label>
+                    <input type="tel" id="f-phone" placeholder="+33 6 00 00 00 00">
+                </div>
+                <div class="form-row">
+                    <label>Email</label>
+                    <input type="email" id="f-email" placeholder="john@example.com">
+                </div>
+                <button class="btn-submit" onclick="submitBooking()">Confirm reservation</button>
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+            </div>
+            <div class="success-msg" id="modal-success">
+                <div class="check">✓</div>
+                <h3>Reservation confirmed!</h3>
+                <p>My Luxury Voyage will contact you within 24h to finalise your booking and arrange the deposit.</p>
+                <button class="btn-cancel" onclick="closeModal()" style="margin-top:16px;">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+    /* ── CAR SLIDERS ── */
+    const cCur = {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0
+    };
+    [1, 2, 3, 4, 5].forEach(id => {
+        const slides = document.querySelectorAll(`#cs-${id} .car-slide`);
+        const dotsEl = document.getElementById(`cd-${id}`);
+        slides.forEach((_, i) => {
+            const d = document.createElement('div');
+            d.className = 'csdot' + (i === 0 ? ' active' : '');
+            d.onclick = () => cGoTo(id, i);
+            dotsEl.appendChild(d);
+        });
+    });
+    function cGoTo(id, n) {
+        const slides = document.querySelectorAll(`#cs-${id} .car-slide`);
+        cCur[id] = (n + slides.length) % slides.length;
+        document.getElementById(`cs-${id}`).style.transform = `translateX(-${cCur[id] * 100}%)`;
+        document.querySelectorAll(`#cd-${id} .csdot`).forEach((d, i) => d.classList.toggle('active', i === cCur[id]));
+    }
+    function cSlide(id, dir) {
+        cGoTo(id, cCur[id] + dir);
+    }
+
+    /* ── MODAL ── */
+    let currentCar = null;
+    function openModal(carId, carName, price) {
+        currentCar = carId;
+        document.getElementById('modal-car-name').textContent = carName + ' — ' + price;
+        document.getElementById('modal-form').style.display = 'block';
+        document.getElementById('modal-success').style.display = 'none';
+        ['f-first', 'f-last', 'f-phone', 'f-email'].forEach(id => document.getElementById(id).value = '');
+        document.getElementById('modal').classList.add('open');
+    }
+    function closeModal() {
+        document.getElementById('modal').classList.remove('open');
+        currentCar = null;
+    }
+
+    function submitBooking() {
+        const first = document.getElementById('f-first').value.trim();
+        const last = document.getElementById('f-last').value.trim();
+        const phone = document.getElementById('f-phone').value.trim();
+        const email = document.getElementById('f-email').value.trim();
+        const carName = document.getElementById('modal-car-name').textContent;
+        if (!first || !last || !phone || !email) {
+            alert('Please fill in all fields.');
+            return;
+        }
+
+        // Mark booked
+        const card = document.getElementById(currentCar);
+        if (card) {
+            card.classList.add('booked');
+            const wrap = card.querySelector('.car-slider-wrap');
+            const ov = document.createElement('div');
+            ov.className = 'booked-overlay';
+            ov.innerHTML = '<div class="booked-badge-img">BOOKED</div>';
+            wrap.appendChild(ov);
+        }
+
+        const msg = encodeURIComponent(`New car reservation — RT Jamon & Hielo\nVehicle: ${carName}\nName: ${first} ${last}\nMobile: ${phone}\nEmail: ${email}`);
+        window.open(`https://wa.me/{{WA_NUMBER}}?text=${msg}`, '_blank');
+
+        document.getElementById('modal-form').style.display = 'none';
+        document.getElementById('modal-success').style.display = 'block';
+    }
+    document.getElementById('modal').addEventListener('click', e => {
+        if (e.target.id === 'modal')
+            closeModal();
+    });
+    </script>
 </body>
 </html>
