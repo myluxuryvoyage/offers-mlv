@@ -422,13 +422,18 @@ const T = {
 
 function setLang(l) {
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
+  document.querySelector('.lang-btn[onclick="setLang(\''+l+'\')"]').classList.add('active');
   document.documentElement.lang = l;
   document.documentElement.dir = l==='ar'?'rtl':'ltr';
-  const t = T[l];
-  document.querySelectorAll('[data-k]').forEach(el=>{
-    const v = t[el.getAttribute('data-k')];
-    if(v!==undefined) el.innerHTML = v;
+  var t = T[l];
+  if (!t) return;
+  // Skip keys that are already injected server-side (conditions, descriptions)
+  var skipKeys = ['cc1','cc2','r-desc','r-name','r-type'];
+  document.querySelectorAll('[data-k]').forEach(function(el){
+    var k = el.getAttribute('data-k');
+    if (skipKeys.indexOf(k) > -1) return; // keep server-injected value
+    var v = t[k];
+    if (v !== undefined) el.innerHTML = v;
   });
 }
 </script>
