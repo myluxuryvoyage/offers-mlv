@@ -148,8 +148,7 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 <body>
 
 <div class="lang-bar">
-  <button class="lang-btn active" onclick="setLang('fr')" data-lang="fr">FR</button>
-  <button class="lang-btn" onclick="setLang('en')" data-lang="en">EN</button>
+  <button class="lang-btn active" onclick="setLang('en')" data-lang="en">EN</button>
   <button class="lang-btn" onclick="setLang('ar')" data-lang="ar">AR</button>
 </div>
 
@@ -295,220 +294,242 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 <script id="mlv-data" type="application/json">%%MLV_JSON%%</script>
 
 <script>
-/* ════════════════════════════════════════════════════
-   MLV PRO — Data-driven hotel template
-   Données injectées via MLV_DATA par Code.gs
-   ════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════
+   MLV PRO — Hotel template v4.0
+   Data-driven, EN/AR bilingual
+   ══════════════════════════════════════════════════════════ */
 
-/* ── HERO SLIDER ── */
-var _cur = 0;
-function _initHeroSlider() {
-  var slides = document.querySelectorAll('.hero-slide');
-  var dotsEl = document.getElementById('dots');
-  if (!dotsEl) return;
-  slides.forEach(function(_,i) {
-    var d = document.createElement('div');
-    d.className = 'dot'+(i===0?' active':'');
-    d.onclick = (function(idx){ return function(){ _goTo(idx); }; })(i);
-    dotsEl.appendChild(d);
-  });
-  setInterval(function(){ _goTo((_cur+1) % document.querySelectorAll('.hero-slide').length); }, 4500);
-}
-function _goTo(n) {
-  var slides = document.querySelectorAll('.hero-slide');
-  _cur = (n + slides.length) % slides.length;
-  document.getElementById('slider').style.transform = 'translateX(-'+(_cur*100)+'%)';
-  document.querySelectorAll('.dot').forEach(function(d,i){ d.classList.toggle('active',i===_cur); });
-}
-function _slide(dir){ _goTo(_cur+dir); }
-
-/* ── ROOM SLIDER ── */
-var _rCur = 0;
-function _initRoomSlider() {
-  var rSlides = document.querySelectorAll('#rs-1 .room-slide');
-  var rDotsEl = document.getElementById('rd-1');
-  if (!rDotsEl) return;
-  rSlides.forEach(function(_,i) {
-    var d = document.createElement('div');
-    d.className = 'rdot'+(i===0?' active':'');
-    d.onclick = (function(idx){ return function(){ _rGoTo(idx); }; })(i);
-    rDotsEl.appendChild(d);
-  });
-}
-function _rGoTo(n) {
-  var rSlides = document.querySelectorAll('#rs-1 .room-slide');
-  _rCur = (n + rSlides.length) % rSlides.length;
-  document.getElementById('rs-1').style.transform = 'translateX(-'+(_rCur*100)+'%)';
-  document.querySelectorAll('.rdot').forEach(function(d,i){ d.classList.toggle('active',i===_rCur); });
-}
-function _rSlide(dir){ _rGoTo(_rCur+dir); }
-
-/* ── MODAL ── */
-function openModal(){ document.getElementById('modal').classList.add('open'); }
-function closeModal(){ document.getElementById('modal').classList.remove('open'); }
-document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('modal').addEventListener('click',function(e){ if(e.target.id==='modal') closeModal(); });
-});
-
-/* ── LECTURE DES DONNEES ── */
-function getD() {
-  try {
-    var el = document.getElementById('mlv-data');
-    return el ? JSON.parse(el.textContent) : null;
-  } catch(e) { console.error('MLV data parse error:', e); return null; }
-}
+var _cur = 0, _rCur = 0;
 
 /* ── PROXY IMAGE ── */
 function proxyImg(url) {
-  if (!url || url.length < 5) return '';
-  if (url.indexOf('unsplash') > -1) return url;
-  if (url.indexOf('drive.google.com/file/d/') > -1) {
+  if (!url || url.length < 8) return '';
+  if (url.indexOf('unsplash.com') > -1) return url;
+  if (url.indexOf('drive.google.com/file') > -1) {
     var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
     if (m) return 'https://drive.google.com/uc?export=view&id=' + m[1];
   }
+  // Already a weserv URL? return as-is
+  if (url.indexOf('weserv.nl') > -1) return url;
   return 'https://images.weserv.nl/?url=' + encodeURIComponent(url) + '&w=1400&output=jpg&q=85';
 }
 
-/* ── CONSTRUCTION DES SLIDES ── */
+/* ── READ DATA ── */
+function getData() {
+  try {
+    var el = document.getElementById('mlv-data');
+    if (!el) return null;
+    return JSON.parse(el.textContent);
+  } catch(e) { console.error('MLV parse error:', e); return null; }
+}
+
+/* ── BUILD SLIDES ── */
 function buildSlides(containerId, urls, cssClass) {
-  var container = document.getElementById(containerId);
-  if (!container) return;
-  var defaults = [
-    'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1400&q=80',
-    'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1400&q=80'
-  ];
-  var filtered = (urls || []).filter(function(u){ return u && u.length > 5; });
-  var final = filtered.length > 0 ? filtered : defaults;
-  container.innerHTML = '';
-  final.forEach(function(u) {
+  var c = document.getElementById(containerId);
+  if (!c) return;
+  var defaults = ['https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1400&q=80',
+                  'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1400&q=80'];
+  var imgs = (urls || []).filter(function(u){ return u && u.length > 8; });
+  if (imgs.length === 0) imgs = defaults;
+  c.innerHTML = '';
+  imgs.forEach(function(u) {
     var div = document.createElement('div');
     div.className = cssClass;
     div.style.backgroundImage = "url('" + proxyImg(u) + "')";
-    container.appendChild(div);
+    c.appendChild(div);
   });
 }
 
-/* ── REMPLISSAGE DU DOM ── */
-function fill(id, val) {
-  var el = document.getElementById(id);
-  if (el && val !== undefined && val !== null) el.innerHTML = val;
+/* ── HERO SLIDER INIT ── */
+function initHero() {
+  var slides = document.querySelectorAll('.hero-slide');
+  var dotsEl = document.getElementById('dots');
+  if (!dotsEl || slides.length === 0) return;
+  dotsEl.innerHTML = '';
+  slides.forEach(function(_, i) {
+    var d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.onclick = (function(n){ return function(){ goTo(n); }; })(i);
+    dotsEl.appendChild(d);
+  });
+  setInterval(function(){ goTo((_cur + 1) % document.querySelectorAll('.hero-slide').length); }, 4500);
 }
-function fillAll(cls, val) {
-  document.querySelectorAll('.'+cls).forEach(function(el){ el.innerHTML = val; });
+function goTo(n) {
+  var slides = document.querySelectorAll('.hero-slide');
+  _cur = (n + slides.length) % slides.length;
+  var el = document.getElementById('slider');
+  if (el) el.style.transform = 'translateX(-' + (_cur * 100) + '%)';
+  document.querySelectorAll('.dot').forEach(function(d, i){ d.classList.toggle('active', i === _cur); });
 }
-function fillAttr(id, attr, val) {
-  var el = document.getElementById(id);
-  if (el) el.setAttribute(attr, val);
-}
+function slide(dir) { goTo(_cur + dir); }
 
-/* ── APPLICATION DES DONNEES ── */
+/* ── ROOM SLIDER INIT ── */
+function initRoom() {
+  var slides = document.querySelectorAll('#rs-1 .room-slide');
+  var dotsEl = document.getElementById('rd-1');
+  if (!dotsEl || slides.length === 0) return;
+  dotsEl.innerHTML = '';
+  slides.forEach(function(_, i) {
+    var d = document.createElement('div');
+    d.className = 'rdot' + (i === 0 ? ' active' : '');
+    d.onclick = (function(n){ return function(){ rGoTo(n); }; })(i);
+    dotsEl.appendChild(d);
+  });
+}
+function rGoTo(n) {
+  var slides = document.querySelectorAll('#rs-1 .room-slide');
+  _rCur = (n + slides.length) % slides.length;
+  var el = document.getElementById('rs-1');
+  if (el) el.style.transform = 'translateX(-' + (_rCur * 100) + '%)';
+  document.querySelectorAll('.rdot').forEach(function(d, i){ d.classList.toggle('active', i === _rCur); });
+}
+function rSlide(dir) { rGoTo(_rCur + dir); }
+
+/* ── MODAL ── */
+function openModal() { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+
+/* ── SET TEXT HELPER ── */
+function setText(sel, val, isHtml) {
+  var el = typeof sel === 'string' ? document.querySelector(sel) : sel;
+  if (!el || val === undefined || val === null) return;
+  if (isHtml) el.innerHTML = val;
+  else el.textContent = val;
+}
+function setId(id, val, isHtml) { setText(document.getElementById(id), val, isHtml); }
+function setK(k, val, isHtml)   { setText('[data-k="' + k + '"]', val, isHtml); }
+
+/* ══════════════════════════════════════════════════════════
+   APPLY DATA — langue = 'en' ou 'ar'
+   ══════════════════════════════════════════════════════════ */
 function applyData(lang) {
-  var d = getD();
-  if (!d) return;
-  lang = lang || 'fr';
-  var t = d.translations[lang] || d.translations.fr;
+  var d = getData();
+  if (!d) { console.error('No MLV data'); return; }
+
   var base = d.base;
+  var t    = d.translations[lang] || d.translations['en'];
 
-  // Images
+  /* ── IMAGES ── */
   buildSlides('slider', base.heroImgs, 'hero-slide');
-  buildSlides('rs-1', base.roomImgs, 'room-slide');
-  _initHeroSlider();
-  _initRoomSlider();
+  buildSlides('rs-1',   base.roomImgs, 'room-slide');
+  initHero();
+  initRoom();
 
-  // Summary bar
-  fill('sb-checkin',   base.checkIn);
-  fill('sb-checkout',  base.checkOut);
-  fill('sb-travelers', base.travelers);
-  fill('sb-nights',    base.nights);
-  fill('sb-hotel',     base.hotelName);
+  /* ── HERO ── */
+  setK('h-title', base.hotelName + '<br><em>' + t.roomName + '</em>', true);
+  setK('h-sub',   base.hotelName + ' · ' + base.checkIn + ' – ' + base.checkOut);
+  setK('h-eye',   lang === 'ar' ? 'عرض حصري · ماي لاكشري فوياج' : 'Exclusive proposal · My Luxury Voyage');
 
-  // Hero
-  document.querySelector('[data-k="h-title"]').innerHTML = base.hotelName + '<br><em>' + t.roomName + '</em>';
-  document.querySelector('[data-k="h-sub"]').textContent  = base.hotelName + ' · ' + base.checkIn + ' – ' + base.checkOut;
+  /* ── SUMMARY BAR ── */
+  setK('sb1',  lang === 'ar' ? 'الوصول'     : 'Check-in');
+  setK('sb2',  lang === 'ar' ? 'المغادرة'   : 'Check-out');
+  setK('sb3',  lang === 'ar' ? 'المسافرون'  : 'Guests');
+  setK('sb4',  lang === 'ar' ? 'الليالي'    : 'Nights');
+  setK('sb5',  lang === 'ar' ? 'الفندق'     : 'Hotel');
+  setK('sb1v', base.checkIn);
+  setK('sb2v', base.checkOut);
+  setK('sb3v', base.travelers);
+  setK('sb4v', base.nights);
 
-  // Room
-  document.querySelector('[data-k="r-name"]').textContent  = t.roomName;
-  document.querySelector('[data-k="r-type"]').textContent  = t.roomType;
-  document.querySelector('[data-k="r-desc"]').textContent  = t.roomDesc;
-  document.getElementById('price-night').textContent       = base.priceNight;
-  document.getElementById('price-total').textContent       = 'Total : ' + base.priceTotal + ' — ' + base.nightsNum + ' ' + (lang === 'en' ? 'nights' : lang === 'ar' ? 'ليالٍ' : 'nuits');
+  /* ── ROOM ── */
+  setK('r-name',   t.roomName);
+  setK('r-type',   t.roomType);
+  setK('r-desc',   t.roomDesc);
+  setK('r-pnight', lang === 'ar' ? 'السعر لليلة' : 'Price per night');
+  setK('r-nights', (lang === 'ar' ? 'الإجمالي : ' : 'Total: ') + base.priceTotal + ' — ' + base.nightsNum + ' ' + (lang === 'ar' ? 'ليالٍ' : 'nights'));
 
-  // Specs
+  /* ── PRICE ── */
+  setId('price-night', base.priceNight);
+
+  /* ── SPECS ── */
   var specsEl = document.getElementById('room-specs');
-  specsEl.innerHTML = '';
-  (t.specs || []).forEach(function(s) {
-    var div = document.createElement('div');
-    div.className = 'spec-tag';
-    div.textContent = s;
-    specsEl.appendChild(div);
-  });
+  if (specsEl) {
+    specsEl.innerHTML = '';
+    (t.specs || []).forEach(function(s) {
+      if (!s) return;
+      var div = document.createElement('div');
+      div.className = 'spec-tag';
+      div.textContent = s;
+      specsEl.appendChild(div);
+    });
+  }
 
-  // Services
+  /* ── SERVICES ── */
   var svcsEl = document.getElementById('room-svcs');
-  svcsEl.innerHTML = '';
-  (t.services || []).forEach(function(s) {
-    svcsEl.innerHTML += '<div class="svc-pill"><div class="svc-pill-dot"></div><span>' + s + '</span></div>';
-  });
+  if (svcsEl) {
+    svcsEl.innerHTML = '';
+    (t.services || []).forEach(function(s) {
+      if (!s) return;
+      svcsEl.innerHTML += '<div class="svc-pill"><div class="svc-pill-dot"></div><span>' + s + '</span></div>';
+    });
+  }
 
-  // Extras
+  /* ── EXTRAS ── */
+  setK('ext-eye',   lang === 'ar' ? 'خيارات إضافية'    : 'Additional options');
+  setK('ext-title', lang === 'ar' ? 'الإضافات المتاحة' : 'Available extras');
+  setK('et-h1', lang === 'ar' ? 'الخدمة' : 'Service');
+  setK('et-h2', lang === 'ar' ? 'السعر'  : 'Rate');
   var tbody = document.getElementById('extras-tbody');
-  tbody.innerHTML = '';
-  (base.extras || []).forEach(function(ex) {
-    var row = document.createElement('tr');
-    var labelKey = ex.labelKey;
-    var label = (lang === 'en' ? ex.labelEn : lang === 'ar' ? ex.labelAr : ex.labelFr) || ex.labelFr;
-    var price  = lang === 'en' ? (ex.priceEn || ex.price) : lang === 'ar' ? (ex.priceAr || ex.price) : ex.price;
-    row.innerHTML = '<td>' + label + '</td><td class="amt">' + price + '</td>';
-    tbody.appendChild(row);
-  });
+  if (tbody) {
+    tbody.innerHTML = '';
+    (base.extras || []).forEach(function(ex) {
+      var label = lang === 'ar' ? ex.labelAr : ex.labelEn;
+      var price = lang === 'ar' ? (ex.priceAr || ex.price) : (ex.priceEn || ex.price);
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + (label||'') + '</td><td class="amt">' + (price||'') + '</td>';
+      tbody.appendChild(tr);
+    });
+  }
 
-  // Conditions
-  document.querySelector('[data-k="ct1"]').textContent  = lang === 'en' ? 'Rate conditions' : lang === 'ar' ? 'الشروط السعرية' : 'Conditions';
-  document.querySelector('[data-k="cc1"]').textContent  = t.condTarif;
-  document.querySelector('[data-k="ct2"]').textContent  = lang === 'en' ? 'Cancellation policy' : lang === 'ar' ? 'سياسة الإلغاء' : "Politique d'annulation";
-  document.querySelector('[data-k="cc2"]').textContent  = t.condAnnul;
+  /* ── CONDITIONS ── */
+  setK('cond-eye',   lang === 'ar' ? 'الشروط والأحكام'               : 'Terms');
+  setK('cond-title', lang === 'ar' ? 'الشروط السعرية وسياسة الإلغاء' : 'Rate conditions & cancellation');
+  setK('ct1', lang === 'ar' ? 'الشروط السعرية'   : 'Rate conditions');
+  setK('cc1', t.condTarif || '');
+  setK('ct2', lang === 'ar' ? 'سياسة الإلغاء'    : 'Cancellation policy');
+  setK('cc2', t.condAnnul || '');
 
-  // CTA
-  document.querySelector('[data-k="cta-p"]').textContent = t.ctaText;
+  /* ── CTA ── */
+  setK('cta-p',      t.ctaText || '');
+  setK('btn-accept', lang === 'ar' ? '✓ قبول هذا العرض'          : '✓ Accept this proposal');
+  setK('btn-wa',     lang === 'ar' ? 'تواصل معنا عبر واتساب'     : 'Contact us on WhatsApp');
 
-  // WhatsApp
+  /* ── WHATSAPP LINK ── */
   var waLink = document.querySelector('.btn-wa');
-  if (waLink) waLink.href = 'https://wa.me/' + base.waNumber + '?text=' + encodeURIComponent(t.waMsg || '');
+  if (waLink) {
+    var msg = lang === 'ar'
+      ? 'مرحبا My Luxury Voyage، بخصوص عرض ' + base.hotelName
+      : 'Hello My Luxury Voyage, regarding the proposal for ' + base.hotelName;
+    waLink.href = 'https://wa.me/' + base.waNumber + '?text=' + encodeURIComponent(msg);
+  }
 
-  // UI labels
-  var labels = {
-    fr: { eye:'Proposition exclusive · My Luxury Voyage', sb1:'Arrivée', sb2:'Départ', sb3:'Voyageurs', sb4:'Nuits', sb5:'Hôtel', pnight:'Prix par nuit', extEye:'Options supplémentaires', extTitle:'Extras disponibles', etH1:'Prestation', etH2:'Tarif', condEye:'Conditions', condTitle:'Conditions tarifaires & annulation', accept:'✓ Accepter cette proposition', wa:'Nous contacter sur WhatsApp', mTitle:'Merci pour votre confiance', mBody:'Votre accord a bien été enregistré. Un conseiller vous contactera prochainement.', mClose:'Fermer' },
-    en: { eye:'Exclusive proposal · My Luxury Voyage', sb1:'Check-in', sb2:'Check-out', sb3:'Guests', sb4:'Nights', sb5:'Hotel', pnight:'Price per night', extEye:'Additional options', extTitle:'Available extras', etH1:'Service', etH2:'Rate', condEye:'Terms', condTitle:'Rate conditions & cancellation policy', accept:'✓ Accept this proposal', wa:'Contact us on WhatsApp', mTitle:'Thank you for your trust', mBody:'Your acceptance has been recorded. An advisor will contact you shortly.', mClose:'Close' },
-    ar: { eye:'عرض حصري · ماي لاكشري فوياج', sb1:'الوصول', sb2:'المغادرة', sb3:'المسافرون', sb4:'الليالي', sb5:'الفندق', pnight:'السعر لليلة', extEye:'خيارات إضافية', extTitle:'الإضافات المتاحة', etH1:'الخدمة', etH2:'السعر', condEye:'الشروط', condTitle:'الشروط السعرية وسياسة الإلغاء', accept:'✓ قبول هذا العرض', wa:'تواصل معنا عبر واتساب', mTitle:'شكراً لثقتكم', mBody:'تم تسجيل موافقتكم. سيتواصل معكم مستشار قريباً.', mClose:'إغلاق' }
-  };
-  var lb = labels[lang] || labels.fr;
-  var setK = function(k, v) { var el = document.querySelector('[data-k="'+k+'"]'); if(el) el.innerHTML = v; };
-  setK('h-eye', lb.eye);
-  setK('sb1', lb.sb1); setK('sb2', lb.sb2); setK('sb3', lb.sb3); setK('sb4', lb.sb4); setK('sb5', lb.sb5);
-  setK('r-pnight', lb.pnight);
-  setK('ext-eye', lb.extEye); setK('ext-title', lb.extTitle);
-  setK('et-h1', lb.etH1); setK('et-h2', lb.etH2);
-  setK('cond-eye', lb.condEye); setK('cond-title', lb.condTitle);
-  setK('btn-accept', lb.accept); setK('btn-wa', lb.wa);
-  setK('modal-title', lb.mTitle); setK('modal-body', lb.mBody); setK('modal-close', lb.mClose);
+  /* ── MODAL ── */
+  setK('modal-title', lang === 'ar' ? 'شكراً لثقتكم'   : 'Thank you for your trust');
+  setK('modal-body',  lang === 'ar'
+    ? 'تم تسجيل موافقتكم. سيتواصل معكم مستشار قريباً.'
+    : 'Your acceptance has been recorded. An advisor will contact you shortly.');
+  setK('modal-close', lang === 'ar' ? 'إغلاق' : 'Close');
 
-  // RTL
+  /* ── RTL / LTR ── */
   document.documentElement.lang = lang;
   document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
 
-  // Active button
-  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
-  var activeBtn = Array.from(document.querySelectorAll('.lang-btn')).find(function(b){ return b.dataset.lang === lang; });
+  /* ── ACTIVE LANG BUTTON ── */
+  document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+  var activeBtn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
   if (activeBtn) activeBtn.classList.add('active');
 }
 
-/* ── INIT AU CHARGEMENT ── */
-document.addEventListener('DOMContentLoaded', function() {
-  applyData('fr');
-});
-
-/* ── CHANGEMENT DE LANGUE ── */
+/* ── LANG SWITCH ── */
 function setLang(l) { applyData(l); }
+
+/* ── INIT ── */
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('modal').addEventListener('click', function(e) {
+    if (e.target.id === 'modal') closeModal();
+  });
+  applyData('en'); // Default to EN
+});
 </script>
 </body>
 </html>
