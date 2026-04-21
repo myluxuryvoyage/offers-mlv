@@ -148,9 +148,9 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 <body>
 
 <div class="lang-bar">
-  <button class="lang-btn active" onclick="setLang('fr')">FR</button>
-  <button class="lang-btn" onclick="setLang('en')">EN</button>
-  <button class="lang-btn" onclick="setLang('ar')">AR</button>
+  <button class="lang-btn active" onclick="setLang('fr')" data-lang="fr">FR</button>
+  <button class="lang-btn" onclick="setLang('en')" data-lang="en">EN</button>
+  <button class="lang-btn" onclick="setLang('ar')" data-lang="ar">AR</button>
 </div>
 
 <div class="doc">
@@ -167,24 +167,24 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
     src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png"
     alt="My Luxury Voyage"
     onerror="this.outerHTML='<span style=&quot;position:absolute;top:28px;left:50%;transform:translateX(-50%);color:#C9A96E;font-family:Playfair Display,serif;font-size:18px;letter-spacing:.1em;z-index:10;&quot;>MY LUXURY VOYAGE</span>'">
-  <button class="slider-btn slider-prev" onclick="slide(-1)">‹</button>
-  <button class="slider-btn slider-next" onclick="slide(1)">›</button>
+  <button class="slider-btn slider-prev" onclick="_slide(-1)">‹</button>
+  <button class="slider-btn slider-next" onclick="_slide(1)">›</button>
   <div class="slider-dots" id="dots"></div>
   <div class="hero-content">
     <div class="hero-eyebrow" data-k="h-eye">Proposition exclusive · My Luxury Voyage</div>
-    <div class="hero-title" data-k="h-title">{{FR_HERO_TITLE}}</div>
-    <div class="hero-sub" data-k="h-sub">{{SB_HOTEL}} · {{SB_CHECKIN}} – {{SB_CHECKOUT}}</div>
+    <div class="hero-title" data-k="h-title"><span id="d-hotel-name"></span><br><em id="d-room-name-0"></em></div>
+    <div class="hero-sub" data-k="h-sub"><span id="d-hotel-name2"></span> · <span id="d-checkin"></span> – <span id="d-checkout"></span></div>
   </div>
 </div>
 <div class="hero-strip"></div>
 
 <!-- SUMMARY BAR -->
 <div class="sum-bar">
-  <div class="sb-item"><div class="sb-label" data-k="sb1">Arrivée</div><div class="sb-val date-val" data-k="sb1v">{{SB_CHECKIN}}</div></div>
-  <div class="sb-item"><div class="sb-label" data-k="sb2">Départ</div><div class="sb-val date-val" data-k="sb2v">{{SB_CHECKOUT}}</div></div>
-  <div class="sb-item"><div class="sb-label" data-k="sb3">Voyageurs</div><div class="sb-val" data-k="sb3v">{{SB_TRAVELERS}}</div></div>
-  <div class="sb-item"><div class="sb-label" data-k="sb4">Nuits</div><div class="sb-val" data-k="sb4v">{{SB_NIGHTS}}</div></div>
-  <div class="sb-item"><div class="sb-label" data-k="sb5">Hôtel</div><div class="sb-val">{{SB_HOTEL}}</div></div>
+  <div class="sb-item"><div class="sb-label" data-k="sb1">Arrivée</div><div class="sb-val date-val" data-k="sb1v" id="sb-checkin"><span class="d-checkin"></span></div></div>
+  <div class="sb-item"><div class="sb-label" data-k="sb2">Départ</div><div class="sb-val date-val" data-k="sb2v" id="sb-checkout"><span class="d-checkout"></span></div></div>
+  <div class="sb-item"><div class="sb-label" data-k="sb3">Voyageurs</div><div class="sb-val" data-k="sb3v" id="sb-travelers"><span id="d-travelers"></span></div></div>
+  <div class="sb-item"><div class="sb-label" data-k="sb4">Nuits</div><div class="sb-val" data-k="sb4v" id="sb-nights"><span id="d-nights"></span></div></div>
+  <div class="sb-item"><div class="sb-label" data-k="sb5">Hôtel</div><div class="sb-val"><span id="d-hotel3"></span></div></div>
 </div>
 
 <!-- ROOM CARD (single) -->
@@ -198,8 +198,8 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
         <div class="room-slide" style="background-image:url('https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80')"></div>
         <!-- /ROOM_SLIDES -->
       </div>
-      <button class="room-prev" onclick="rSlide(-1)">‹</button>
-      <button class="room-next" onclick="rSlide(1)">›</button>
+      <button class="room-prev" onclick="_rSlide(-1)">‹</button>
+      <button class="room-next" onclick="_rSlide(1)">›</button>
       <div class="room-dots" id="rd-1"></div>
     </div>
 
@@ -207,25 +207,21 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
     <div class="room-body">
       <div class="room-header">
         <div>
-          <div class="room-name" data-k="r-name">{{FR_R1_NAME}}</div>
-          <div class="room-type" data-k="r-type">{{FR_R1_TYPE}}</div>
+          <div class="room-name" data-k="r-name"></div>
+          <div class="room-type" data-k="r-type"></div>
         </div>
         <div class="room-price">
           <div class="room-price-night" data-k="r-pnight">Prix par nuit</div>
-          <div class="room-price-total">{{PRICE_NIGHT}}</div>
-          <div class="room-price-night" data-k="r-nights" style="margin-top:5px;font-size:10px;opacity:.7;">Total : {{PRICE_TOTAL}} — {{NIGHTS}} nuits</div>
+          <div class="room-price-total" id="price-night"></div>
+          <div class="room-price-night" data-k="r-nights" style="margin-top:5px;font-size:10px;opacity:.7;">Total : <span id="d-price-total"></span> — <span id="d-nights2"></span> nuits</div>
         </div>
       </div>
 
-      <div class="room-specs">
-        {{FR_SPECS}}
-      </div>
+      <div class="room-specs" id="room-specs"></div>
 
-      <div class="room-desc" data-k="r-desc">{{FR_R1_DESC}}</div>
+      <div class="room-desc" data-k="r-desc"></div>
 
-      <div class="room-svcs">
-        {{FR_SERVICES}}
-      </div>
+      <div class="room-svcs" id="room-svcs"></div>
     </div>
   </div>
 </div>
@@ -242,7 +238,7 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
       </tr>
     </thead>
     <tbody id="extras-tbody">
-      {{EXTRAS_ROWS}}
+      
     </tbody>
   </table>
 </div>
@@ -253,20 +249,20 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
   <div class="sec-title" data-k="cond-title">Conditions tarifaires &amp; annulation</div>
   <div class="cond-block">
     <div class="cond-title" data-k="ct1">Conditions</div>
-    <div class="cond-text" data-k="cc1">{{FR_COND_TARIF}}</div>
+    <div class="cond-text" data-k="cc1"></div>
   </div>
   <div class="cond-block">
     <div class="cond-title" data-k="ct2">Politique d'annulation</div>
-    <div class="cond-text" data-k="cc2">{{FR_COND_ANNUL}}</div>
+    <div class="cond-text" data-k="cc2"></div>
   </div>
 </div>
 
 <!-- CTA -->
 <div class="cta">
-  <p class="cta-text" data-k="cta-p">{{FR_CTA_TEXT}}</p>
+  <p class="cta-text" data-k="cta-p"></p>
   <div class="btn-row">
     <button class="btn-accept" onclick="openModal()" data-k="btn-accept">✓ Accepter cette proposition</button>
-    <a class="btn-wa" href="https://wa.me/{{WA_NUMBER}}?text=Bonjour%20My%20Luxury%20Voyage" target="_blank" rel="noopener">
+    <a class="btn-wa" href="https://wa.me/33650505040?text=Bonjour%20My%20Luxury%20Voyage" target="_blank" rel="noopener">
       <svg class="wa-svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
       <span data-k="btn-wa">Nous contacter sur WhatsApp</span>
     </a>
@@ -294,148 +290,225 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-/* ── HERO SLIDER ── */
-let cur = 0;
-const slides = document.querySelectorAll('.hero-slide');
-const dotsEl = document.getElementById('dots');
-slides.forEach((_,i) => {
-  const d = document.createElement('div');
-  d.className = 'dot'+(i===0?' active':'');
-  d.onclick = () => goTo(i);
-  dotsEl.appendChild(d);
-});
-function goTo(n) {
-  cur = (n+slides.length)%slides.length;
-  document.getElementById('slider').style.transform = `translateX(-${cur*100}%)`;
-  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('active',i===cur));
-}
-function slide(dir){ goTo(cur+dir); }
-setInterval(()=>slide(1), 4500);
 
-/* ── ROOM PHOTO SLIDER ── */
-let rCur = 0;
-const rSlides = document.querySelectorAll('#rs-1 .room-slide');
-const rDotsEl = document.getElementById('rd-1');
-rSlides.forEach((_,i) => {
-  const d = document.createElement('div');
-  d.className = 'rdot'+(i===0?' active':'');
-  d.onclick = () => rGoTo(i);
-  rDotsEl.appendChild(d);
-});
-function rGoTo(n) {
-  rCur = (n+rSlides.length)%rSlides.length;
-  document.getElementById('rs-1').style.transform = `translateX(-${rCur*100}%)`;
-  document.querySelectorAll('.rdot').forEach((d,i) => d.classList.toggle('active',i===rCur));
+<!-- MLV_DATA_PLACEHOLDER -->
+<script id="mlv-data" type="application/json">%%MLV_JSON%%</script>
+
+<script>
+/* ════════════════════════════════════════════════════
+   MLV PRO — Data-driven hotel template
+   Données injectées via MLV_DATA par Code.gs
+   ════════════════════════════════════════════════════ */
+
+/* ── HERO SLIDER ── */
+var _cur = 0;
+function _initHeroSlider() {
+  var slides = document.querySelectorAll('.hero-slide');
+  var dotsEl = document.getElementById('dots');
+  if (!dotsEl) return;
+  slides.forEach(function(_,i) {
+    var d = document.createElement('div');
+    d.className = 'dot'+(i===0?' active':'');
+    d.onclick = (function(idx){ return function(){ _goTo(idx); }; })(i);
+    dotsEl.appendChild(d);
+  });
+  setInterval(function(){ _goTo((_cur+1) % document.querySelectorAll('.hero-slide').length); }, 4500);
 }
-function rSlide(dir){ rGoTo(rCur+dir); }
+function _goTo(n) {
+  var slides = document.querySelectorAll('.hero-slide');
+  _cur = (n + slides.length) % slides.length;
+  document.getElementById('slider').style.transform = 'translateX(-'+(_cur*100)+'%)';
+  document.querySelectorAll('.dot').forEach(function(d,i){ d.classList.toggle('active',i===_cur); });
+}
+function _slide(dir){ _goTo(_cur+dir); }
+
+/* ── ROOM SLIDER ── */
+var _rCur = 0;
+function _initRoomSlider() {
+  var rSlides = document.querySelectorAll('#rs-1 .room-slide');
+  var rDotsEl = document.getElementById('rd-1');
+  if (!rDotsEl) return;
+  rSlides.forEach(function(_,i) {
+    var d = document.createElement('div');
+    d.className = 'rdot'+(i===0?' active':'');
+    d.onclick = (function(idx){ return function(){ _rGoTo(idx); }; })(i);
+    rDotsEl.appendChild(d);
+  });
+}
+function _rGoTo(n) {
+  var rSlides = document.querySelectorAll('#rs-1 .room-slide');
+  _rCur = (n + rSlides.length) % rSlides.length;
+  document.getElementById('rs-1').style.transform = 'translateX(-'+(_rCur*100)+'%)';
+  document.querySelectorAll('.rdot').forEach(function(d,i){ d.classList.toggle('active',i===_rCur); });
+}
+function _rSlide(dir){ _rGoTo(_rCur+dir); }
 
 /* ── MODAL ── */
 function openModal(){ document.getElementById('modal').classList.add('open'); }
 function closeModal(){ document.getElementById('modal').classList.remove('open'); }
-document.getElementById('modal').addEventListener('click',e=>{ if(e.target.id==='modal') closeModal(); });
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('modal').addEventListener('click',function(e){ if(e.target.id==='modal') closeModal(); });
+});
 
-/* ── TRANSLATIONS ── */
-const T = {
-  fr:{
-    'h-eye':'Proposition exclusive · My Luxury Voyage',
-    'h-title':'{{FR_HERO_TITLE}}',
-    'h-sub':'{{SB_HOTEL}} · {{SB_CHECKIN}} – {{SB_CHECKOUT}}',
-    'sb1':'Arrivée','sb1v':'{{SB_CHECKIN}}','sb2':'Départ','sb2v':'{{SB_CHECKOUT}}','sb3':'Voyageurs','sb3v':'{{SB_TRAVELERS}}',
-    'sb4':'Nuits','sb4v':'{{SB_NIGHTS}}','sb5':'Hôtel',
-    'r-name':'{{FR_R1_NAME}}',
-    'r-type':'{{FR_R1_TYPE}}',
-    'r-pnight':'Prix par nuit','r-nights':'Total : {{PRICE_TOTAL}} — {{NIGHTS}} nuits',
-    'r-desc':'{{FR_R1_DESC}}',
-    'unit-pp':'/ pers.','unit-npn':'/ nuit / pers.',
-    'ext-eye':'Options supplémentaires','ext-title':'Extras disponibles',
-    'ex1':'Petit-déjeuner pour 2 personnes','ex2':'Taxe de séjour',
-    'ex3':'Transfert aéroport (Mercedes Classe S)',
-    'ex4':'Dîner romantique en chambre','ex4a':'Sur devis',
-    'ex5':'Décoration florale spéciale','ex5a':'Sur devis',
-    'cond-eye':'Conditions','cond-title':'Conditions tarifaires & annulation',
-    'ct1':'Conditions tarifaires',
-    'cc1':'{{FR_COND_TARIF}}',
-    'ct2':'Politique d\'annulation',
-    'cc2':'{{FR_COND_ANNUL}}',
-    'cta-p':'{{FR_CTA_TEXT}}',
-    'btn-accept':'✓ Accepter cette proposition','btn-wa':'Nous contacter sur WhatsApp',
-    'modal-title':'Merci pour votre confiance',
-    'modal-body':'Votre accord a bien été enregistré. Un conseiller My Luxury Voyage vous contactera dans les prochaines heures.',
-    'modal-close':'Fermer'
-  },
-  en:{
-    'h-eye':'Exclusive proposal · My Luxury Voyage',
-    'h-title':'{{EN_HERO_TITLE}}',
-    'h-sub':'{{SB_HOTEL}} · {{SB_CHECKIN}} – {{SB_CHECKOUT}}',
-    'sb1':'Check-in','sb1v':'{{SB_CHECKIN}}','sb2':'Check-out','sb2v':'{{SB_CHECKOUT}}','sb3':'Guests','sb3v':'{{SB_TRAVELERS}}',
-    'sb4':'Nights','sb4v':'{{SB_NIGHTS}}','sb5':'Hotel',
-    'r-name':'{{EN_R1_NAME}}',
-    'r-type':'{{EN_R1_TYPE}}',
-    'r-pnight':'Price per night','r-nights':'Total : {{PRICE_TOTAL}} — {{NIGHTS}} nights',
-    'r-desc':'{{EN_R1_DESC}}',
-    'unit-pp':'/ person','unit-npn':'/ night / person',
-    'ext-eye':'Additional options','ext-title':'Available extras',
-    'ex1':'Breakfast for 2','ex2':'City tax',
-    'ex3':'Airport transfer (Mercedes S-Class)',
-    'ex4':'Romantic in-room dinner','ex4a':'On request',
-    'ex5':'Special floral decoration','ex5a':'On request',
-    'cond-eye':'Terms','cond-title':'Rate conditions & cancellation policy',
-    'ct1':'Rate conditions',
-    'cc1':'{{EN_COND_TARIF}}',
-    'ct2':'Cancellation policy',
-    'cc2':'{{EN_COND_ANNUL}}',
-    'cta-p':'{{EN_CTA_TEXT}}',
-    'btn-accept':'✓ Accept this proposal','btn-wa':'Contact us on WhatsApp',
-    'modal-title':'Thank you for your trust',
-    'modal-body':'Your acceptance has been recorded. A My Luxury Voyage advisor will contact you shortly.',
-    'modal-close':'Close'
-  },
-  ar:{
-    'h-eye':'عرض حصري · ماي لاكشري فوياج',
-    'h-title':'{{AR_HERO_TITLE}}',
-    'h-sub':'{{SB_HOTEL}} · {{SB_CHECKIN}} – {{SB_CHECKOUT}}',
-    'sb1':'الوصول','sb1v':'{{SB_CHECKIN}}','sb2':'المغادرة','sb2v':'{{SB_CHECKOUT}}','sb3':'المسافرون','sb3v':'{{SB_TRAVELERS}}',
-    'sb4':'الليالي','sb4v':'{{SB_NIGHTS}}','sb5':'الفندق',
-    'r-name':'{{AR_R1_NAME}}',
-    'r-type':'{{AR_R1_TYPE}}',
-    'r-pnight':'السعر لليلة','r-nights':'الإجمالي : {{PRICE_TOTAL}} — {{NIGHTS}} ليالٍ',
-    'r-desc':'{{AR_R1_DESC}}',
-    'unit-pp':'/ للشخص','unit-npn':'/ ليلة / للشخص',
-    'ext-eye':'خيارات إضافية','ext-title':'الإضافات المتاحة',
-    'ex1':'إفطار لشخصين','ex2':'ضريبة الإقامة',
-    'ex3':'نقل المطار (مرسيدس كلاس إس)',
-    'ex4':'عشاء رومانسي في الغرفة','ex4a':'بناءً على الطلب',
-    'ex5':'تزيين خاص بالزهور','ex5a':'بناءً على الطلب',
-    'cond-eye':'الشروط والأحكام','cond-title':'الشروط السعرية وسياسة الإلغاء',
-    'ct1':'الشروط السعرية',
-    'cc1':'{{AR_COND_TARIF}}',
-    'ct2':'سياسة الإلغاء',
-    'cc2':'{{AR_COND_ANNUL}}',
-    'cta-p':'{{AR_CTA_TEXT}}',
-    'btn-accept':'✓ قبول هذا العرض','btn-wa':'تواصل معنا عبر واتساب',
-    'modal-title':'شكراً لثقتكم',
-    'modal-body':'تم تسجيل موافقتكم. سيتواصل معكم مستشار ماي لاكشري فوياج خلال الساعات القادمة.',
-    'modal-close':'إغلاق'
+/* ── LECTURE DES DONNEES ── */
+function getD() {
+  try {
+    var el = document.getElementById('mlv-data');
+    return el ? JSON.parse(el.textContent) : null;
+  } catch(e) { console.error('MLV data parse error:', e); return null; }
+}
+
+/* ── PROXY IMAGE ── */
+function proxyImg(url) {
+  if (!url || url.length < 5) return '';
+  if (url.indexOf('unsplash') > -1) return url;
+  if (url.indexOf('drive.google.com/file/d/') > -1) {
+    var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (m) return 'https://drive.google.com/uc?export=view&id=' + m[1];
   }
-};
+  return 'https://images.weserv.nl/?url=' + encodeURIComponent(url) + '&w=1400&output=jpg&q=85';
+}
 
-function setLang(l) {
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
-  document.querySelector('.lang-btn[onclick="setLang(\''+l+'\')"]').classList.add('active');
-  document.documentElement.lang = l;
-  document.documentElement.dir = l==='ar'?'rtl':'ltr';
-  var t = T[l];
-  if (!t) return;
-  // Skip keys that are already injected server-side (conditions, descriptions)
-  var skipKeys = ['cc1','cc2','r-desc','r-name','r-type'];
-  document.querySelectorAll('[data-k]').forEach(function(el){
-    var k = el.getAttribute('data-k');
-    if (skipKeys.indexOf(k) > -1) return; // keep server-injected value
-    var v = t[k];
-    if (v !== undefined) el.innerHTML = v;
+/* ── CONSTRUCTION DES SLIDES ── */
+function buildSlides(containerId, urls, cssClass) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  var defaults = [
+    'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1400&q=80',
+    'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=1400&q=80'
+  ];
+  var filtered = (urls || []).filter(function(u){ return u && u.length > 5; });
+  var final = filtered.length > 0 ? filtered : defaults;
+  container.innerHTML = '';
+  final.forEach(function(u) {
+    var div = document.createElement('div');
+    div.className = cssClass;
+    div.style.backgroundImage = "url('" + proxyImg(u) + "')";
+    container.appendChild(div);
   });
 }
+
+/* ── REMPLISSAGE DU DOM ── */
+function fill(id, val) {
+  var el = document.getElementById(id);
+  if (el && val !== undefined && val !== null) el.innerHTML = val;
+}
+function fillAll(cls, val) {
+  document.querySelectorAll('.'+cls).forEach(function(el){ el.innerHTML = val; });
+}
+function fillAttr(id, attr, val) {
+  var el = document.getElementById(id);
+  if (el) el.setAttribute(attr, val);
+}
+
+/* ── APPLICATION DES DONNEES ── */
+function applyData(lang) {
+  var d = getD();
+  if (!d) return;
+  lang = lang || 'fr';
+  var t = d.translations[lang] || d.translations.fr;
+  var base = d.base;
+
+  // Images
+  buildSlides('slider', base.heroImgs, 'hero-slide');
+  buildSlides('rs-1', base.roomImgs, 'room-slide');
+  _initHeroSlider();
+  _initRoomSlider();
+
+  // Summary bar
+  fill('sb-checkin',   base.checkIn);
+  fill('sb-checkout',  base.checkOut);
+  fill('sb-travelers', base.travelers);
+  fill('sb-nights',    base.nights);
+  fill('sb-hotel',     base.hotelName);
+
+  // Hero
+  document.querySelector('[data-k="h-title"]').innerHTML = base.hotelName + '<br><em>' + t.roomName + '</em>';
+  document.querySelector('[data-k="h-sub"]').textContent  = base.hotelName + ' · ' + base.checkIn + ' – ' + base.checkOut;
+
+  // Room
+  document.querySelector('[data-k="r-name"]').textContent  = t.roomName;
+  document.querySelector('[data-k="r-type"]').textContent  = t.roomType;
+  document.querySelector('[data-k="r-desc"]').textContent  = t.roomDesc;
+  document.getElementById('price-night').textContent       = base.priceNight;
+  document.getElementById('price-total').textContent       = 'Total : ' + base.priceTotal + ' — ' + base.nightsNum + ' ' + (lang === 'en' ? 'nights' : lang === 'ar' ? 'ليالٍ' : 'nuits');
+
+  // Specs
+  var specsEl = document.getElementById('room-specs');
+  specsEl.innerHTML = '';
+  (t.specs || []).forEach(function(s) {
+    var div = document.createElement('div');
+    div.className = 'spec-tag';
+    div.textContent = s;
+    specsEl.appendChild(div);
+  });
+
+  // Services
+  var svcsEl = document.getElementById('room-svcs');
+  svcsEl.innerHTML = '';
+  (t.services || []).forEach(function(s) {
+    svcsEl.innerHTML += '<div class="svc-pill"><div class="svc-pill-dot"></div><span>' + s + '</span></div>';
+  });
+
+  // Extras
+  var tbody = document.getElementById('extras-tbody');
+  tbody.innerHTML = '';
+  (base.extras || []).forEach(function(ex) {
+    var row = document.createElement('tr');
+    var labelKey = ex.labelKey;
+    var label = (lang === 'en' ? ex.labelEn : lang === 'ar' ? ex.labelAr : ex.labelFr) || ex.labelFr;
+    var price  = lang === 'en' ? (ex.priceEn || ex.price) : lang === 'ar' ? (ex.priceAr || ex.price) : ex.price;
+    row.innerHTML = '<td>' + label + '</td><td class="amt">' + price + '</td>';
+    tbody.appendChild(row);
+  });
+
+  // Conditions
+  document.querySelector('[data-k="ct1"]').textContent  = lang === 'en' ? 'Rate conditions' : lang === 'ar' ? 'الشروط السعرية' : 'Conditions';
+  document.querySelector('[data-k="cc1"]').textContent  = t.condTarif;
+  document.querySelector('[data-k="ct2"]').textContent  = lang === 'en' ? 'Cancellation policy' : lang === 'ar' ? 'سياسة الإلغاء' : "Politique d'annulation";
+  document.querySelector('[data-k="cc2"]').textContent  = t.condAnnul;
+
+  // CTA
+  document.querySelector('[data-k="cta-p"]').textContent = t.ctaText;
+
+  // WhatsApp
+  var waLink = document.querySelector('.btn-wa');
+  if (waLink) waLink.href = 'https://wa.me/' + base.waNumber + '?text=' + encodeURIComponent(t.waMsg || '');
+
+  // UI labels
+  var labels = {
+    fr: { eye:'Proposition exclusive · My Luxury Voyage', sb1:'Arrivée', sb2:'Départ', sb3:'Voyageurs', sb4:'Nuits', sb5:'Hôtel', pnight:'Prix par nuit', extEye:'Options supplémentaires', extTitle:'Extras disponibles', etH1:'Prestation', etH2:'Tarif', condEye:'Conditions', condTitle:'Conditions tarifaires & annulation', accept:'✓ Accepter cette proposition', wa:'Nous contacter sur WhatsApp', mTitle:'Merci pour votre confiance', mBody:'Votre accord a bien été enregistré. Un conseiller vous contactera prochainement.', mClose:'Fermer' },
+    en: { eye:'Exclusive proposal · My Luxury Voyage', sb1:'Check-in', sb2:'Check-out', sb3:'Guests', sb4:'Nights', sb5:'Hotel', pnight:'Price per night', extEye:'Additional options', extTitle:'Available extras', etH1:'Service', etH2:'Rate', condEye:'Terms', condTitle:'Rate conditions & cancellation policy', accept:'✓ Accept this proposal', wa:'Contact us on WhatsApp', mTitle:'Thank you for your trust', mBody:'Your acceptance has been recorded. An advisor will contact you shortly.', mClose:'Close' },
+    ar: { eye:'عرض حصري · ماي لاكشري فوياج', sb1:'الوصول', sb2:'المغادرة', sb3:'المسافرون', sb4:'الليالي', sb5:'الفندق', pnight:'السعر لليلة', extEye:'خيارات إضافية', extTitle:'الإضافات المتاحة', etH1:'الخدمة', etH2:'السعر', condEye:'الشروط', condTitle:'الشروط السعرية وسياسة الإلغاء', accept:'✓ قبول هذا العرض', wa:'تواصل معنا عبر واتساب', mTitle:'شكراً لثقتكم', mBody:'تم تسجيل موافقتكم. سيتواصل معكم مستشار قريباً.', mClose:'إغلاق' }
+  };
+  var lb = labels[lang] || labels.fr;
+  var setK = function(k, v) { var el = document.querySelector('[data-k="'+k+'"]'); if(el) el.innerHTML = v; };
+  setK('h-eye', lb.eye);
+  setK('sb1', lb.sb1); setK('sb2', lb.sb2); setK('sb3', lb.sb3); setK('sb4', lb.sb4); setK('sb5', lb.sb5);
+  setK('r-pnight', lb.pnight);
+  setK('ext-eye', lb.extEye); setK('ext-title', lb.extTitle);
+  setK('et-h1', lb.etH1); setK('et-h2', lb.etH2);
+  setK('cond-eye', lb.condEye); setK('cond-title', lb.condTitle);
+  setK('btn-accept', lb.accept); setK('btn-wa', lb.wa);
+  setK('modal-title', lb.mTitle); setK('modal-body', lb.mBody); setK('modal-close', lb.mClose);
+
+  // RTL
+  document.documentElement.lang = lang;
+  document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
+
+  // Active button
+  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
+  var activeBtn = Array.from(document.querySelectorAll('.lang-btn')).find(function(b){ return b.dataset.lang === lang; });
+  if (activeBtn) activeBtn.classList.add('active');
+}
+
+/* ── INIT AU CHARGEMENT ── */
+document.addEventListener('DOMContentLoaded', function() {
+  applyData('fr');
+});
+
+/* ── CHANGEMENT DE LANGUE ── */
+function setLang(l) { applyData(l); }
 </script>
 </body>
 </html>
