@@ -406,50 +406,78 @@ function setText(sel, val, isHtml) {
 function setId(id, val, isHtml) { setText(document.getElementById(id), val, isHtml); }
 function setK(k, val, isHtml)   { setText('[data-k="' + k + '"]', val, isHtml); }
 
-/* ── TRADUCTION AR VIA MYMEMORY (cote navigateur) ── */
-function mmTranslate(text, cb) {
-  if (!text || text.trim().length < 2) { cb(text); return; }
-  var url = 'https://api.mymemory.translated.net/get?q='
-    + encodeURIComponent(text.substring(0, 400)) + '&langpair=en|ar';
-  fetch(url)
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      cb(d.responseStatus === 200 ? d.responseData.translatedText : text);
-    })
-    .catch(function(){ cb(text); });
-}
-function mmTranslateArr(arr, cb) {
-  if (!arr || arr.length === 0) { cb([]); return; }
-  var out = new Array(arr.length), left = arr.length;
-  arr.forEach(function(item, i) {
-    mmTranslate(item || '', function(t) {
-      out[i] = t; if (--left === 0) cb(out);
-    });
-  });
-}
+/* ── TRADUCTION AR — 1 appel API par batch de 500 chars ── */
 function ensureAR(d, cb) {
   var en = d.translations.en, ar = d.translations.ar;
-  // Si AR non traduit (identique à EN), on traduit maintenant
   if (ar.roomName && ar.roomName !== en.roomName) { cb(); return; }
-  var tasks = 9, done = 0;
-  function tick() { if (++done >= tasks) cb(); }
-  mmTranslate(en.roomName  || '', function(t){ ar.roomName  = t; tick(); });
-  mmTranslate(en.roomType  || '', function(t){ ar.roomType  = t; tick(); });
-  mmTranslate(en.roomDesc  || '', function(t){ ar.roomDesc  = t; tick(); });
-  mmTranslate(en.condTarif || '', function(t){ ar.condTarif = t; tick(); });
-  mmTranslate(en.condAnnul || '', function(t){ ar.condAnnul = t; tick(); });
-  mmTranslate(en.ctaText   || '', function(t){ ar.ctaText   = t; tick(); });
-  mmTranslateArr(en.specs    || [], function(t){ ar.specs    = t; tick(); });
-  mmTranslateArr(en.services || [], function(t){ ar.services = t; tick(); });
-  // Also translate free-text extras prices that are in English
-  var extraPrices = (d.base.extras || []).map(function(ex){ return ex.priceEn || ex.price || ''; });
-  mmTranslateArr(extraPrices, function(translated) {
-    translated.forEach(function(t, i) {
-      if (d.base.extras[i]) d.base.extras[i].priceAr = t;
-    });
-    tick();
+
+  var extras  = d.base.extras || [];
+  var specs   = en.specs    || [];
+  var services= en.services || [];
+  var extraPrices = extras.map(function(ex){ return ex.priceEn || ex.price || ''; });
+
+  // Tableau plat de tous les textes a traduire
+  var texts = [
+    en.roomName  || '',
+    en.roomType  || '',
+    en.roomDesc  || '',
+    en.condTarif || '',
+    en.condAnnul || '',
+    en.ctaText   || ''
+  ].concat(specs).concat(services).concat(extraPrices);
+
+  var SEP = ' ||> ';
+
+  // Decouper en batches de 490 chars max
+  var batches = [], cur = [], curLen = 0, idxMap = [];
+  texts.forEach(function(t, i) {
+    var piece = t.trim().substring(0, 80);
+    if (!piece) { idxMap.push(null); return; }
+    if (curLen + piece.length + SEP.length > 490 && cur.length > 0) {
+      batches.push(cur); cur = []; curLen = 0;
+    }
+    idxMap.push({batch: batches.length, pos: cur.length});
+    cur.push(piece);
+    curLen += piece.length + SEP.length;
   });
-  // tasks=9 is correct: 6 strings + specs[] + services[] + extraPrices[]
+  if (cur.length) batches.push(cur);
+
+  if (batches.length === 0) { cb(); return; }
+
+  var results = batches.map(function(){ return []; });
+  var done = 0;
+
+  batches.forEach(function(batch, bi) {
+    var url = 'https://api.mymemory.translated.net/get?q='
+      + encodeURIComponent(batch.join(SEP)) + '&langpair=en|ar';
+    fetch(url)
+      .then(function(r){ return r.json(); })
+      .then(function(resp){
+        var parts = resp.responseStatus === 200
+          ? resp.responseData.translatedText.split(SEP)
+          : batch;
+        results[bi] = parts;
+      })
+      .catch(function(){ results[bi] = batch; })
+      .finally(function(){
+        if (++done < batches.length) return;
+        // Reassemble
+        idxMap.forEach(function(loc, i) {
+          if (!loc) return;
+          var t = (results[loc.batch][loc.pos] || texts[i]).trim();
+          if      (i === 0) ar.roomName  = t;
+          else if (i === 1) ar.roomType  = t;
+          else if (i === 2) ar.roomDesc  = t;
+          else if (i === 3) ar.condTarif = t;
+          else if (i === 4) ar.condAnnul = t;
+          else if (i === 5) ar.ctaText   = t;
+          else if (i < 6 + specs.length) ar.specs[i-6] = t;
+          else if (i < 6 + specs.length + services.length) ar.services[i-6-specs.length] = t;
+          else { var ei=i-6-specs.length-services.length; if(extras[ei]) extras[ei].priceAr=t; }
+        });
+        cb();
+      });
+  });
 }
 
 /* ══════════════════════════════════════════════════════════
