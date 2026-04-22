@@ -406,17 +406,37 @@ function setText(sel, val, isHtml) {
 function setId(id, val, isHtml) { setText(document.getElementById(id), val, isHtml); }
 function setK(k, val, isHtml)   { setText('[data-k="' + k + '"]', val, isHtml); }
 
-/* ── TRADUCTION AR — 1 appel API par batch de 500 chars ── */
+/* ── TRADUCTION AR — Google Translate (sans clé API) ── */
+function gtrans(texts, cb) {
+  // Google Translate unofficial endpoint - gratuit, sans clé, sans quota
+  var joined = texts.join('\n');
+  var url = 'https://translate.googleapis.com/translate_a/single'
+    + '?client=gtx&sl=en&tl=ar&dt=t&q=' + encodeURIComponent(joined);
+  fetch(url)
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      // data[0] = array de [translated, original, ...]
+      // On reconstruit le texte traduit complet puis on resplit par \n
+      var translated = '';
+      for (var i = 0; i < data[0].length; i++) {
+        if (data[0][i] && data[0][i][0]) translated += data[0][i][0];
+      }
+      var parts = translated.split('\n');
+      cb(parts);
+    })
+    .catch(function(){ cb(texts); });
+}
+
 function ensureAR(d, cb) {
   var en = d.translations.en, ar = d.translations.ar;
   if (ar.roomName && ar.roomName !== en.roomName) { cb(); return; }
 
-  var extras  = d.base.extras || [];
-  var specs   = en.specs    || [];
-  var services= en.services || [];
+  var extras   = d.base.extras  || [];
+  var specs    = en.specs       || [];
+  var services = en.services    || [];
   var extraPrices = extras.map(function(ex){ return ex.priceEn || ex.price || ''; });
 
-  // Tableau plat de tous les textes a traduire
+  // Tableau plat - 1 texte par ligne
   var texts = [
     en.roomName  || '',
     en.roomType  || '',
@@ -426,57 +446,20 @@ function ensureAR(d, cb) {
     en.ctaText   || ''
   ].concat(specs).concat(services).concat(extraPrices);
 
-  var SEP = ' ||> ';
-
-  // Decouper en batches de 490 chars max
-  var batches = [], cur = [], curLen = 0, idxMap = [];
-  texts.forEach(function(t, i) {
-    var piece = t.trim().substring(0, 80);
-    if (!piece) { idxMap.push(null); return; }
-    if (curLen + piece.length + SEP.length > 490 && cur.length > 0) {
-      batches.push(cur); cur = []; curLen = 0;
-    }
-    idxMap.push({batch: batches.length, pos: cur.length});
-    cur.push(piece);
-    curLen += piece.length + SEP.length;
-  });
-  if (cur.length) batches.push(cur);
-
-  if (batches.length === 0) { cb(); return; }
-
-  var results = batches.map(function(){ return []; });
-  var done = 0;
-
-  batches.forEach(function(batch, bi) {
-    var url = 'https://api.mymemory.translated.net/get?q='
-      + encodeURIComponent(batch.join(SEP)) + '&langpair=en|ar';
-    fetch(url)
-      .then(function(r){ return r.json(); })
-      .then(function(resp){
-        var parts = resp.responseStatus === 200
-          ? resp.responseData.translatedText.split(SEP)
-          : batch;
-        results[bi] = parts;
-      })
-      .catch(function(){ results[bi] = batch; })
-      .finally(function(){
-        if (++done < batches.length) return;
-        // Reassemble
-        idxMap.forEach(function(loc, i) {
-          if (!loc) return;
-          var t = (results[loc.batch][loc.pos] || texts[i]).trim();
-          if      (i === 0) ar.roomName  = t;
-          else if (i === 1) ar.roomType  = t;
-          else if (i === 2) ar.roomDesc  = t;
-          else if (i === 3) ar.condTarif = t;
-          else if (i === 4) ar.condAnnul = t;
-          else if (i === 5) ar.ctaText   = t;
-          else if (i < 6 + specs.length) ar.specs[i-6] = t;
-          else if (i < 6 + specs.length + services.length) ar.services[i-6-specs.length] = t;
-          else { var ei=i-6-specs.length-services.length; if(extras[ei]) extras[ei].priceAr=t; }
-        });
-        cb();
-      });
+  gtrans(texts, function(parts) {
+    var n = 6;
+    ar.roomName  = parts[0] || en.roomName;
+    ar.roomType  = parts[1] || en.roomType;
+    ar.roomDesc  = parts[2] || en.roomDesc;
+    ar.condTarif = parts[3] || en.condTarif;
+    ar.condAnnul = parts[4] || en.condAnnul;
+    ar.ctaText   = parts[5] || en.ctaText;
+    specs.forEach(function(_, i)   { ar.specs[i]    = parts[n + i]                        || specs[i]; });
+    services.forEach(function(_, i){ ar.services[i] = parts[n + specs.length + i]         || services[i]; });
+    extraPrices.forEach(function(_, i) {
+      if (extras[i]) extras[i].priceAr = parts[n + specs.length + services.length + i] || extraPrices[i];
+    });
+    cb();
   });
 }
 
