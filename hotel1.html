@@ -304,13 +304,19 @@ var _cur = 0, _rCur = 0;
 /* ── PROXY IMAGE ── */
 function proxyImg(url) {
   if (!url || url.length < 8) return '';
+  // These work directly - no proxy needed
   if (url.indexOf('unsplash.com') > -1) return url;
+  if (url.indexOf('i.imgur.com') > -1) return url;
+  if (url.indexOf('imgur.com') > -1 && url.match(/\.(jpg|jpeg|png|gif|webp)/i)) return url;
+  // Google Drive direct link
   if (url.indexOf('drive.google.com/file') > -1) {
     var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
     if (m) return 'https://drive.google.com/uc?export=view&id=' + m[1];
   }
-  // Already a weserv URL? return as-is
+  if (url.indexOf('drive.google.com/uc') > -1) return url;
+  // Already proxied
   if (url.indexOf('weserv.nl') > -1) return url;
+  // Everything else - OneDrive, hotel sites, etc.
   return 'https://images.weserv.nl/?url=' + encodeURIComponent(url) + '&w=1400&output=jpg&q=85';
 }
 
@@ -399,13 +405,57 @@ function setText(sel, val, isHtml) {
 function setId(id, val, isHtml) { setText(document.getElementById(id), val, isHtml); }
 function setK(k, val, isHtml)   { setText('[data-k="' + k + '"]', val, isHtml); }
 
+/* ── TRADUCTION AR VIA MYMEMORY (cote navigateur) ── */
+function mmTranslate(text, cb) {
+  if (!text || text.trim().length < 2) { cb(text); return; }
+  var url = 'https://api.mymemory.translated.net/get?q='
+    + encodeURIComponent(text.substring(0, 400)) + '&langpair=en|ar';
+  fetch(url)
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      cb(d.responseStatus === 200 ? d.responseData.translatedText : text);
+    })
+    .catch(function(){ cb(text); });
+}
+function mmTranslateArr(arr, cb) {
+  if (!arr || arr.length === 0) { cb([]); return; }
+  var out = new Array(arr.length), left = arr.length;
+  arr.forEach(function(item, i) {
+    mmTranslate(item || '', function(t) {
+      out[i] = t; if (--left === 0) cb(out);
+    });
+  });
+}
+function ensureAR(d, cb) {
+  var en = d.translations.en, ar = d.translations.ar;
+  // Si AR non traduit (identique à EN), on traduit maintenant
+  if (ar.roomName && ar.roomName !== en.roomName) { cb(); return; }
+  var tasks = 8, done = 0;
+  function tick() { if (++done >= tasks) cb(); }
+  mmTranslate(en.roomName  || '', function(t){ ar.roomName  = t; tick(); });
+  mmTranslate(en.roomType  || '', function(t){ ar.roomType  = t; tick(); });
+  mmTranslate(en.roomDesc  || '', function(t){ ar.roomDesc  = t; tick(); });
+  mmTranslate(en.condTarif || '', function(t){ ar.condTarif = t; tick(); });
+  mmTranslate(en.condAnnul || '', function(t){ ar.condAnnul = t; tick(); });
+  mmTranslate(en.ctaText   || '', function(t){ ar.ctaText   = t; tick(); });
+  mmTranslateArr(en.specs    || [], function(t){ ar.specs    = t; tick(); });
+  mmTranslateArr(en.services || [], function(t){ ar.services = t; tick(); });
+}
+
 /* ══════════════════════════════════════════════════════════
    APPLY DATA — langue = 'en' ou 'ar'
    ══════════════════════════════════════════════════════════ */
 function applyData(lang) {
   var d = getData();
   if (!d) { console.error('No MLV data'); return; }
+  if (lang === 'ar') {
+    ensureAR(d, function() { _renderPage(d, 'ar'); });
+    return;
+  }
+  _renderPage(d, lang);
+}
 
+function _renderPage(d, lang) {
   var base = d.base;
   var t    = d.translations[lang] || d.translations['en'];
 
@@ -528,7 +578,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('modal').addEventListener('click', function(e) {
     if (e.target.id === 'modal') closeModal();
   });
-  applyData('en'); // Default to EN
+  _applyData(getData(), 'en'); // Default to EN
 });
 </script>
 </body>
