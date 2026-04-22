@@ -390,6 +390,7 @@ function rGoTo(n) {
   document.querySelectorAll('.rdot').forEach(function(d, i){ d.classList.toggle('active', i === _rCur); });
 }
 function rSlide(dir) { rGoTo(_rCur + dir); }
+function _rSlide(dir) { rGoTo(_rCur + dir); } // alias for HTML onclick
 
 /* ── MODAL ── */
 function openModal() { document.getElementById('modal').classList.add('open'); }
@@ -448,7 +449,7 @@ function ensureAR(d, cb) {
     });
     tick();
   });
-  tasks++; // account for the extra task we added
+  // tasks=9 is correct: 6 strings + specs[] + services[] + extraPrices[]
 }
 
 /* ══════════════════════════════════════════════════════════
