@@ -430,7 +430,7 @@ function ensureAR(d, cb) {
   var en = d.translations.en, ar = d.translations.ar;
   // Si AR non traduit (identique à EN), on traduit maintenant
   if (ar.roomName && ar.roomName !== en.roomName) { cb(); return; }
-  var tasks = 8, done = 0;
+  var tasks = 9, done = 0;
   function tick() { if (++done >= tasks) cb(); }
   mmTranslate(en.roomName  || '', function(t){ ar.roomName  = t; tick(); });
   mmTranslate(en.roomType  || '', function(t){ ar.roomType  = t; tick(); });
@@ -440,6 +440,15 @@ function ensureAR(d, cb) {
   mmTranslate(en.ctaText   || '', function(t){ ar.ctaText   = t; tick(); });
   mmTranslateArr(en.specs    || [], function(t){ ar.specs    = t; tick(); });
   mmTranslateArr(en.services || [], function(t){ ar.services = t; tick(); });
+  // Also translate free-text extras prices that are in English
+  var extraPrices = (d.base.extras || []).map(function(ex){ return ex.priceEn || ex.price || ''; });
+  mmTranslateArr(extraPrices, function(translated) {
+    translated.forEach(function(t, i) {
+      if (d.base.extras[i]) d.base.extras[i].priceAr = t;
+    });
+    tick();
+  });
+  tasks++; // account for the extra task we added
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -476,6 +485,7 @@ function _renderPage(d, lang) {
   setK('sb3',  lang === 'ar' ? 'المسافرون'  : 'Guests');
   setK('sb4',  lang === 'ar' ? 'الليالي'    : 'Nights');
   setK('sb5',  lang === 'ar' ? 'الفندق'     : 'Hotel');
+  var h3el = document.getElementById('d-hotel3'); if (h3el) h3el.textContent = base.hotelName;
   setK('sb1v', base.checkIn);
   setK('sb2v', base.checkOut);
   setK('sb3v', base.travelers);
@@ -578,7 +588,8 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('modal').addEventListener('click', function(e) {
     if (e.target.id === 'modal') closeModal();
   });
-  _applyData(getData(), 'en'); // Default to EN
+  var _d = getData();
+  if (_d) { buildSlides('slider', _d.base.heroImgs, 'hero-slide'); buildSlides('rs-1', _d.base.roomImgs, 'room-slide'); _renderPage(_d, 'en'); } // Default to EN
 });
 </script>
 </body>
