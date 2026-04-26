@@ -540,7 +540,7 @@ function _renderPage(d, lang) {
   setK('sb1v', ci);
   setK('sb2v', co);
   setK('sb3v', base.travelers);
-  setK('sb4v', base.nights);
+  setK('sb4v', base.nights || (base.nightsNum > 0 ? base.nightsNum + (lang === 'ar' ? ' ليالٍ' : ' nights') : ''));
 
   /* ── ROOM ── */
   setK('r-name',   t.roomName);
