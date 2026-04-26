@@ -183,7 +183,7 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
   <div class="sb-item"><div class="sb-label" data-k="sb2">Départ</div><div class="sb-val date-val" data-k="sb2v" id="sb-checkout"><span class="d-checkout"></span></div></div>
   <div class="sb-item"><div class="sb-label" data-k="sb3">Voyageurs</div><div class="sb-val" data-k="sb3v" id="sb-travelers"><span id="d-travelers"></span></div></div>
   <div class="sb-item"><div class="sb-label" data-k="sb4">Nuits</div><div class="sb-val" data-k="sb4v" id="sb-nights"><span id="d-nights"></span></div></div>
-  <div class="sb-item"><div class="sb-label" data-k="sb5">Hôtel</div><div class="sb-val"><span id="d-hotel3"></span></div></div>
+  <div class="sb-item"><div class="sb-label" data-k="sb5">Hôtel</div><div class="sb-val"><span id="d-hotel3" dir="ltr"></span></div></div>
 </div>
 
 <!-- ROOM CARD (single) -->
@@ -386,7 +386,8 @@ function rGoTo(n) {
   var slides = document.querySelectorAll('#rs-1 .room-slide');
   _rCur = (n + slides.length) % slides.length;
   var el = document.getElementById('rs-1');
-  if (el) el.style.transform = 'translateX(-' + (_rCur * 100) + '%)';
+  var isRTL = document.documentElement.dir === 'rtl';
+  if (el) el.style.transform = 'translateX(' + (isRTL ? '' : '-') + (_rCur * 100) + '%)';
   document.querySelectorAll('.rdot').forEach(function(d, i){ d.classList.toggle('active', i === _rCur); });
 }
 function rSlide(dir) { rGoTo(_rCur + dir); }
@@ -453,6 +454,7 @@ function ensureAR(d, cb) {
   var extraPrices = extras.map(function(ex){ return ex.priceEn || ex.price || ''; });
 
   // Tableau plat - 1 texte par ligne
+  var extraLabels = extras.map(function(ex){ return ex.labelEn || ex.labelFr || ''; });
   var texts = [
     en.roomName  || '',
     en.roomType  || '',
@@ -460,7 +462,7 @@ function ensureAR(d, cb) {
     en.condTarif || '',
     en.condAnnul || '',
     en.ctaText   || ''
-  ].concat(specs).concat(services).concat(extraPrices);
+  ].concat(specs).concat(services).concat(extraLabels).concat(extraPrices);
 
   gtrans(texts, function(parts) {
     var n = 6;
@@ -470,10 +472,15 @@ function ensureAR(d, cb) {
     ar.condTarif = parts[3] || en.condTarif;
     ar.condAnnul = parts[4] || en.condAnnul;
     ar.ctaText   = parts[5] || en.ctaText;
-    specs.forEach(function(_, i)   { ar.specs[i]    = parts[n + i]                        || specs[i]; });
-    services.forEach(function(_, i){ ar.services[i] = parts[n + specs.length + i]         || services[i]; });
+    specs.forEach(function(_, i)   { ar.specs[i]    = parts[n + i] || specs[i]; });
+    services.forEach(function(_, i){ ar.services[i] = parts[n + specs.length + i] || services[i]; });
+    var labOff = n + specs.length + services.length;
+    extraLabels.forEach(function(_, i) {
+      if (extras[i]) extras[i].labelAr = parts[labOff + i] || extraLabels[i];
+    });
+    var priceOff = labOff + extraLabels.length;
     extraPrices.forEach(function(_, i) {
-      if (extras[i]) extras[i].priceAr = parts[n + specs.length + services.length + i] || extraPrices[i];
+      if (extras[i]) extras[i].priceAr = parts[priceOff + i] || extraPrices[i];
     });
     cb();
   });
