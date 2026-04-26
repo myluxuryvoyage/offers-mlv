@@ -647,5 +647,25 @@ document.addEventListener('DOMContentLoaded', function() {
   if (_d) { buildSlides('slider', _d.base.heroImgs, 'hero-slide'); buildSlides('rs-1', _d.base.roomImgs, 'room-slide'); _renderPage(_d, 'en'); } // Default to EN
 });
 </script>
+
+<div style="background:#f5f5f5;border-top:1px solid #e0e0e0;padding:10px 44px;text-align:center;">
+  <p id="translation-note" style="font-size:9px;color:#999;letter-spacing:.05em;line-height:1.6;margin:0;"></p>
+</div>
+<script>
+(function(){
+  var notes = {
+    en: 'Translations are generated automatically by Google Translate. We apologize for any translation errors.',
+    ar: 'تمت الترجمة تلقائياً بواسطة Google Translate. نعتذر عن أي أخطاء في الترجمة.'
+  };
+  function updateNote() {
+    var el = document.getElementById('translation-note');
+    var lang = document.documentElement.lang || 'en';
+    if (el) el.textContent = notes[lang] || notes.en;
+  }
+  document.addEventListener('DOMContentLoaded', updateNote);
+  var orig = window.setLang;
+  window.setLang = function(l) { if(orig) orig(l); setTimeout(updateNote, 100); };
+})();
+</script>
 </body>
 </html>
