@@ -376,6 +376,7 @@ function goTo(n) {
   document.querySelectorAll('.dot').forEach(function(d, i){ d.classList.toggle('active', i === _cur); });
 }
 function slide(dir) { goTo(_cur + dir); }
+function _slide(dir) { goTo(_cur + dir); } // alias for HTML onclick
 
 /* ── ROOM SLIDER INIT ── */
 function initRoom() {
@@ -476,7 +477,7 @@ function ensureAR(d, cb) {
     en.condTarif || '',
     en.condAnnul || '',
     en.ctaText   || ''
-  ].concat(specs).concat(services).concat(extraLabels).concat(extraPrices);
+  ].concat(specs).concat(services).concat(extraLabels).concat(extraPrices).concat([d.base.hotelName || '']);
 
   gtrans(texts, function(parts) {
     var n = 6;
@@ -496,6 +497,9 @@ function ensureAR(d, cb) {
     extraPrices.forEach(function(_, i) {
       if (extras[i]) extras[i].priceAr = parts[priceOff + i] || extraPrices[i];
     });
+    // Hotel name transliteration (last item in texts)
+    var hnIdx = 6 + specs.length + services.length + extraLabels.length + extraPrices.length;
+    if (parts[hnIdx] && parts[hnIdx].trim()) d.base.hotelNameAr = parts[hnIdx].trim();
     cb();
   });
 }
@@ -536,7 +540,7 @@ function _renderPage(d, lang) {
   setK('sb3',  lang === 'ar' ? 'المسافرون'  : 'Guests');
   setK('sb4',  lang === 'ar' ? 'الليالي'    : 'Nights');
   setK('sb5',  lang === 'ar' ? 'الفندق'     : 'Hotel');
-  var h3el = document.getElementById('d-hotel3'); if (h3el) h3el.textContent = base.hotelName;
+  var h3el = document.getElementById('d-hotel3'); if (h3el) h3el.textContent = (lang === 'ar' && base.hotelNameAr) ? base.hotelNameAr : base.hotelName;
   setK('sb1v', ci);
   setK('sb2v', co);
   setK('sb3v', base.travelers);
