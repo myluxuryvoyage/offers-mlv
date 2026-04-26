@@ -396,7 +396,23 @@ function _rSlide(dir) { rGoTo(_rCur + dir); } // alias for HTML onclick
 function openModal() { document.getElementById('modal').classList.add('open'); }
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
-/* ── SET TEXT HELPER ── */
+/* ── FORMAT DATE PAR LANGUE ── */
+function fmtDate(raw, lang) {
+  if (!raw) return '';
+  // raw = 'YYYY-MM-DD'
+  var p = raw.split('-');
+  if (p.length !== 3) return raw;
+  var y = p[0], m = parseInt(p[1]), d = parseInt(p[2]);
+  if (lang === 'ar') {
+    // Format arabe : YYYY/MM/DD
+    return y + '/' + p[1] + '/' + p[2];
+  }
+  // Format anglais : DD Mon YYYY
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return d + ' ' + (months[m-1] || p[1]) + ' ' + y;
+}
+
+
 function setText(sel, val, isHtml) {
   var el = typeof sel === 'string' ? document.querySelector(sel) : sel;
   if (!el || val === undefined || val === null) return;
@@ -488,7 +504,9 @@ function _renderPage(d, lang) {
 
   /* ── HERO ── */
   setK('h-title', base.hotelName + '<br><em>' + t.roomName + '</em>', true);
-  setK('h-sub',   base.hotelName + ' · ' + base.checkIn + ' – ' + base.checkOut);
+  var ci = fmtDate(base.checkIn, lang);
+  var co = fmtDate(base.checkOut, lang);
+  setK('h-sub',   base.hotelName + ' · ' + ci + ' – ' + co);
   setK('h-eye',   lang === 'ar' ? 'عرض حصري · ماي لاكشري فوياج' : 'Exclusive proposal · My Luxury Voyage');
 
   /* ── SUMMARY BAR ── */
@@ -498,8 +516,8 @@ function _renderPage(d, lang) {
   setK('sb4',  lang === 'ar' ? 'الليالي'    : 'Nights');
   setK('sb5',  lang === 'ar' ? 'الفندق'     : 'Hotel');
   var h3el = document.getElementById('d-hotel3'); if (h3el) h3el.textContent = base.hotelName;
-  setK('sb1v', base.checkIn);
-  setK('sb2v', base.checkOut);
+  setK('sb1v', ci);
+  setK('sb2v', co);
   setK('sb3v', base.travelers);
   setK('sb4v', base.nights);
 
