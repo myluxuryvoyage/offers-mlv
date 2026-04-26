@@ -149,7 +149,7 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 
 <div class="lang-bar">
   <button class="lang-btn active" onclick="setLang('en')" data-lang="en">EN</button>
-  <button class="lang-btn" onclick="setLang('ar')" data-lang="ar">AR</button>
+  <button class="lang-btn" onclick="setLang('ar')" data-lang="ar">العربية</button>
 </div>
 
 <div class="doc">
@@ -347,10 +347,16 @@ function buildSlides(containerId, urls, cssClass) {
 }
 
 /* ── HERO SLIDER INIT ── */
+var _heroInterval = null;
 function initHero() {
   var slides = document.querySelectorAll('.hero-slide');
   var dotsEl = document.getElementById('dots');
   if (!dotsEl || slides.length === 0) return;
+  // Reset position and clear old interval
+  _cur = 0;
+  var sliderEl = document.getElementById('slider');
+  if (sliderEl) sliderEl.style.transform = 'translateX(0%)';
+  if (_heroInterval) { clearInterval(_heroInterval); _heroInterval = null; }
   dotsEl.innerHTML = '';
   slides.forEach(function(_, i) {
     var d = document.createElement('div');
@@ -358,7 +364,9 @@ function initHero() {
     d.onclick = (function(n){ return function(){ goTo(n); }; })(i);
     dotsEl.appendChild(d);
   });
-  setInterval(function(){ goTo((_cur + 1) % document.querySelectorAll('.hero-slide').length); }, 4500);
+  if (slides.length > 1) {
+    _heroInterval = setInterval(function(){ goTo((_cur + 1) % document.querySelectorAll('.hero-slide').length); }, 4500);
+  }
 }
 function goTo(n) {
   var slides = document.querySelectorAll('.hero-slide');
@@ -374,6 +382,10 @@ function initRoom() {
   var slides = document.querySelectorAll('#rs-1 .room-slide');
   var dotsEl = document.getElementById('rd-1');
   if (!dotsEl || slides.length === 0) return;
+  // Reset position
+  _rCur = 0;
+  var rsEl = document.getElementById('rs-1');
+  if (rsEl) rsEl.style.transform = 'translateX(0%)';
   dotsEl.innerHTML = '';
   slides.forEach(function(_, i) {
     var d = document.createElement('div');
@@ -446,7 +458,9 @@ function gtrans(texts, cb) {
 
 function ensureAR(d, cb) {
   var en = d.translations.en, ar = d.translations.ar;
-  if (ar.roomName && ar.roomName !== en.roomName) { cb(); return; }
+  // Check if AR is already properly translated (contains Arabic characters)
+  var hasArabic = /[\u0600-\u06FF]/.test(ar.roomName || '');
+  if (hasArabic) { cb(); return; }
 
   var extras   = d.base.extras  || [];
   var specs    = en.specs       || [];
