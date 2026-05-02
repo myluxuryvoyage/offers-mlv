@@ -13,7 +13,7 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 
 /* COVER */
 .cover{position:relative;height:82vh;min-height:520px;max-height:840px;overflow:hidden;display:flex;flex-direction:column;}
-.cover-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1400&q=80') center/cover;filter:brightness(.48);}
+.cover-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1400&q=80') center/cover;filter:brightness(.48);transition:background-image .3s;}
 .cover-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,46,74,.05) 0%,rgba(28,46,74,.62) 100%);}
 .cover-body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;}
 .cover-logos{display:flex;align-items:center;justify-content:center;gap:28px;margin-bottom:32px;}
@@ -200,10 +200,10 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 
 <!-- OVERVIEW -->
 <div class="overview">
-  <div class="ov-item"><div class="ov-label">Route</div><div class="ov-val">Lisboa → Gardona</div></div>
-  <div class="ov-item"><div class="ov-label">Dates</div><div class="ov-val">25–29 Jan 2026</div></div>
-  <div class="ov-item"><div class="ov-label">Duration</div><div class="ov-val">4 Days</div></div>
-  <div class="ov-item"><div class="ov-label">Countries</div><div class="ov-val">Portugal · Spain</div></div>
+  <div class="ov-item"><div class="ov-label" data-k="ov-route">Route</div><div class="ov-val" id="ov-route-val">Lisboa → Gardona</div></div>
+  <div class="ov-item"><div class="ov-label" data-k="ov-dates">Dates</div><div class="ov-val" id="ov-dates-val">25–29 Jan 2026</div></div>
+  <div class="ov-item"><div class="ov-label" data-k="ov-dur">Duration</div><div class="ov-val" id="ov-dur-val">4 Days</div></div>
+  <div class="ov-item"><div class="ov-label" data-k="ov-countries">Countries</div><div class="ov-val" id="ov-countries-val">Portugal · Spain</div></div>
 </div>
 
 <!-- DAY 1 -->
@@ -849,6 +849,23 @@ function _renderRT(lang) {
     if (titleEl) titleEl.innerHTML = d.base.rtName || 'Road Trip';
     if (routeEl) routeEl.textContent = (d.base.rtFrom || '') + ' → ' + (d.base.rtTo || '');
     if (datesEl) datesEl.textContent = (d.base.rtStart || '') + ' – ' + (d.base.rtEnd || '') + (d.base.rtDays ? ' · ' + d.base.rtDays : '');
+
+    // Cover image
+    if (d.base.coverImg) {
+      var bg = document.querySelector('.cover-bg');
+      if (bg) bg.style.backgroundImage = "url('" + proxyImg(d.base.coverImg) + "')";
+    }
+
+    // Overview section — dynamic
+    var ovRoute = document.getElementById('ov-route-val');
+    var ovDates = document.getElementById('ov-dates-val');
+    var ovDur   = document.getElementById('ov-dur-val');
+    var ovCtry  = document.getElementById('ov-countries-val');
+    if (ovRoute) ovRoute.textContent = (d.base.rtFrom || '') + ' → ' + (d.base.rtTo || '');
+    if (ovDates) ovDates.textContent = (d.base.rtStart || '') + ' – ' + (d.base.rtEnd || '');
+    if (ovDur)   ovDur.textContent   = d.base.rtDays || '';
+    if (ovCtry)  ovCtry.textContent  = d.base.countries || '';
+
     // Car cards
     if (d.base.cars && d.base.cars.length > 0) buildCarCards(d.base.cars, lang);
   }
