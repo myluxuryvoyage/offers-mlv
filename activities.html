@@ -562,31 +562,31 @@ function gtrans(texts, cb) {
 var T_EN = {
   'c-label':'My Luxury Voyage · Curated Selection',
   'c-eye':'Italy','c-title':'Lago di Garda',
-  'c-sub':'Activities &amp; Restaurants',
+  'c-sub':'Activities & Restaurants',
   'c-dest':'Please indicate your preferences below',
-  'intro-text':'We have selected for you a series of <strong>activities, cultural experiences and restaurants</strong> for your stay at Lago di Garda. Browse each suggestion and indicate your preference.',
+  'intro-text':'We have selected for you a series of activities, cultural experiences and restaurants for your stay at Lago di Garda. Browse each suggestion and indicate your preference.',
   'intro-note':'All suggestions are subject to availability at the time of booking.',
   'cat1-sub':'Category 01','cat1-title':'Lake<br>Experiences',
-  'cat2-sub':'Category 02','cat2-title':'Culture &amp;<br>Heritage',
-  'cat3-sub':'Category 03','cat3-title':'Nature<br>Wellness &amp; Leisure',
+  'cat2-sub':'Category 02','cat2-title':'Culture &<br>Heritage',
+  'cat3-sub':'Category 03','cat3-title':'Nature<br>Wellness & Leisure',
   'cat4-sub':'Restaurant Selection','cat4-title':'Restaurant<br>Suggestions',
   'sug-eye':'MY LUXURY VOYAGE · Suggestion n°',
   's1-sub':'Private island visit · Lake experience',
   's1-desc':'The island is located on the Brescia side of Lake Garda. Its charm lies in the extraordinary neo-Gothic Venetian-style villa, designed by Luigi Rovelli in the early 1900s.',
   's1-info-bold':'Duration:','s1-info':'2 to 2h30 on the island · Transfer: 15 to 40 min depending on port',
   's2-sub':'Cultural discovery · Guided walk',
-  's2-desc':'<strong>Riva del Garda</strong>, a charming town at the northern tip of Lake Garda, perfectly blends nature and culture. Ideal for water sports enthusiasts, hikers and cyclists.',
-  's3-sub':'Museum · Archaeology &amp; Art',
+  's2-desc':'Riva del Garda, a charming town at the northern tip of Lake Garda, perfectly blends nature and culture. Ideal for water sports enthusiasts, hikers and cyclists.',
+  's3-sub':'Museum · Archaeology & Art',
   's3-desc':'Located in the medieval Rocca of Riva del Garda, the MAG offers a journey through archaeology, art and local history.',
   's3-info-bold':'Hours:','s3-info':'Tuesday – Sunday · 10:00 – 18:00',
   's4-sub':'Picturesque village · Lakeside stroll',
-  's4-desc':'<strong>Limone sul Garda</strong> is a charming lakeside village known for its lemon trees. Visit the <strong>Limonaia Museum</strong> and enjoy lakeside cafés.',
-  's5-sub':'Guided tour · History &amp; Romance',
-  's5-desc':'Discover the timeless charm of <strong>Verona</strong>. Explore the <strong>Arena di Verona</strong>, <strong>Juliet's House</strong> and <strong>Piazza delle Erbe</strong>.',
+  's4-desc':'Limone sul Garda is a charming lakeside village known for its lemon trees. Visit the Limonaia Museum and enjoy lakeside cafés.',
+  's5-sub':'Guided tour · History & Romance',
+  's5-desc':'Discover the timeless charm of Verona. Explore the Arena di Verona, Juliet\'s House and Piazza delle Erbe.',
   's6-sub':'Water sports · Lake Garda',
-  's6-desc':'Lake Garda is a premier destination for water sports lovers: <strong>kitesurf</strong>, <strong>wakeboard</strong>, <strong>stand-up paddle</strong> and <strong>kayak</strong>.',
-  's7-sub':'Spa &amp; Wellness · 1,500 m²',
-  's7-desc':'Welcome to EALA Luxury Spa, 1,500 m² of wellness designed for you. Unique treatments via a <strong>holistic, sensory and natural</strong> approach.',
+  's6-desc':'Lake Garda is a premier destination for water sports lovers: kitesurf, wakeboard, stand-up paddle and kayak.',
+  's7-sub':'Spa & Wellness · 1,500 m²',
+  's7-desc':'Welcome to EALA Luxury Spa, 1,500 m² of wellness designed for you. Unique treatments via a holistic, sensory and natural approach.',
   'r1-type':'Seafood','r2-type':'Italian cuisine',
   'pref-yes':'Yes, interested','pref-no':'No, not interested','pref-maybe':'Maybe',
   'price-lbl':'Estimated price per person (EUR)',
@@ -605,20 +605,70 @@ function applyDynamicData(lang) {
   var d = getData();
   if (!d || !d.base) return;
   var b = d.base;
+  var isAR = lang === 'ar';
+
   // Cover image
   if (b.coverImg) {
     var coverBg = document.querySelector('.cover-bg');
     if (coverBg) coverBg.style.backgroundImage = "url('" + proxyImg(b.coverImg) + "')";
   }
-  // City/Country/Dates - override T values
+  // City / Country
   if (b.city) {
-    var eyeEl = document.querySelector('[data-k="c-eye"]');
-    if (eyeEl) eyeEl.textContent = b.city;
+    document.querySelectorAll('[data-k="c-eye"]').forEach(function(el){ el.textContent = b.city; });
   }
-  if (b.country) {
-    var titleEl = document.querySelector('[data-k="c-title"]');
-    if (titleEl) titleEl.textContent = b.country + ' · ' + (b.city || '');
+  if (b.country || b.city) {
+    document.querySelectorAll('[data-k="c-title"]').forEach(function(el){ el.textContent = (b.country||'') + (b.city ? ' · ' + b.city : ''); });
   }
+
+  // Build activity cards dynamically
+  if (!b.activities || b.activities.length === 0) return;
+
+  // Labels by lang
+  var lbl = {
+    avail:  isAR ? 'هذا الاقتراح رهن التوفر' : 'Cette suggestion est soumise à disponibilité',
+    price:  isAR ? 'السعر' : (lang === 'en' ? 'Price' : 'Tarif'),
+    yes:    isAR ? 'موافق' : (lang === 'en' ? 'Approved' : 'Approuvé'),
+    opt:    isAR ? 'كخيار' : (lang === 'en' ? 'As option' : 'En option'),
+    no:     isAR ? 'مرفوض' : (lang === 'en' ? 'Declined' : 'Refusé'),
+    sug:    isAR ? 'اقتراح' : (lang === 'en' ? 'Suggestion' : 'Suggestion')
+  };
+
+  // Find or create container
+  var container = document.getElementById('dynamic-acts');
+  if (!container) {
+    // Hide all static sug-cards and cat-divs
+    document.querySelectorAll('.sug-card, .cat-div, .cat-bar').forEach(function(el){ el.style.display='none'; });
+    container = document.createElement('div');
+    container.id = 'dynamic-acts';
+    var submitSection = document.querySelector('.submit-section');
+    if (submitSection) submitSection.parentNode.insertBefore(container, submitSection);
+  }
+  container.innerHTML = '';
+
+  b.activities.forEach(function(act, i) {
+    var num = i + 1;
+    var imgs = [act.img1, act.img2, act.img3].filter(function(u){ return u && u.length > 5; });
+    var photosHtml = imgs.length > 0
+      ? '<div class="photos">' + imgs.map(function(u){ return '<img src="' + proxyImg(u) + '" alt="' + (act.name||'') + '" onerror="this.style.display=\'none\'">'; }).join('') + '</div>'
+      : '';
+
+    var card = document.createElement('div');
+    card.className = 'sug-card';
+    card.innerHTML =
+      '<div class="sug-eyebrow">MY LUXURY VOYAGE · ' + lbl.sug + ' n°' + num + '</div>' +
+      '<div class="sug-title">' + (act.category ? act.category + ' — ' : '') + (act.name || '') + '</div>' +
+      '<div class="sug-divider"></div>' +
+      '<div class="sug-desc">' + (act.descFR || '') + '</div>' +
+      photosHtml +
+      (act.price ? '<div class="price-line"><span class="price-line-label">' + lbl.price + '</span><span class="price-line-amount">' + act.price + '</span></div>' : '') +
+      '<div class="sug-avail">' + lbl.avail + '</div>' +
+      '<div class="vote-box" id="vote-' + num + '">' +
+        '<button class="vote-btn" onclick="vote(' + num + ',\'yes\')"><span class="vote-label">' + lbl.yes + '</span><span class="vote-check" id="vc-' + num + '-yes"></span></button>' +
+        '<button class="vote-btn" onclick="vote(' + num + ',\'opt\')"><span class="vote-label">' + lbl.opt + '</span><span class="vote-check" id="vc-' + num + '-opt"></span></button>' +
+        '<button class="vote-btn" onclick="vote(' + num + ',\'no\')"><span class="vote-label">' + lbl.no + '</span><span class="vote-check" id="vc-' + num + '-no"></span></button>' +
+      '</div>';
+    container.appendChild(card);
+  });
 }
 
 /* ── SET DATA-K ELEMENTS WITH EN TEXT ── */
@@ -659,7 +709,13 @@ function applyAR() {
   // Also translate price labels
   var priceLbls = Array.from(document.querySelectorAll('.price-lbl'));
 
-  var allTexts = texts.concat(priceLbls.map(function(){ return PRICE_LABELS.en; }));
+  // Also collect dynamic activity card texts
+  var dynTitles = Array.from(document.querySelectorAll('#dynamic-acts .sug-title'));
+  var dynDescs  = Array.from(document.querySelectorAll('#dynamic-acts .sug-desc'));
+  var dynPrices = Array.from(document.querySelectorAll('#dynamic-acts .price-line-amount'));
+  var dynTexts  = dynTitles.concat(dynDescs).map(function(el){ return el.textContent.trim(); }).filter(function(t){ return t.length > 1; });
+
+  var allTexts = texts.concat(priceLbls.map(function(){ return PRICE_LABELS.en; })).concat(dynTexts);
 
   gtrans(allTexts, function(parts) {
     var j = 0;
@@ -669,7 +725,11 @@ function applyAR() {
       if (orig.length > 1 && parts[j]) el.textContent = parts[j];
       j++;
     });
-    priceLbls.forEach(function(el){ el.textContent = PRICE_LABELS.ar; });
+    priceLbls.forEach(function(el){ el.textContent = PRICE_LABELS.ar; j++; });
+    dynTitles.concat(dynDescs).forEach(function(el){
+      if (parts[j]) el.textContent = parts[j];
+      j++;
+    });
     _arDone = true;
   });
 
