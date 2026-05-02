@@ -794,7 +794,7 @@ function buildCarCards(cars, lang) {
           '<div class="cp-val">' + (car.totalPrice || '') + '</div>' +
           (car.deposit ? '<div class="cp-deposit">' + labelDeposit + ': <strong>' + car.deposit + '</strong></div>' : '') +
         '</div></div>' +
-        '<div class="btn-reserve-wrap"><button class="btn-reserve" onclick="openModal('car' + id + '','' + (car.name||'').replace(/'/g,"\'") + '','' + (car.totalPrice||'').replace(/'/g,"\'") + '')">' + labelReserve + '</button></div>' +
+        '<div class="btn-reserve-wrap"><button class="btn-reserve" onclick="openModal(\'car' + id + '\',\'' + (car.name||'').replace(/'/g,"\\'") + '\',\'' + (car.totalPrice||'').replace(/'/g,"\\'") + '\')">' + labelReserve + '</button></div>' +
       '</div></div>';
   });
   _initCarSliders();
