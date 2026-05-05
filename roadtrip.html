@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MLV — Road Trip</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#1C2E4A;--gold:#C9A96E;--gold2:#B8944F;--white:#fff;--cream:#F8F6F1;--gray:#666;--light:#F2F0EC;--red:#C0392B;}
@@ -153,6 +154,21 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 .footer-txt{font-size:10px;color:rgba(255,255,255,.38);letter-spacing:.06em;line-height:1.7;text-align:right;}
 
 .itin-block{padding:28px 44px;background:var(--white);}
+.city-block{display:flex;gap:0;border-bottom:1px solid rgba(201,169,110,.15);background:var(--white);}
+.city-img-wrap{width:220px;min-width:220px;overflow:hidden;flex-shrink:0;}
+.city-img{width:100%;height:100%;object-fit:cover;display:block;}
+.city-content{flex:1;padding:28px 36px;}
+.itin-city-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:10px;letter-spacing:.02em;}
+.itin-city-details{font-size:13px;line-height:1.85;color:#555;white-space:pre-line;}
+.mlv-tooltip { background:#fff !important; border:1px solid #C9A96E !important; border-radius:4px !important; box-shadow:0 2px 8px rgba(0,0,0,.12) !important; padding:6px 10px !important; }
+.mlv-tooltip::before { border-top-color:#C9A96E !important; }
+.leaflet-control-zoom { border:1px solid rgba(201,169,110,.4) !important; }
+.leaflet-control-zoom a { color:#1C2E4A !important; font-family:'Montserrat',sans-serif !important; }
+@media(max-width:620px){
+  .city-block{flex-direction:column;}
+  .city-img-wrap{width:100%;min-width:0;height:200px;}
+  .city-content{padding:20px 22px;}
+}
 .itin-day-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.06em;margin:20px 0 8px;padding-bottom:6px;border-bottom:1px solid rgba(201,169,110,.3);}
 .itin-day-title:first-child{margin-top:0;}
 .itin-line{font-size:13px;line-height:1.8;color:#444;padding:3px 0 3px 14px;border-left:2px solid rgba(201,169,110,.4);margin-bottom:2px;}
@@ -213,6 +229,27 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 <div id="itinerary-section">
   <!-- Dynamic itinerary rendered by JS from base.itinerary -->
 </div>
+
+<!-- ROUTE MAP -->
+<div id="route-map-section" style="display:none;">
+  <div style="padding:32px 44px 16px;background:#fff;">
+    <div style="font-size:9px;letter-spacing:.3em;color:#C9A96E;text-transform:uppercase;margin-bottom:8px;font-family:'Montserrat',sans-serif;" data-k="map-label">Route Map</div>
+    <div style="font-size:14px;font-weight:600;color:#1C2E4A;letter-spacing:.04em;text-transform:uppercase;border-bottom:2px solid rgba(201,169,110,.25);padding-bottom:16px;font-family:'Montserrat',sans-serif;" id="map-cities-title"></div>
+  </div>
+  <div id="mlv-leaflet-map" style="width:100%;height:460px;"></div>
+  <div style="background:#F8F6F1;padding:14px 44px;display:flex;align-items:center;gap:28px;border-bottom:1px solid rgba(201,169,110,.2);">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="width:24px;height:2.5px;background:#C9A96E;"></div>
+      <span id="map-legend-route" style="font-size:10px;font-family:'Montserrat',sans-serif;color:#1C2E4A;letter-spacing:.08em;">ROUTE MLV</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="width:10px;height:10px;border-radius:50%;background:#1C2E4A;border:2.5px solid #C9A96E;"></div>
+      <span id="map-legend-stop" style="font-size:10px;font-family:'Montserrat',sans-serif;color:#1C2E4A;letter-spacing:.08em;">ÉTAPE</span>
+    </div>
+    <div style="margin-left:auto;font-size:9px;font-family:'Montserrat',sans-serif;color:#aaa;letter-spacing:.05em;">© OpenStreetMap contributors · My Luxury Voyage</div>
+  </div>
+</div>
+
 
 <!-- CAR CARDS -->
 <div class="cars-wrap">
@@ -689,22 +726,33 @@ function _renderRT(lang) {
     }
     if (ovCtry)  ovCtry.textContent  = d.base.countries || '';
 
-    // Itinerary — render from base.itinerary text
+    // Itinerary — render cities from base.cities[]
     var itinSection = document.getElementById('itinerary-section');
     if (itinSection) {
-      if (d.base.itinerary && d.base.itinerary.trim().length > 0) {
-        // Parse itinerary text: each line becomes a paragraph
+      var cities = d.base.cities || [];
+      if (cities.length > 0) {
+        var cityParts = [];
+        cities.forEach(function(city) {
+          var imgSrc = city.img && city.img.length > 5 ? proxyImg(city.img) : '';
+          var block = '<div class="city-block">';
+          if (imgSrc) block += '<div class="city-img-wrap"><img class="city-img" src="' + imgSrc + '"></div>';
+          block += '<div class="city-content">';
+          if (city.name)    block += '<div class="itin-city-name">'    + city.name    + '</div>';
+          if (city.details) block += '<div class="itin-city-details">'  + city.details + '</div>';
+          block += '</div></div>';
+          cityParts.push(block);
+        });
+        itinSection.innerHTML = cityParts.join('');
+      } else if (d.base.itinerary && d.base.itinerary.trim().length > 0) {
+        // Fallback: render plain text itinerary
         var lines = d.base.itinerary.split('\n').filter(function(l){ return l.trim().length > 0; });
         itinSection.innerHTML = '<div class="itin-block">' +
           lines.map(function(line) {
-            // Detect "Jour N" or "Day N" headers
             var isHeader = /^(jour|day|j\d|d\d)/i.test(line.trim());
-            if (isHeader) {
-              return '<div class="itin-day-title">' + line.trim() + '</div>';
-            }
-            return '<div class="itin-line">' + line.trim() + '</div>';
-          }).join('') +
-        '</div>';
+            return isHeader
+              ? '<div class="itin-day-title">' + line.trim() + '</div>'
+              : '<div class="itin-line">' + line.trim() + '</div>';
+          }).join('') + '</div>';
       } else {
         itinSection.innerHTML = '';
       }
@@ -712,6 +760,11 @@ function _renderRT(lang) {
 
     // Car cards
     if (d.base.cars && d.base.cars.length > 0) buildCarCards(d.base.cars, lang);
+
+    // Route map — init once with city data
+    if (d.base.cities && d.base.cities.length > 0) {
+      initRouteMap(d.base.cities);
+    }
   }
 
   // RTL
@@ -723,25 +776,131 @@ function _renderRT(lang) {
   var activeBtn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
   if (activeBtn) activeBtn.classList.add('active');
 
-  // Translate static page text if AR and not yet done
+  // Translate dynamic content if AR or PT (run after buildCarCards + itinerary are rendered)
   var isPT = lang === 'pt';
   if ((isAR && !_arTranslated) || (isPT && !_ptTranslated)) {
-    var staticTexts = document.querySelectorAll('.ov-label, .ov-val, .itin-day-title, .itin-line, .car-name, .cb-label, .car-price-box .cp-label');
-    var nodes = Array.from(staticTexts);
-    var texts = nodes.map(function(n){ return n.textContent.trim(); }).filter(function(t){ return t.length > 1; });
-    var targetLang = isAR ? 'ar' : 'pt';
-    if (texts.length > 0) {
-      gtrans(texts, function(parts) {
-        var j = 0;
-        nodes.forEach(function(n) {
-          var t = n.textContent.trim();
-          if (t.length > 1 && parts[j]) { n.textContent = parts[j]; j++; }
-        });
+    setTimeout(function() {
+      // Select ALL text elements that need translation (exclude dynamic data: dates, prices, names)
+      var staticTexts = document.querySelectorAll(
+        '.ov-label, .itin-day-title, .itin-line, .itin-city-name, .itin-city-details, ' +
+        '.car-km-note, .cb-label, .cp-label, .cp-deposit'
+      );
+      var nodes = Array.from(staticTexts).filter(function(n){ return n.textContent.trim().length > 1; });
+      var texts = nodes.map(function(n){ return n.textContent.trim(); });
+      var targetLang = isAR ? 'ar' : 'pt';
+      if (texts.length > 0) {
+        gtrans(texts, function(parts) {
+          nodes.forEach(function(n, i) {
+            if (parts[i]) n.textContent = parts[i];
+          });
+          if (isAR) _arTranslated = true;
+          if (isPT) _ptTranslated = true;
+        }, targetLang);
+      } else {
         if (isAR) _arTranslated = true;
         if (isPT) _ptTranslated = true;
-      }, targetLang);
+      }
+    }, 50);
+  }
+}
+
+
+/* ── LEAFLET MAP ── */
+var _mapInitialized = false;
+function initRouteMap(cities) {
+  if (!cities || cities.length < 1) return;
+  // Filter cities that have names
+  var namedCities = cities.filter(function(c){ return c.name && c.name.trim().length > 0; });
+  if (namedCities.length === 0) return;
+
+  // Show map section
+  var section = document.getElementById('route-map-section');
+  if (section) section.style.display = 'block';
+
+  // Set title
+  var title = document.getElementById('map-cities-title');
+  if (title) title.textContent = namedCities.map(function(c){ return c.name; }).join(' · ');
+
+  if (_mapInitialized) return;
+  _mapInitialized = true;
+
+  // Wait for Leaflet to load
+  function tryInit() {
+    if (typeof L === 'undefined') { setTimeout(tryInit, 200); return; }
+
+    var map = L.map('mlv-leaflet-map', {
+      zoomControl: true,
+      attributionControl: false
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19
+    }).addTo(map);
+
+    // Custom gold marker
+    function makeMarker(num) {
+      return L.divIcon({
+        className: '',
+        html: '<div style="width:28px;height:28px;border-radius:50%;background:#1C2E4A;border:3px solid #C9A96E;display:flex;align-items:center;justify-content:center;color:#C9A96E;font-size:10px;font-weight:700;font-family:Montserrat,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.3);">' + num + '</div>',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14]
+      });
+    }
+
+    // Geocode cities using Nominatim
+    var coords = [];
+    var pending = namedCities.length;
+
+    namedCities.forEach(function(city, i) {
+      var url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(city.name) + '&format=json&limit=1';
+      fetch(url, {headers: {'Accept-Language': 'en'}})
+        .then(function(r){ return r.json(); })
+        .then(function(data) {
+          if (data && data[0]) {
+            coords[i] = {
+              lat: parseFloat(data[0].lat),
+              lng: parseFloat(data[0].lon),
+              name: city.name,
+              idx: i
+            };
+          }
+          pending--;
+          if (pending === 0) drawMap();
+        })
+        .catch(function() { pending--; if (pending === 0) drawMap(); });
+    });
+
+    function drawMap() {
+      var validCoords = [];
+      for (var i = 0; i < namedCities.length; i++) {
+        if (coords[i]) validCoords.push(coords[i]);
+      }
+      if (validCoords.length === 0) return;
+
+      // Add markers
+      validCoords.forEach(function(c, i) {
+        var marker = L.marker([c.lat, c.lng], {icon: makeMarker(i + 1)}).addTo(map);
+        marker.bindTooltip('<strong style="font-family:Montserrat,sans-serif;font-size:11px;color:#1C2E4A;">' + c.name + '</strong>', {
+          permanent: false, direction: 'top', offset: [0, -16],
+          className: 'mlv-tooltip'
+        });
+      });
+
+      // Draw polyline
+      var latlngs = validCoords.map(function(c){ return [c.lat, c.lng]; });
+      L.polyline(latlngs, {
+        color: '#C9A96E',
+        weight: 3,
+        opacity: 0.85,
+        dashArray: null
+      }).addTo(map);
+
+      // Fit bounds
+      var bounds = L.latLngBounds(latlngs);
+      map.fitBounds(bounds, {padding: [50, 50]});
     }
   }
+  tryInit();
 }
 
 function setLangRT(l) { _renderRT(l); }
@@ -773,5 +932,6 @@ document.addEventListener('DOMContentLoaded', function() {
   window.setLangRT = function(l) { if(orig) orig(l); setTimeout(updateNote, 100); };
 })();
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </body>
 </html>
