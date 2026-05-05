@@ -190,6 +190,13 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 [dir="rtl"] .ev-content{text-align:right;}
 [dir="rtl"] .ov-item{text-align:right;}
 </style>
+  <meta property="og:type" content="website">
+  <meta property="og:title" id="og-title" content="My Luxury Voyage — Road Trip">
+  <meta property="og:description" id="og-desc" content="My Luxury Voyage · Road Trip Proposal">
+  <meta property="og:image" id="og-image" content="">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" id="tw-title" content="My Luxury Voyage — Road Trip">
+  <meta name="twitter:image" id="tw-image" content="">
 </head>
 <body>
 
@@ -601,19 +608,14 @@ function buildCarCards(cars, lang) {
       return '<div class="car-slide" style="background-image:url(\'' + proxyImg(u) + '\')"></div>';
     }).join('');
     var isAR = lang === 'ar', isPT = lang === 'pt';
-  var labelDaily    = isAR ? 'السعر اليومي'           : isPT ? 'Diária'              : 'Daily rate';
-  var labelDeliv    = isAR ? 'التوصيل / الاستلام'     : isPT ? 'Entrega / Coleta'    : 'Delivery / Collection';
-  var labelMileage  = isAR ? 'باقة الكيلومترات'       : isPT ? 'Pacote de km'        : 'Mileage package';
-  var labelExtraKm  = isAR ? 'كيلومتر إضافي'          : isPT ? 'km extra'            : 'Extra km';
-  var labelTotal    = isAR ? 'السعر الإجمالي الخاص'   : isPT ? 'PREÇO TOTAL Especial': 'TOTAL Special Price';
-  var labelDeposit  = isAR ? 'وديعة'                  : isPT ? 'Depósito'            : 'Deposit';
-  var labelReserve  = isAR ? 'احجز هذه السيارة'       : isPT ? 'Reservar este veículo': 'Reserve this vehicle';
-    var labelDeliv    = lang === 'ar' ? 'التوصيل / الاستلام'     : 'Delivery / Collection';
-    var labelMileage  = lang === 'ar' ? 'باقة الكيلومترات'       : 'Mileage package';
-    var labelExtraKm  = lang === 'ar' ? 'كيلومتر إضافي'          : 'Extra km';
-    var labelTotal    = lang === 'ar' ? 'السعر الإجمالي الخاص'   : 'TOTAL Special Price';
-    var labelDeposit  = lang === 'ar' ? 'وديعة'                  : 'Deposit';
-    var labelReserve  = lang === 'ar' ? 'احجز هذه السيارة'       : 'Reserve this vehicle';
+    var labelDaily   = isAR ? 'السعر اليومي'           : isPT ? 'Diária'               : 'Daily rate';
+    var labelDeliv   = isAR ? 'التوصيل / الاستلام'     : isPT ? 'Entrega / Coleta'     : 'Delivery / Collection';
+    var labelMileage = isAR ? 'باقة الكيلومترات'       : isPT ? 'Pacote de km'         : 'Mileage package';
+    var labelExtraKm = isAR ? 'كيلومتر إضافي'          : isPT ? 'km extra'             : 'Extra km';
+    var labelTotal   = isAR ? 'السعر الإجمالي الخاص'   : isPT ? 'PREÇO TOTAL Especial' : 'TOTAL Special Price';
+    var labelDeposit = isAR ? 'وديعة'                  : isPT ? 'Depósito'             : 'Deposit';
+    var labelReserve = isAR ? 'احجز هذه السيارة'       : isPT ? 'Reservar este veículo': 'Reserve this vehicle';
+    var labelKmNote  = car.kmNote || (isAR ? 'كم في اليوم مشمول' : isPT ? 'km por dia incluídos' : '250km per day included');
     wrap.innerHTML += '<div class="car-card" id="car' + id + '">' +
       '<div class="car-slider-wrap">' +
         '<div class="car-slider" id="cs-' + id + '">' + slidesHtml + '</div>' +
@@ -623,7 +625,7 @@ function buildCarCards(cars, lang) {
       '</div>' +
       '<div class="car-body">' +
         '<div class="car-top"><div class="car-name">' + (car.name || '') + '</div>' +
-        (car.kmNote ? '<div class="car-km-note">' + car.kmNote + '</div>' : '') + '</div>' +
+        '<div class="car-km-note">' + labelKmNote + '</div></div>' +
         '<ul class="car-bullets">' +
           (car.dailyPrice ? '<li><div class="cb-dot"></div><span><span class="cb-label">' + labelDaily + ':</span> ' + car.dailyPrice + '</span></li>' : '') +
           (car.deliveryFee ? '<li><div class="cb-dot"></div><span><span class="cb-label">' + labelDeliv + ':</span> ' + car.deliveryFee + '</span></li>' : '') +
@@ -779,9 +781,10 @@ function _renderRT(lang) {
   if ((isAR && !_arTranslated) || (isPT && !_ptTranslated)) {
     setTimeout(function() {
       // Select ALL text elements that need translation (exclude dynamic data: dates, prices, names)
+      // Only translate editorial content via gtrans
+      // Car labels are handled by buildCarCards label variables (already translated)
       var staticTexts = document.querySelectorAll(
-        '.ov-label, .itin-day-title, .itin-line, .itin-city-name, .itin-city-details, ' +
-        '.car-km-note, .cb-label, .cp-label, .cp-deposit'
+        '.ov-label, .itin-city-name, .itin-city-details, .itin-day-title, .itin-line'
       );
       var nodes = Array.from(staticTexts).filter(function(n){ return n.textContent.trim().length > 1; });
       var texts = nodes.map(function(n){ return n.textContent.trim(); });
@@ -920,6 +923,18 @@ function setLangRT(l) {
 
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded', function() {
+  // Update OG/WhatsApp preview meta tags from JSON
+  var d = getData();
+  if (d && d.base) {
+    var title = (d.base.rtName || 'Road Trip') + ' · ' + (d.base.rtFrom || '') + ' → ' + (d.base.rtTo || '') + ' · My Luxury Voyage';
+    var desc  = (d.base.rtStart || '') + ' – ' + (d.base.rtEnd || '') + (d.base.countries ? ' · ' + d.base.countries : '');
+    var img   = d.base.coverImg || '';
+    var setMeta = function(id, val) { var el = document.getElementById(id); if (el && val) el.setAttribute('content', val); };
+    setMeta('og-title', title); setMeta('tw-title', title);
+    setMeta('og-desc', desc);
+    setMeta('og-image', img); setMeta('tw-image', img);
+    document.title = title;
+  }
   document.getElementById('modal').addEventListener('click', function(e){ if(e.target.id === 'modal') closeModal(); });
   _renderRT('en');
 });
