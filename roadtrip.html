@@ -213,9 +213,6 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
     <div class="cover-route" id="rt-route">Lisboa, PT → Gardona, SP</div>
     <div class="cover-dates" id="rt-dates">25 – 29 January 2026 · 4 Days</div>
   </div>
-  <div class="cover-foot">
-    <img class="cover-foot-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2025/02/MLV-logo-white-1024x724.png" alt="MLV" onerror="this.outerHTML='<span style=&quot;color:#C9A96E;font-family:Playfair Display,serif;font-size:18px;letter-spacing:.1em;&quot;>MY LUXURY VOYAGE</span>'">
-  </div>
 </div>
 
 <!-- OVERVIEW -->
@@ -635,8 +632,8 @@ function buildCarCards(cars, lang) {
         '</ul>' +
         '<div class="car-price-box"><div class="cp-total">' +
           '<div class="cp-label">' + labelTotal + '</div>' +
-          '<div class="cp-val">' + (car.totalPrice || '') + '</div>' +
-          (car.deposit ? '<div class="cp-deposit">' + labelDeposit + ': <strong>' + car.deposit + '</strong></div>' : '') +
+          '<div class="cp-val" dir="ltr" style="unicode-bidi:embed">' + (car.totalPrice || '') + '</div>' +
+          (car.deposit ? '<div class="cp-deposit">' + labelDeposit + ': <strong dir="ltr" style="unicode-bidi:embed">' + car.deposit + '</strong></div>' : '') +
         '</div></div>' +
         '<div class="btn-reserve-wrap"><button class="btn-reserve" onclick="openModal(\'car' + id + '\',\'' + (car.name||'').replace(/'/g,"\\'") + '\',\'' + (car.totalPrice||'').replace(/'/g,"\\'") + '\')">' + labelReserve + '</button></div>' +
       '</div></div>';
@@ -678,6 +675,7 @@ var LABELS = {
 /* ── APPLY LANG ── */
 var _arTranslated = false;
 var _ptTranslated = false;
+var _lastLang = 'en';
 function _renderRT(lang) {
   var d = getData();
   var lb = LABELS[lang] || LABELS.en;
@@ -695,7 +693,7 @@ function _renderRT(lang) {
     if (datesEl) {
       var dayCount = '';
       if (d.base.rtStart && d.base.rtEnd) {
-        var ms2 = new Date(d.base.rtEnd) - new Date(d.base.rtStart);
+        var ms2 = Math.abs(new Date(d.base.rtEnd) - new Date(d.base.rtStart));
         var dc = Math.round(ms2 / 86400000);
         if (dc > 0) dayCount = dc + ' Day' + (dc > 1 ? 's' : '');
       }
@@ -718,7 +716,7 @@ function _renderRT(lang) {
     if (ovDur) {
       var dur = d.base.rtDays || '';
       if (!dur && d.base.rtStart && d.base.rtEnd) {
-        var ms = new Date(d.base.rtEnd) - new Date(d.base.rtStart);
+        var ms = Math.abs(new Date(d.base.rtEnd) - new Date(d.base.rtStart));
         var days = Math.round(ms / 86400000);
         dur = days > 0 ? days + ' Day' + (days > 1 ? 's' : '') : '';
       }
@@ -903,7 +901,22 @@ function initRouteMap(cities) {
   tryInit();
 }
 
-function setLangRT(l) { _renderRT(l); }
+function setLangRT(l) {
+  if (l !== _lastLang) {
+    _lastLang = l;
+    // Always reset flags so translation re-runs for the new language
+    _arTranslated = false;
+    _ptTranslated = false;
+    // Force rebuild of dynamic sections so they start fresh in EN
+    var carsWrap = document.querySelector('.cars-wrap');
+    if (carsWrap) carsWrap.innerHTML = '';
+    var itinSection = document.getElementById('itinerary-section');
+    if (itinSection) itinSection.innerHTML = '';
+    var dynActs = document.getElementById('dynamic-acts');
+    if (dynActs) dynActs.innerHTML = '';
+  }
+  _renderRT(l);
+}
 
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded', function() {
