@@ -191,12 +191,13 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 [dir="rtl"] .ov-item{text-align:right;}
 </style>
   <meta property="og:type" content="website">
-  <meta property="og:title" id="og-title" content="My Luxury Voyage — Road Trip">
-  <meta property="og:description" id="og-desc" content="My Luxury Voyage · Road Trip Proposal">
-  <meta property="og:image" id="og-image" content="">
+  <meta property="og:title" content="%%OG_TITLE%%">
+  <meta property="og:description" content="%%OG_DESC%%">
+  <meta property="og:image" content="%%OG_IMAGE%%">
+  <meta property="og:url" content="%%OG_URL%%">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" id="tw-title" content="My Luxury Voyage — Road Trip">
-  <meta name="twitter:image" id="tw-image" content="">
+  <meta name="twitter:title" content="%%OG_TITLE%%">
+  <meta name="twitter:image" content="%%OG_IMAGE%%">
 </head>
 <body>
 
@@ -615,7 +616,7 @@ function buildCarCards(cars, lang) {
     var labelTotal   = isAR ? 'السعر الإجمالي الخاص'   : isPT ? 'PREÇO TOTAL Especial' : 'TOTAL Special Price';
     var labelDeposit = isAR ? 'وديعة'                  : isPT ? 'Depósito'             : 'Deposit';
     var labelReserve = isAR ? 'احجز هذه السيارة'       : isPT ? 'Reservar este veículo': 'Reserve this vehicle';
-    var labelKmNote  = car.kmNote || (isAR ? 'كم في اليوم مشمول' : isPT ? 'km por dia incluídos' : '250km per day included');
+    var labelKmNote  = isAR ? 'كم / يوم مشمول' : isPT ? 'km por dia incluídos' : (car.kmNote || '250km per day included');
     wrap.innerHTML += '<div class="car-card" id="car' + id + '">' +
       '<div class="car-slider-wrap">' +
         '<div class="car-slider" id="cs-' + id + '">' + slidesHtml + '</div>' +
@@ -781,26 +782,55 @@ function _renderRT(lang) {
   if ((isAR && !_arTranslated) || (isPT && !_ptTranslated)) {
     setTimeout(function() {
       // Select ALL text elements that need translation (exclude dynamic data: dates, prices, names)
-      // Only translate editorial content via gtrans
-      // Car labels are handled by buildCarCards label variables (already translated)
-      var staticTexts = document.querySelectorAll(
-        '.ov-label, .itin-city-name, .itin-city-details, .itin-day-title, .itin-line'
-      );
-      var nodes = Array.from(staticTexts).filter(function(n){ return n.textContent.trim().length > 1; });
-      var texts = nodes.map(function(n){ return n.textContent.trim(); });
+      // Translate content via gtrans in separate batches to avoid index shifting
       var targetLang = isAR ? 'ar' : 'pt';
-      if (texts.length > 0) {
-        gtrans(texts, function(parts) {
-          nodes.forEach(function(n, i) {
-            if (parts[i]) n.textContent = parts[i];
-          });
+
+      // Batch 1: static labels (ov-label)
+      var labelNodes = Array.from(document.querySelectorAll('.ov-label'))
+        .filter(function(n){ return n.textContent.trim().length > 1; });
+
+      // Batch 2: city names only (single short strings, no newlines)
+      var cityNameNodes = Array.from(document.querySelectorAll('.itin-city-name'))
+        .filter(function(n){ return n.textContent.trim().length > 1; });
+
+      // Batch 3: city details (multi-line, separate to avoid shifting)
+      var cityDetailNodes = Array.from(document.querySelectorAll('.itin-city-details'))
+        .filter(function(n){ return n.textContent.trim().length > 1; });
+
+      var pending = 0;
+      var done = function() {
+        pending--;
+        if (pending === 0) {
           if (isAR) _arTranslated = true;
           if (isPT) _ptTranslated = true;
+        }
+      };
+
+      pending = 3;
+
+      // Translate labels
+      if (labelNodes.length > 0) {
+        gtrans(labelNodes.map(function(n){ return n.textContent.trim(); }), function(parts) {
+          labelNodes.forEach(function(n, i){ if (parts[i]) n.textContent = parts[i]; });
+          done();
         }, targetLang);
-      } else {
-        if (isAR) _arTranslated = true;
-        if (isPT) _ptTranslated = true;
-      }
+      } else { done(); }
+
+      // Translate city names
+      if (cityNameNodes.length > 0) {
+        gtrans(cityNameNodes.map(function(n){ return n.textContent.trim(); }), function(parts) {
+          cityNameNodes.forEach(function(n, i){ if (parts[i]) n.textContent = parts[i]; });
+          done();
+        }, targetLang);
+      } else { done(); }
+
+      // Translate city details
+      if (cityDetailNodes.length > 0) {
+        gtrans(cityDetailNodes.map(function(n){ return n.textContent.trim(); }), function(parts) {
+          cityDetailNodes.forEach(function(n, i){ if (parts[i]) n.textContent = parts[i]; });
+          done();
+        }, targetLang);
+      } else { done(); }
     }, 50);
   }
 }
@@ -923,17 +953,10 @@ function setLangRT(l) {
 
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded', function() {
-  // Update OG/WhatsApp preview meta tags from JSON
-  var d = getData();
-  if (d && d.base) {
-    var title = (d.base.rtName || 'Road Trip') + ' · ' + (d.base.rtFrom || '') + ' → ' + (d.base.rtTo || '') + ' · My Luxury Voyage';
-    var desc  = (d.base.rtStart || '') + ' – ' + (d.base.rtEnd || '') + (d.base.countries ? ' · ' + d.base.countries : '');
-    var img   = d.base.coverImg || '';
-    var setMeta = function(id, val) { var el = document.getElementById(id); if (el && val) el.setAttribute('content', val); };
-    setMeta('og-title', title); setMeta('tw-title', title);
-    setMeta('og-desc', desc);
-    setMeta('og-image', img); setMeta('tw-image', img);
-    document.title = title;
+  // Update page title from JSON data
+  var _d = getData();
+  if (_d && _d.base && _d.base.rtName) {
+    document.title = _d.base.rtName + ' · My Luxury Voyage';
   }
   document.getElementById('modal').addEventListener('click', function(e){ if(e.target.id === 'modal') closeModal(); });
   _renderRT('en');
