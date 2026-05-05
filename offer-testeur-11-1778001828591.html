@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MLV — Road Trip</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair&#43;Display:ital,wght@0,400;0,700;1,400&amp;family=Montserrat:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1C2E4A;--gold:#C9A96E;--gold2:#B8944F;--white:#fff;--cream:#F8F6F1;--gray:#666;--light:#F2F0EC;--red:#C0392B;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
+.doc{max-width:900px;margin:0 auto;background:var(--white);box-shadow:0 4px 40px rgba(0,0,0,.15);}
+
+ 
+.cover{position:relative;height:82vh;min-height:520px;max-height:840px;overflow:hidden;display:flex;flex-direction:column;}
+.cover-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1400&q=80') center/cover;filter:brightness(.48);transition:background-image .3s;}
+.cover-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(28,46,74,.05) 0%,rgba(28,46,74,.62) 100%);}
+.cover-body{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;text-align:center;}
+.cover-logos{display:flex;align-items:center;justify-content:center;gap:28px;margin-bottom:32px;}
+.partner-logo{height:40px;filter:brightness(0) invert(1);opacity:.8;}
+.sep-line{width:1px;height:36px;background:rgba(201,169,110,.45);}
+.mlv-logo{height:48px;filter:brightness(0) invert(1);opacity:.88;}
+.cover-label{font-size:9px;letter-spacing:.4em;color:var(--gold);text-transform:uppercase;margin-bottom:16px;}
+.cover-title{font-family:'Playfair Display',serif;font-size:clamp(44px,7vw,76px);font-weight:700;color:#fff;letter-spacing:.04em;text-transform:uppercase;line-height:1.05;margin-bottom:10px;}
+.cover-divider{width:56px;height:1px;background:var(--gold);margin:16px auto;}
+.cover-route{font-size:14px;font-weight:500;color:#fff;letter-spacing:.06em;margin-bottom:8px;}
+.cover-dates{font-size:11px;color:rgba(255,255,255,.6);letter-spacing:.14em;text-transform:uppercase;}
+.cover-foot{position:relative;z-index:2;background:var(--cream);padding:18px 32px;display:flex;align-items:center;justify-content:center;border-top:3px solid var(--gold);}
+.cover-foot-logo{height:46px;}
+
+ 
+.overview{background:var(--navy);display:grid;grid-template-columns:repeat(4,1fr);}
+.ov-item{padding:20px 12px;text-align:center;border-right:1px solid rgba(255,255,255,.1);}
+.ov-item:last-child{border-right:none;}
+.ov-label{font-size:8px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:5px;}
+.ov-val{font-size:12px;font-weight:500;color:#fff;line-height:1.3;}
+
+ 
+.day-block{border-bottom:2px solid rgba(201,169,110,.25);}
+.day-header{padding:30px 44px 20px;}
+.day-eye{font-size:9px;letter-spacing:.3em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
+.day-title{font-family:'Playfair Display',serif;font-size:clamp(22px,3.5vw,34px);font-weight:700;color:var(--navy);letter-spacing:.04em;text-transform:uppercase;}
+.day-title sup{font-size:.42em;vertical-align:super;font-family:'Montserrat',sans-serif;font-weight:400;color:var(--gold);}
+
+ 
+.events{padding:0 44px 32px;}
+.event{display:flex;padding:26px 0 0;}
+.ev-tl{width:24px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding-top:5px;}
+.ev-dot{width:9px;height:9px;border:2px solid var(--gold);border-radius:50%;background:#fff;flex-shrink:0;z-index:2;}
+.ev-line{width:1px;flex:1;min-height:22px;margin-top:4px;background:repeating-linear-gradient(to bottom,var(--gold) 0,var(--gold) 4px,transparent 4px,transparent 9px);}
+.ev-photo{width:160px;min-width:160px;height:122px;object-fit:cover;border-radius:2px;margin:0 18px 0 10px;flex-shrink:0;}
+.ev-content{flex:1;padding-top:2px;}
+.ev-time{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:3px;}
+.ev-name{font-size:13px;color:var(--navy);line-height:1.35;}
+.ev-name .hl{color:var(--gold);font-weight:700;}
+.ev-desc{font-size:12px;font-style:italic;color:var(--gray);margin-top:7px;line-height:1.6;}
+.ev-extra{font-size:11px;font-weight:600;color:var(--navy);margin-top:5px;}
+.travel{display:flex;padding:0;}
+.tr-tl{width:24px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;}
+.tr-line{width:1px;height:34px;background:repeating-linear-gradient(to bottom,var(--gold) 0,var(--gold) 4px,transparent 4px,transparent 9px);}
+.tr-label{font-size:11px;font-style:italic;color:var(--gold);line-height:34px;padding-left:52px;font-weight:300;}
+.hotel-card{margin:0 44px 28px;background:var(--cream);border-left:3px solid var(--gold);padding:14px 18px;display:flex;align-items:center;gap:14px;}
+.hc-icon{font-size:18px;flex-shrink:0;}
+.hc-name{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:2px;}
+.hc-detail{font-size:11px;color:var(--gray);font-style:italic;}
+.hc-photo{width:68px;height:50px;object-fit:cover;border-radius:2px;margin-left:auto;flex-shrink:0;}
+
+ 
+.vehicles-separator{background:var(--navy);padding:40px 24px;text-align:center;}
+.vs-line{width:40px;height:1px;background:rgba(201,169,110,.45);display:inline-block;vertical-align:middle;margin:0 12px;}
+.vs-title{font-family:'Playfair Display',serif;font-size:clamp(18px,3vw,30px);font-weight:700;color:#fff;letter-spacing:.04em;text-transform:uppercase;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.vs-sub{font-size:10px;letter-spacing:.18em;color:var(--gold);text-transform:uppercase;line-height:1.6;}
+.vs-icon{display:none;}
+
+ 
+.cars-wrap{padding:32px 44px;}
+.car-card{border:1px solid rgba(201,169,110,.28);margin-bottom:28px;transition:box-shadow .2s;}
+.car-card:hover{box-shadow:0 4px 22px rgba(201,169,110,.18);}
+.car-card.booked{opacity:.5;pointer-events:none;background:#f6f6f6;}
+
+ 
+.car-slider-wrap{position:relative;height:280px;overflow:hidden;}
+.car-slider{display:flex;height:100%;transition:transform .5s ease;}
+.car-slide{min-width:100%;height:100%;background-size:cover;background-position:center;}
+.cs-prev,.cs-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.38);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:17px;display:flex;align-items:center;justify-content:center;z-index:5;transition:background .2s;}
+.cs-prev:hover,.cs-next:hover{background:rgba(0,0,0,.62);}
+.cs-prev{left:14px;}
+.cs-next{right:14px;}
+.cs-dots{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:6px;}
+.csdot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.42);cursor:pointer;transition:background .2s;}
+.csdot.active{background:var(--gold);}
+.booked-overlay{position:absolute;inset:0;background:rgba(0,0,0,.42);display:flex;align-items:center;justify-content:center;}
+.booked-badge-img{background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;padding:8px 20px;border-radius:2px;}
+
+ 
+.car-body{padding:22px 26px 28px;}
+.car-top{margin-bottom:16px;}
+.car-name{font-family:'Playfair Display',serif;font-size:clamp(18px,2.5vw,24px);font-weight:700;color:var(--navy);}
+.car-name em{font-style:normal;color:var(--gold);}
+.car-km-note{font-size:11px;color:var(--gray);font-style:italic;margin-top:3px;}
+
+ 
+.car-bullets{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:7px 20px;margin-bottom:20px;}
+.car-bullets li{display:flex;align-items:baseline;gap:8px;font-size:12px;color:var(--navy);}
+.cb-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:1px;}
+.cb-label{color:var(--gray);font-size:11px;}
+
+ 
+.car-price-box{background:var(--navy);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;}
+.cp-item{text-align:center;}
+.cp-label{font-size:8px;letter-spacing:.18em;color:rgba(255,255,255,.45);text-transform:uppercase;margin-bottom:4px;}
+.cp-val{font-size:13px;font-weight:600;color:#fff;}
+.cp-total{text-align:center;}
+.cp-total .cp-label{color:var(--gold);}
+.cp-total .cp-val{font-size:20px;font-weight:700;color:var(--gold);}
+.cp-deposit{font-size:11px;color:rgba(255,255,255,.5);text-align:center;margin-top:2px;}
+.cp-deposit strong{color:#fff;}
+
+ 
+.btn-reserve-wrap{text-align:center;}
+.btn-reserve{background:var(--gold);color:var(--navy);border:none;padding:13px 40px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border-radius:1px;transition:background .2s,transform .15s;}
+.btn-reserve:hover{background:var(--gold2);transform:translateY(-2px);}
+
+ 
+.cta{padding:44px;text-align:center;background:var(--cream);}
+.cta p{font-size:13px;color:var(--gray);line-height:1.8;max-width:480px;margin:0 auto 26px;}
+.btn-wa{display:inline-flex;align-items:center;gap:10px;background:#25D366;color:#fff;padding:13px 28px;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;border-radius:2px;transition:opacity .2s;}
+.btn-wa:hover{opacity:.9;}
+.wa-svg{width:16px;height:16px;fill:#fff;}
+
+ 
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.76);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-bg.open{display:flex;}
+.modal{background:#fff;border-top:3px solid var(--gold);border-radius:2px;padding:38px;max-width:450px;width:90%;}
+.modal h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--navy);margin-bottom:4px;}
+.modal .car-sel{font-size:12px;color:var(--gold);font-weight:600;margin-bottom:22px;}
+.form-row{margin-bottom:14px;}
+.form-row label{display:block;font-size:9px;letter-spacing:.15em;color:var(--gray);text-transform:uppercase;margin-bottom:5px;}
+.form-row input{width:100%;padding:10px 13px;border:1px solid #ddd;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--navy);outline:none;border-radius:1px;transition:border-color .2s;}
+.form-row input:focus{border-color:var(--gold);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.btn-submit{width:100%;background:var(--gold);color:#fff;border:none;padding:13px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;margin-top:8px;border-radius:1px;transition:background .2s;}
+.btn-submit:hover{background:var(--gold2);}
+.btn-cancel{width:100%;background:transparent;color:var(--gray);border:1px solid #ddd;padding:10px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:8px;border-radius:1px;}
+.success-msg{display:none;text-align:center;padding:16px 0;}
+.success-msg .check{font-size:36px;margin-bottom:10px;}
+.success-msg h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--navy);margin-bottom:8px;}
+.success-msg p{font-size:12px;color:var(--gray);line-height:1.6;}
+
+ 
+.doc-footer{background:var(--navy);padding:22px 44px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
+.footer-logo{height:30px;filter:brightness(0) invert(1);opacity:.65;}
+.footer-txt{font-size:10px;color:rgba(255,255,255,.38);letter-spacing:.06em;line-height:1.7;text-align:right;}
+
+.itin-block{padding:28px 44px;background:var(--white);}
+.city-block{display:flex;gap:0;border-bottom:1px solid rgba(201,169,110,.15);background:var(--white);}
+.city-img-wrap{width:220px;min-width:220px;overflow:hidden;flex-shrink:0;}
+.city-img{width:100%;height:100%;object-fit:cover;display:block;}
+.city-content{flex:1;padding:28px 36px;}
+.itin-city-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:10px;letter-spacing:.02em;}
+.itin-city-details{font-size:13px;line-height:1.85;color:#555;white-space:pre-line;}
+.mlv-tooltip { background:#fff !important; border:1px solid #C9A96E !important; border-radius:4px !important; box-shadow:0 2px 8px rgba(0,0,0,.12) !important; padding:6px 10px !important; }
+.mlv-tooltip::before { border-top-color:#C9A96E !important; }
+.leaflet-control-zoom { border:1px solid rgba(201,169,110,.4) !important; }
+.leaflet-control-zoom a { color:#1C2E4A !important; font-family:'Montserrat',sans-serif !important; }
+@media(max-width:620px){
+  .city-block{flex-direction:column;}
+  .city-img-wrap{width:100%;min-width:0;height:200px;}
+  .city-content{padding:20px 22px;}
+}
+.itin-day-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.06em;margin:20px 0 8px;padding-bottom:6px;border-bottom:1px solid rgba(201,169,110,.3);}
+.itin-day-title:first-child{margin-top:0;}
+.itin-line{font-size:13px;line-height:1.8;color:#444;padding:3px 0 3px 14px;border-left:2px solid rgba(201,169,110,.4);margin-bottom:2px;}
+@media(max-width:620px){
+  .events,.cars-wrap,.cta{padding-left:20px;padding-right:20px;}
+  .day-header,.hotel-card{padding-left:20px;padding-right:20px;}
+  .hotel-card{margin-left:20px;margin-right:20px;}
+  .vehicles-separator{padding:28px 20px;}
+  .car-bullets{grid-template-columns:1fr;}
+  .car-price-box{justify-content:center;gap:16px;}
+  .overview{grid-template-columns:repeat(2,1fr);}
+  .doc-footer{padding:20px;flex-direction:column;text-align:center;}
+  .footer-txt{text-align:center;}
+  .ev-photo{width:100px;min-width:100px;height:86px;}
+}
+.lang-btn.active,.lang-btn:hover{color:#C9A96E !important;}
+[dir="rtl"] .car-bullets{text-align:right;}
+[dir="rtl"] .cp-label,[dir="rtl"] .cp-val{text-align:right;}
+[dir="rtl"] .ev-content{text-align:right;}
+[dir="rtl"] .ov-item{text-align:right;}
+</style>
+  <meta property="og:type" content="website">
+  <meta property="og:title" id="og-title" content="My Luxury Voyage — Road Trip">
+  <meta property="og:description" id="og-desc" content="My Luxury Voyage · Road Trip Proposal">
+  <meta property="og:image" id="og-image" content="">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" id="tw-title" content="My Luxury Voyage — Road Trip">
+  <meta name="twitter:image" id="tw-image" content="">
+</head>
+<body>
+
+<div class="lang-bar" style="position:fixed;top:0;right:0;z-index:200;display:flex;background:rgba(28,46,74,.9);backdrop-filter:blur(8px);border-bottom-left-radius:8px;">
+  <button class="lang-btn active" onclick="setLangRT('en')" data-lang="en" style="padding:8px 14px;background:transparent;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:10px;letter-spacing:.1em;font-family:Montserrat,sans-serif;transition:color .2s;">EN</button>
+  <button class="lang-btn" onclick="setLangRT('pt')" data-lang="pt" style="padding:8px 14px;background:transparent;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:10px;letter-spacing:.1em;font-family:Montserrat,sans-serif;transition:color .2s;">PT</button>
+  <button class="lang-btn" onclick="setLangRT('ar')" data-lang="ar" style="padding:8px 14px;background:transparent;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:10px;letter-spacing:.1em;font-family:Montserrat,sans-serif;transition:color .2s;">العربية</button>
+</div>
+
+<div class="doc">
+
+
+<div class="cover">
+  <div class="cover-bg"></div>
+  <div class="cover-overlay"></div>
+  <div class="cover-body">
+    <img class="mlv-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png" alt="MLV" style="margin-bottom:32px;" onerror="this.outerHTML='&lt;span style=&#34;color:#C9A96E;font-family:Playfair Display,serif;font-size:20px;letter-spacing:.1em;margin-bottom:32px;display:block;&#34;&gt;MY LUXURY VOYAGE&lt;/span&gt;'">
+    <div class="cover-label" data-k="cover-label">Road Trip · My Luxury Voyage</div>
+    <div class="cover-title" id="rt-title">RT Jamon<br>&amp; Hielo</div>
+    <div class="cover-divider"></div>
+    <div class="cover-route" id="rt-route">Lisboa, PT → Gardona, SP</div>
+    <div class="cover-dates" id="rt-dates">25 – 29 January 2026 · 4 Days</div>
+  </div>
+</div>
+
+
+<div class="overview">
+  <div class="ov-item"><div class="ov-label" data-k="ov-route">Route</div><div class="ov-val" id="ov-route-val">Lisboa → Gardona</div></div>
+  <div class="ov-item"><div class="ov-label" data-k="ov-dates">Dates</div><div class="ov-val" id="ov-dates-val">25–29 Jan 2026</div></div>
+  <div class="ov-item"><div class="ov-label" data-k="ov-dur">Duration</div><div class="ov-val" id="ov-dur-val">4 Days</div></div>
+  <div class="ov-item"><div class="ov-label" data-k="ov-countries">Countries</div><div class="ov-val" id="ov-countries-val">Portugal · Spain</div></div>
+</div>
+
+<div id="itinerary-section">
+  
+</div>
+
+
+<div id="route-map-section" style="display:none;">
+  <div style="padding:32px 44px 16px;background:#fff;">
+    <div style="font-size:9px;letter-spacing:.3em;color:#C9A96E;text-transform:uppercase;margin-bottom:8px;font-family:'Montserrat',sans-serif;" data-k="map-label">Route Map</div>
+    <div style="font-size:14px;font-weight:600;color:#1C2E4A;letter-spacing:.04em;text-transform:uppercase;border-bottom:2px solid rgba(201,169,110,.25);padding-bottom:16px;font-family:'Montserrat',sans-serif;" id="map-cities-title"></div>
+  </div>
+  <div id="mlv-leaflet-map" style="width:100%;height:460px;"></div>
+  <div style="background:#F8F6F1;padding:14px 44px;display:flex;align-items:center;gap:28px;border-bottom:1px solid rgba(201,169,110,.2);">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="width:24px;height:2.5px;background:#C9A96E;"></div>
+      <span id="map-legend-route" style="font-size:10px;font-family:'Montserrat',sans-serif;color:#1C2E4A;letter-spacing:.08em;">ROUTE MLV</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="width:10px;height:10px;border-radius:50%;background:#1C2E4A;border:2.5px solid #C9A96E;"></div>
+      <span id="map-legend-stop" style="font-size:10px;font-family:'Montserrat',sans-serif;color:#1C2E4A;letter-spacing:.08em;">ÉTAPE</span>
+    </div>
+    <div style="margin-left:auto;font-size:9px;font-family:'Montserrat',sans-serif;color:#aaa;letter-spacing:.05em;">© OpenStreetMap contributors · My Luxury Voyage</div>
+  </div>
+</div>
+
+
+
+<div class="cars-wrap">
+
+  
+  <div class="car-card" id="car1">
+    <div class="car-slider-wrap">
+      <div class="car-slider" id="cs-1">
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=900&amp;q=80')"></div>
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=900&amp;q=80')"></div>
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=900&amp;q=80')"></div>
+      </div>
+      <button class="cs-prev" onclick="cSlide(1,-1)">‹</button>
+      <button class="cs-next" onclick="cSlide(1,1)">›</button>
+      <div class="cs-dots" id="cd-1"></div>
+    </div>
+    <div class="car-body">
+      <div class="car-top">
+        <div class="car-name"><em>Lamborghini</em> Urus SE</div>
+        <div class="car-km-note">250km per day included</div>
+      </div>
+      <ul class="car-bullets">
+        <li><div class="cb-dot"></div><span><span class="cb-label">Daily rate:</span> 2 400 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Delivery / Collection:</span> 3 250 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Extra mileage pkg (750km):</span> 4 125 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Extra km:</span> 11 € / km</span></li>
+      </ul>
+      <div class="car-price-box">
+        <div class="cp-total">
+          <div class="cp-label">TOTAL Special Price</div>
+          <div class="cp-val">16 975 €</div>
+          <div class="cp-deposit">Deposit: <strong>30 000 €</strong></div>
+        </div>
+      </div>
+      <div class="btn-reserve-wrap">
+        <button class="btn-reserve" onclick="openModal('car1','Lamborghini Urus SE','16 975 €')">Reserve this vehicle</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="car-card" id="car2">
+    <div class="car-slider-wrap">
+      <div class="car-slider" id="cs-2">
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=900&amp;q=80')"></div>
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=900&amp;q=80')"></div>
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1617788138017-80ad40651399?w=900&amp;q=80')"></div>
+      </div>
+      <button class="cs-prev" onclick="cSlide(2,-1)">‹</button>
+      <button class="cs-next" onclick="cSlide(2,1)">›</button>
+      <div class="cs-dots" id="cd-2"></div>
+    </div>
+    <div class="car-body">
+      <div class="car-top">
+        <div class="car-name"><em>Lamborghini</em> Urus Performante</div>
+        <div class="car-km-note">250km per day included</div>
+      </div>
+      <ul class="car-bullets">
+        <li><div class="cb-dot"></div><span><span class="cb-label">Daily rate:</span> 2 200 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Delivery / Collection:</span> 3 250 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Extra mileage pkg (750km):</span> 4 125 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Extra km:</span> 11 € / km</span></li>
+      </ul>
+      <div class="car-price-box">
+        <div class="cp-total">
+          <div class="cp-label">TOTAL Special Price</div>
+          <div class="cp-val">16 175 €</div>
+          <div class="cp-deposit">Deposit: <strong>30 000 €</strong></div>
+        </div>
+      </div>
+      <div class="btn-reserve-wrap">
+        <button class="btn-reserve" onclick="openModal('car2','Lamborghini Urus Performante','16 175 €')">Reserve this vehicle</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="car-card" id="car3">
+    <div class="car-slider-wrap">
+      <div class="car-slider" id="cs-3">
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=900&amp;q=80')"></div>
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1590000953851-b8c1721a0f89?w=900&amp;q=80')"></div>
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1617788138017-80ad40651399?w=900&amp;q=80')"></div>
+      </div>
+      <button class="cs-prev" onclick="cSlide(3,-1)">‹</button>
+      <button class="cs-next" onclick="cSlide(3,1)">›</button>
+      <div class="cs-dots" id="cd-3"></div>
+    </div>
+    <div class="car-body">
+      <div class="car-top">
+        <div class="car-name"><em>Lamborghini</em> Urus S</div>
+        <div class="car-km-note">250km per day included</div>
+      </div>
+      <ul class="car-bullets">
+        <li><div class="cb-dot"></div><span><span class="cb-label">Daily rate:</span> 1 900 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Delivery / Collection:</span> 3 250 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Extra mileage pkg (750km):</span> 4 125 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Extra km:</span> 11 € / km</span></li>
+      </ul>
+      <div class="car-price-box">
+        <div class="cp-total">
+          <div class="cp-label">TOTAL Special Price</div>
+          <div class="cp-val">14 975 €</div>
+          <div class="cp-deposit">Deposit: <strong>30 000 €</strong></div>
+        </div>
+      </div>
+      <div class="btn-reserve-wrap">
+        <button class="btn-reserve" onclick="openModal('car3','Lamborghini Urus S','14 975 €')">Reserve this vehicle</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="car-card" id="car4">
+    <div class="car-slider-wrap">
+      <div class="car-slider" id="cs-4">
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1555652736-e92021d28a10?w=900&amp;q=80')"></div>
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=900&amp;q=80')"></div>
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1617788138017-80ad40651399?w=900&amp;q=80')"></div>
+      </div>
+      <button class="cs-prev" onclick="cSlide(4,-1)">‹</button>
+      <button class="cs-next" onclick="cSlide(4,1)">›</button>
+      <div class="cs-dots" id="cd-4"></div>
+    </div>
+    <div class="car-body">
+      <div class="car-top">
+        <div class="car-name"><em>Aston Martin</em> DBX 707</div>
+        <div class="car-km-note">250km per day included</div>
+      </div>
+      <ul class="car-bullets">
+        <li><div class="cb-dot"></div><span><span class="cb-label">Daily rate:</span> 2 000 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Delivery / Collection:</span> 3 250 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Extra mileage pkg (750km):</span> 4 125 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Extra km:</span> 11 € / km</span></li>
+      </ul>
+      <div class="car-price-box">
+        <div class="cp-total">
+          <div class="cp-label">TOTAL Special Price</div>
+          <div class="cp-val">15 375 €</div>
+          <div class="cp-deposit">Deposit: <strong>30 000 €</strong></div>
+        </div>
+      </div>
+      <div class="btn-reserve-wrap">
+        <button class="btn-reserve" onclick="openModal('car4','Aston Martin DBX 707','15 375 €')">Reserve this vehicle</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="car-card" id="car5">
+    <div class="car-slider-wrap">
+      <div class="car-slider" id="cs-5">
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=900&amp;q=80')"></div>
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=900&amp;q=80')"></div>
+        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1590000953851-b8c1721a0f89?w=900&amp;q=80')"></div>
+      </div>
+      <button class="cs-prev" onclick="cSlide(5,-1)">‹</button>
+      <button class="cs-next" onclick="cSlide(5,1)">›</button>
+      <div class="cs-dots" id="cd-5"></div>
+    </div>
+    <div class="car-body">
+      <div class="car-top">
+        <div class="car-name"><em>Mercedes</em> GLS 600 Maybach</div>
+        <div class="car-km-note">250km per day included</div>
+      </div>
+      <ul class="car-bullets">
+        <li><div class="cb-dot"></div><span><span class="cb-label">Daily rate:</span> 1 200 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Delivery / Collection:</span> 3 250 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Extra mileage pkg (750km):</span> 1 875 €</span></li>
+        <li><div class="cb-dot"></div><span><span class="cb-label">Extra km:</span> 5 € / km</span></li>
+      </ul>
+      <div class="car-price-box">
+        <div class="cp-total">
+          <div class="cp-label">TOTAL Special Price</div>
+          <div class="cp-val">9 925 €</div>
+          <div class="cp-deposit">Deposit: <strong>20 000 €</strong></div>
+        </div>
+      </div>
+      <div class="btn-reserve-wrap">
+        <button class="btn-reserve" onclick="openModal('car5','Mercedes GLS 600 Maybach','9 925 €')">Reserve this vehicle</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<div class="cta">
+  <p>Any questions about this road trip or the vehicle selection? Our team is available immediately on WhatsApp.</p>
+  <a class="btn-wa" href="https://wa.me/33650505040?text=Bonjour%20My%20Luxury%20Voyage%2C%20j'ai%20une%20question%20sur%20le%20Road%20Trip%20Jamon%20%26%20Hielo." target="_blank" rel="noopener">
+    <svg class="wa-svg" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Contact us on WhatsApp
+  </a>
+</div>
+
+
+<div class="doc-footer">
+  <img class="footer-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png" alt="MLV" onerror="this.style.display='none'">
+  <div class="footer-txt">
+    66 av. Valéry Giscard D'Estaing, 06200 Nice · 14 rue Pasteur, 06400 Cannes<br>
+    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3b5854554f5a584f7b5642574e434e49424d54425a5c5e15585456">[email&#160;protected]</a> · myluxuryvoyage.com
+  </div>
+</div>
+
+</div>
+
+
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <div id="modal-form">
+      <h2>Reserve your vehicle</h2>
+      <div class="car-sel" id="modal-car-name"></div>
+      <div class="form-grid">
+        <div class="form-row"><label>First name</label><input type="text" id="f-first" placeholder="John"></div>
+        <div class="form-row"><label>Last name</label><input type="text" id="f-last" placeholder="Doe"></div>
+      </div>
+      <div class="form-row"><label>Mobile</label><input type="tel" id="f-phone" placeholder="&#43;33 6 00 00 00 00"></div>
+      <div class="form-row"><label>Email</label><input type="email" id="f-email" placeholder="john@example.com"></div>
+      <button class="btn-submit" onclick="submitBooking()">Confirm reservation</button>
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    </div>
+    <div class="success-msg" id="modal-success">
+      <div class="check">✓</div>
+      <h3>Reservation confirmed!</h3>
+      <p>My Luxury Voyage will contact you within 24h to finalise your booking and arrange the deposit.</p>
+      <button class="btn-cancel" onclick="closeModal()" style="margin-top:16px;">Close</button>
+    </div>
+  </div>
+</div>
+
+
+
+<script id="mlv-data" type="application/json">{"type":"roadtrip","base":{"rtName":"Super Tour 2026","rtFrom":"Milan","rtTo":"Barcelone","rtStart":"2026-05-11","rtEnd":"2026-05-15","rtDays":"","countries":"Italy - France - Spain","coverImg":"https://i.imgur.com/4gNZMUU.jpeg","itinerary":"","cities":[{"name":"Milan","img":"https://i.imgur.com/bwfk4GE.jpeg","details":"JUNE 07 SUNDAY TALLINN\nARRIVALS\n15:00 Traditional Sauna for early arrivals\n20:00 Welcome dinner at ?????\nMÖVENPICK HOTEL TALLINN"},{"name":"Monaco","img":"https://i.imgur.com/5izGH8P.jpeg","details":"JUNE 08 MONDAY TALLINN\n08:00 Wake-up, Luggage in the car, Checkout & Breakfast\n09:00 Drive to Latvia (300km, 4h)\n12:00 LUNCH AT PAVĀRU MĀJA\n15:00 Drive to Lithuania (300km, 4h)\n20:00 Dinner at Hotel\nVILNIUS GRAND RESORT"},{"name":"Barcelone","img":"https://i.imgur.com/NDzEwpm.jpeg","details":"JUNE 09 TUESDAY LITHUANIA\n08:00 Wake-up, Luggage in the car, Checkout & Breakfast\n09:00 Drive to Lunch (400km, 5h)\n1400 LUNCH & VISIT AT SUNREEF YACHTS MANUFACTURE\n16:00 Drive to Gdansk (300km, 3h)\n20:00 SPECIAL DINNER\nHOTEL GDAŃSK BOUTIQUE"}],"waNumber":"33650505040","cars":[{"name":"Ferrari F8","kmNote":"250km per day included","dailyPrice":"1900 EUR / Day","deliveryFee":"1700 EUR","mileagePkg":"750 Km included","extraMile":"5 EUR / Km","totalPrice":"4890 EUR","deposit":"20000 EUR","photo1":"https://i.imgur.com/OPQaF6Z.jpeg","photo2":"https://i.imgur.com/UoFcNTu.jpeg","photo3":""},{"name":"Lamborghini ST0","kmNote":"250km per day included","dailyPrice":"2500 EUR / Day","deliveryFee":"1700 EUR","mileagePkg":"750 Km included","extraMile":"7 EUR / Km","totalPrice":"5500 EUR","deposit":"30000 EUR","photo1":"https://i.imgur.com/3OnXGnH.jpeg","photo2":"","photo3":""}]}}</script>
+
+<script>
+
+
+
+ 
+var cCur = {1:0,2:0,3:0,4:0,5:0};
+function _initCarSliders() {
+  [1,2,3,4,5].forEach(function(id) {
+    var slides = document.querySelectorAll('#cs-' + id + ' .car-slide');
+    var dotsEl = document.getElementById('cd-' + id);
+    if (!dotsEl || slides.length === 0) return;
+    dotsEl.innerHTML = '';
+    slides.forEach(function(_, i) {
+      var d = document.createElement('div');
+      d.className = 'csdot' + (i === 0 ? ' active' : '');
+      d.onclick = (function(cid, ci){ return function(){ cGoTo(cid, ci); }; })(id, i);
+      dotsEl.appendChild(d);
+    });
+  });
+}
+function cGoTo(id, n) {
+  var slides = document.querySelectorAll('#cs-' + id + ' .car-slide');
+  cCur[id] = (n + slides.length) % slides.length;
+  var isRTL = document.documentElement.dir === 'rtl';
+  document.getElementById('cs-' + id).style.transform = 'translateX(' + (isRTL ? '' : '-') + (cCur[id] * 100) + '%)';
+  document.querySelectorAll('#cd-' + id + ' .csdot').forEach(function(d, i){ d.classList.toggle('active', i === cCur[id]); });
+}
+function cSlide(id, dir) { cGoTo(id, cCur[id] + dir); }
+
+ 
+var currentCar = null;
+function openModal(carId, carName, price) {
+  currentCar = carId;
+  document.getElementById('modal-car-name').textContent = carName + ' — ' + price;
+  document.getElementById('modal-form').style.display = 'block';
+  document.getElementById('modal-success').style.display = 'none';
+  ['f-first','f-last','f-phone','f-email'].forEach(function(id){ document.getElementById(id).value = ''; });
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); currentCar = null; }
+function submitBooking() {
+  var first = document.getElementById('f-first').value.trim();
+  var last  = document.getElementById('f-last').value.trim();
+  var phone = document.getElementById('f-phone').value.trim();
+  var email = document.getElementById('f-email').value.trim();
+  var carName = document.getElementById('modal-car-name').textContent;
+  if (!first || !last || !phone || !email) { alert('Please fill in all fields.'); return; }
+  var card = document.getElementById(currentCar);
+  if (card) {
+    card.classList.add('booked');
+    var wrap = card.querySelector('.car-slider-wrap');
+    var ov = document.createElement('div');
+    ov.className = 'booked-overlay';
+    ov.innerHTML = '<div class="booked-badge-img">BOOKED</div>';
+    wrap.appendChild(ov);
+  }
+  var d = getData();
+  var waNum = (d && d.base && d.base.waNumber) ? d.base.waNumber : '33650505040';
+  var rtName = (d && d.base && d.base.rtName) ? d.base.rtName : 'Road Trip';
+  var msg = encodeURIComponent('New car reservation — ' + rtName + '\nVehicle: ' + carName + '\nName: ' + first + ' ' + last + '\nMobile: ' + phone + '\nEmail: ' + email);
+  window.open('https://wa.me/' + waNum + '?text=' + msg, '_blank');
+  document.getElementById('modal-form').style.display = 'none';
+  document.getElementById('modal-success').style.display = 'block';
+}
+
+ 
+function getData() {
+  try {
+    var el = document.getElementById('mlv-data');
+    return el ? JSON.parse(el.textContent) : null;
+  } catch(e) { return null; }
+}
+
+ 
+function proxyImg(url) {
+  if (!url || url.length < 8) return '';
+  if (url.indexOf('unsplash.com') > -1) return url;
+  if (url.indexOf('i.imgur.com') > -1) return url;
+  if (url.indexOf('imgur.com') > -1 && url.match(/\.(jpg|jpeg|png|gif|webp)/i)) return url;
+  if (url.indexOf('drive.google.com/file') > -1) {
+    var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    if (m) return 'https://drive.google.com/uc?export=view&id=' + m[1];
+  }
+  if (url.indexOf('drive.google.com/uc') > -1) return url;
+  if (url.indexOf('weserv.nl') > -1) return url;
+  return 'https://images.weserv.nl/?url=' + encodeURIComponent(url) + '&w=900&output=jpg&q=85';
+}
+
+ 
+function gtrans(texts, cb, tl) {
+  var joined = texts.join('\n');
+  var targetLang = tl || 'ar';
+  var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=' + targetLang + '&dt=t&q=' + encodeURIComponent(joined);
+  fetch(url)
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var translated = '';
+      for (var i = 0; i < data[0].length; i++) {
+        if (data[0][i] && data[0][i][0]) translated += data[0][i][0];
+      }
+      cb(translated.split('\n'));
+    })
+    .catch(function(){ cb(texts); });
+}
+
+ 
+function buildCarCards(cars, lang) {
+  var wrap = document.querySelector('.cars-wrap');
+  if (!wrap || !cars || cars.length === 0) return;
+  wrap.innerHTML = '';
+  cars.forEach(function(car, ci) {
+    var id = ci + 1;
+    var imgs = [car.photo1, car.photo2, car.photo3].filter(function(u){ return u && u.length > 5; });
+    if (imgs.length === 0) imgs = ['https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=900&q=80'];
+    var slidesHtml = imgs.map(function(u){
+      return '<div class="car-slide" style="background-image:url(\'' + proxyImg(u) + '\')"></div>';
+    }).join('');
+    var isAR = lang === 'ar', isPT = lang === 'pt';
+    var labelDaily   = isAR ? 'السعر اليومي'           : isPT ? 'Diária'               : 'Daily rate';
+    var labelDeliv   = isAR ? 'التوصيل / الاستلام'     : isPT ? 'Entrega / Coleta'     : 'Delivery / Collection';
+    var labelMileage = isAR ? 'باقة الكيلومترات'       : isPT ? 'Pacote de km'         : 'Mileage package';
+    var labelExtraKm = isAR ? 'كيلومتر إضافي'          : isPT ? 'km extra'             : 'Extra km';
+    var labelTotal   = isAR ? 'السعر الإجمالي الخاص'   : isPT ? 'PREÇO TOTAL Especial' : 'TOTAL Special Price';
+    var labelDeposit = isAR ? 'وديعة'                  : isPT ? 'Depósito'             : 'Deposit';
+    var labelReserve = isAR ? 'احجز هذه السيارة'       : isPT ? 'Reservar este veículo': 'Reserve this vehicle';
+    var labelKmNote  = car.kmNote || (isAR ? 'كم في اليوم مشمول' : isPT ? 'km por dia incluídos' : '250km per day included');
+    wrap.innerHTML += '<div class="car-card" id="car' + id + '">' +
+      '<div class="car-slider-wrap">' +
+        '<div class="car-slider" id="cs-' + id + '">' + slidesHtml + '</div>' +
+        '<button class="cs-prev" onclick="cSlide(' + id + ',-1)">&#8249;</button>' +
+        '<button class="cs-next" onclick="cSlide(' + id + ',1)">&#8250;</button>' +
+        '<div class="cs-dots" id="cd-' + id + '"></div>' +
+      '</div>' +
+      '<div class="car-body">' +
+        '<div class="car-top"><div class="car-name">' + (car.name || '') + '</div>' +
+        '<div class="car-km-note">' + labelKmNote + '</div></div>' +
+        '<ul class="car-bullets">' +
+          (car.dailyPrice ? '<li><div class="cb-dot"></div><span><span class="cb-label">' + labelDaily + ':</span> ' + car.dailyPrice + '</span></li>' : '') +
+          (car.deliveryFee ? '<li><div class="cb-dot"></div><span><span class="cb-label">' + labelDeliv + ':</span> ' + car.deliveryFee + '</span></li>' : '') +
+          (car.mileagePkg ? '<li><div class="cb-dot"></div><span><span class="cb-label">' + labelMileage + ':</span> ' + car.mileagePkg + '</span></li>' : '') +
+          (car.extraMile ? '<li><div class="cb-dot"></div><span><span class="cb-label">' + labelExtraKm + ':</span> ' + car.extraMile + '</span></li>' : '') +
+        '</ul>' +
+        '<div class="car-price-box"><div class="cp-total">' +
+          '<div class="cp-label">' + labelTotal + '</div>' +
+          '<div class="cp-val" dir="ltr" style="unicode-bidi:embed">' + (car.totalPrice || '') + '</div>' +
+          (car.deposit ? '<div class="cp-deposit">' + labelDeposit + ': <strong dir="ltr" style="unicode-bidi:embed">' + car.deposit + '</strong></div>' : '') +
+        '</div></div>' +
+        '<div class="btn-reserve-wrap"><button class="btn-reserve" onclick="openModal(\'car' + id + '\',\'' + (car.name||'').replace(/'/g,"\\'") + '\',\'' + (car.totalPrice||'').replace(/'/g,"\\'") + '\')">' + labelReserve + '</button></div>' +
+      '</div></div>';
+  });
+  _initCarSliders();
+}
+
+ 
+var LABELS = {
+  en: {
+    'cover-label': 'Road Trip · My Luxury Voyage',
+    'ov-route': 'Route', 'ov-dates': 'Dates', 'ov-dur': 'Duration', 'ov-countries': 'Countries',
+    'car-section-title': 'Choose Your Vehicle',
+    'modal-title': 'Vehicle Reservation',
+    'f-first-ph': 'First name', 'f-last-ph': 'Last name', 'f-phone-ph': 'Phone', 'f-email-ph': 'Email',
+    'btn-submit': 'Send reservation via WhatsApp',
+    'success-title': 'Request sent!', 'success-body': 'We will contact you shortly to confirm your reservation.'
+  },
+  ar: {
+    'cover-label': 'رحلة برية · ماي لاكشري فوياج',
+    'ov-route': 'المسار', 'ov-dates': 'التواريخ', 'ov-dur': 'المدة', 'ov-countries': 'البلدان',
+    'car-section-title': 'اختر سيارتك',
+    'modal-title': 'حجز السيارة',
+    'f-first-ph': 'الاسم', 'f-last-ph': 'اللقب', 'f-phone-ph': 'الهاتف', 'f-email-ph': 'البريد الإلكتروني',
+    'btn-submit': 'إرسال الحجز عبر واتساب',
+    'success-title': 'تم الإرسال!', 'success-body': 'سنتواصل معك قريباً لتأكيد حجزك.'
+  },
+  pt: {
+    'cover-label': 'Road Trip · My Luxury Voyage',
+    'ov-route': 'Rota', 'ov-dates': 'Datas', 'ov-dur': 'Duração', 'ov-countries': 'Países',
+    'car-section-title': 'Escolha Seu Veículo',
+    'modal-title': 'Reserva de Veículo',
+    'f-first-ph': 'Nome', 'f-last-ph': 'Sobrenome', 'f-phone-ph': 'Telefone', 'f-email-ph': 'E-mail',
+    'btn-submit': 'Enviar reserva via WhatsApp',
+    'success-title': 'Pedido enviado!', 'success-body': 'Entraremos em contato em breve para confirmar sua reserva.'
+  }
+};
+
+ 
+var _arTranslated = false;
+var _ptTranslated = false;
+var _lastLang = 'en';
+function _renderRT(lang) {
+  var d = getData();
+  var lb = LABELS[lang] || LABELS.en;
+  var isAR = lang === 'ar';
+
+  
+  var el = document.querySelector('[data-k="cover-label"]');
+  if (el) el.textContent = lb['cover-label'];
+  if (d && d.base) {
+    var titleEl = document.getElementById('rt-title');
+    var routeEl = document.getElementById('rt-route');
+    var datesEl = document.getElementById('rt-dates');
+    if (titleEl) titleEl.innerHTML = d.base.rtName || 'Road Trip';
+    if (routeEl) routeEl.textContent = (d.base.rtFrom || '') + ' → ' + (d.base.rtTo || '');
+    if (datesEl) {
+      var dayCount = '';
+      if (d.base.rtStart && d.base.rtEnd) {
+        var ms2 = Math.abs(new Date(d.base.rtEnd) - new Date(d.base.rtStart));
+        var dc = Math.round(ms2 / 86400000);
+        if (dc > 0) dayCount = dc + ' Day' + (dc > 1 ? 's' : '');
+      }
+      datesEl.textContent = (d.base.rtStart || '') + ' – ' + (d.base.rtEnd || '') + (dayCount ? ' · ' + dayCount : '');
+    }
+
+    
+    if (d.base.coverImg) {
+      var bg = document.querySelector('.cover-bg');
+      if (bg) bg.style.backgroundImage = "url('" + proxyImg(d.base.coverImg) + "')";
+    }
+
+    
+    var ovRoute = document.getElementById('ov-route-val');
+    var ovDates = document.getElementById('ov-dates-val');
+    var ovDur   = document.getElementById('ov-dur-val');
+    var ovCtry  = document.getElementById('ov-countries-val');
+    if (ovRoute) ovRoute.textContent = (d.base.rtFrom || '') + ' → ' + (d.base.rtTo || '');
+    if (ovDates) ovDates.textContent = (d.base.rtStart || '') + ' – ' + (d.base.rtEnd || '');
+    if (ovDur) {
+      var dur = d.base.rtDays || '';
+      if (!dur && d.base.rtStart && d.base.rtEnd) {
+        var ms = Math.abs(new Date(d.base.rtEnd) - new Date(d.base.rtStart));
+        var days = Math.round(ms / 86400000);
+        dur = days > 0 ? days + ' Day' + (days > 1 ? 's' : '') : '';
+      }
+      ovDur.textContent = dur;
+    }
+    if (ovCtry)  ovCtry.textContent  = d.base.countries || '';
+
+    
+    var itinSection = document.getElementById('itinerary-section');
+    if (itinSection) {
+      var cities = d.base.cities || [];
+      if (cities.length > 0) {
+        var cityParts = [];
+        cities.forEach(function(city) {
+          var imgSrc = city.img && city.img.length > 5 ? proxyImg(city.img) : '';
+          var block = '<div class="city-block">';
+          if (imgSrc) block += '<div class="city-img-wrap"><img class="city-img" src="' + imgSrc + '"></div>';
+          block += '<div class="city-content">';
+          if (city.name)    block += '<div class="itin-city-name">'    + city.name    + '</div>';
+          if (city.details) block += '<div class="itin-city-details">'  + city.details + '</div>';
+          block += '</div></div>';
+          cityParts.push(block);
+        });
+        itinSection.innerHTML = cityParts.join('');
+      } else if (d.base.itinerary && d.base.itinerary.trim().length > 0) {
+        
+        var lines = d.base.itinerary.split('\n').filter(function(l){ return l.trim().length > 0; });
+        itinSection.innerHTML = '<div class="itin-block">' +
+          lines.map(function(line) {
+            var isHeader = /^(jour|day|j\d|d\d)/i.test(line.trim());
+            return isHeader
+              ? '<div class="itin-day-title">' + line.trim() + '</div>'
+              : '<div class="itin-line">' + line.trim() + '</div>';
+          }).join('') + '</div>';
+      } else {
+        itinSection.innerHTML = '';
+      }
+    }
+
+    
+    if (d.base.cars && d.base.cars.length > 0) buildCarCards(d.base.cars, lang);
+
+    
+    if (d.base.cities && d.base.cities.length > 0) {
+      initRouteMap(d.base.cities);
+    }
+  }
+
+  
+  document.documentElement.dir  = isAR ? 'rtl' : 'ltr'; 
+  document.documentElement.lang = lang;
+
+  
+  document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
+  var activeBtn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
+  if (activeBtn) activeBtn.classList.add('active');
+
+  
+  var isPT = lang === 'pt';
+  if ((isAR && !_arTranslated) || (isPT && !_ptTranslated)) {
+    setTimeout(function() {
+      
+      
+      
+      var staticTexts = document.querySelectorAll(
+        '.ov-label, .itin-city-name, .itin-city-details, .itin-day-title, .itin-line'
+      );
+      var nodes = Array.from(staticTexts).filter(function(n){ return n.textContent.trim().length > 1; });
+      var texts = nodes.map(function(n){ return n.textContent.trim(); });
+      var targetLang = isAR ? 'ar' : 'pt';
+      if (texts.length > 0) {
+        gtrans(texts, function(parts) {
+          nodes.forEach(function(n, i) {
+            if (parts[i]) n.textContent = parts[i];
+          });
+          if (isAR) _arTranslated = true;
+          if (isPT) _ptTranslated = true;
+        }, targetLang);
+      } else {
+        if (isAR) _arTranslated = true;
+        if (isPT) _ptTranslated = true;
+      }
+    }, 50);
+  }
+}
+
+
+ 
+var _mapInitialized = false;
+function initRouteMap(cities) {
+  if (!cities || cities.length < 1) return;
+  
+  var namedCities = cities.filter(function(c){ return c.name && c.name.trim().length > 0; });
+  if (namedCities.length === 0) return;
+
+  
+  var section = document.getElementById('route-map-section');
+  if (section) section.style.display = 'block';
+
+  
+  var title = document.getElementById('map-cities-title');
+  if (title) title.textContent = namedCities.map(function(c){ return c.name; }).join(' · ');
+
+  if (_mapInitialized) return;
+  _mapInitialized = true;
+
+  
+  function tryInit() {
+    if (typeof L === 'undefined') { setTimeout(tryInit, 200); return; }
+
+    var map = L.map('mlv-leaflet-map', {
+      zoomControl: true,
+      attributionControl: false
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19
+    }).addTo(map);
+
+    
+    function makeMarker(num) {
+      return L.divIcon({
+        className: '',
+        html: '<div style="width:28px;height:28px;border-radius:50%;background:#1C2E4A;border:3px solid #C9A96E;display:flex;align-items:center;justify-content:center;color:#C9A96E;font-size:10px;font-weight:700;font-family:Montserrat,sans-serif;box-shadow:0 2px 8px rgba(0,0,0,.3);">' + num + '</div>',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14]
+      });
+    }
+
+    
+    var coords = [];
+    var pending = namedCities.length;
+
+    namedCities.forEach(function(city, i) {
+      var url = 'https://nominatim.openstreetmap.org/search?q=' + encodeURIComponent(city.name) + '&format=json&limit=1';
+      fetch(url, {headers: {'Accept-Language': 'en'}})
+        .then(function(r){ return r.json(); })
+        .then(function(data) {
+          if (data && data[0]) {
+            coords[i] = {
+              lat: parseFloat(data[0].lat),
+              lng: parseFloat(data[0].lon),
+              name: city.name,
+              idx: i
+            };
+          }
+          pending--;
+          if (pending === 0) drawMap();
+        })
+        .catch(function() { pending--; if (pending === 0) drawMap(); });
+    });
+
+    function drawMap() {
+      var validCoords = [];
+      for (var i = 0; i < namedCities.length; i++) {
+        if (coords[i]) validCoords.push(coords[i]);
+      }
+      if (validCoords.length === 0) return;
+
+      
+      validCoords.forEach(function(c, i) {
+        var marker = L.marker([c.lat, c.lng], {icon: makeMarker(i + 1)}).addTo(map);
+        marker.bindTooltip('<strong style="font-family:Montserrat,sans-serif;font-size:11px;color:#1C2E4A;">' + c.name + '</strong>', {
+          permanent: false, direction: 'top', offset: [0, -16],
+          className: 'mlv-tooltip'
+        });
+      });
+
+      
+      var latlngs = validCoords.map(function(c){ return [c.lat, c.lng]; });
+      L.polyline(latlngs, {
+        color: '#C9A96E',
+        weight: 3,
+        opacity: 0.85,
+        dashArray: null
+      }).addTo(map);
+
+      
+      var bounds = L.latLngBounds(latlngs);
+      map.fitBounds(bounds, {padding: [50, 50]});
+    }
+  }
+  tryInit();
+}
+
+function setLangRT(l) {
+  if (l !== _lastLang) {
+    _lastLang = l;
+    
+    _arTranslated = false;
+    _ptTranslated = false;
+    
+    var carsWrap = document.querySelector('.cars-wrap');
+    if (carsWrap) carsWrap.innerHTML = '';
+    var itinSection = document.getElementById('itinerary-section');
+    if (itinSection) itinSection.innerHTML = '';
+    var dynActs = document.getElementById('dynamic-acts');
+    if (dynActs) dynActs.innerHTML = '';
+  }
+  _renderRT(l);
+}
+
+ 
+document.addEventListener('DOMContentLoaded', function() {
+  
+  var d = getData();
+  if (d && d.base) {
+    var title = (d.base.rtName || 'Road Trip') + ' · ' + (d.base.rtFrom || '') + ' → ' + (d.base.rtTo || '') + ' · My Luxury Voyage';
+    var desc  = (d.base.rtStart || '') + ' – ' + (d.base.rtEnd || '') + (d.base.countries ? ' · ' + d.base.countries : '');
+    var img   = d.base.coverImg || '';
+    var setMeta = function(id, val) { var el = document.getElementById(id); if (el && val) el.setAttribute('content', val); };
+    setMeta('og-title', title); setMeta('tw-title', title);
+    setMeta('og-desc', desc);
+    setMeta('og-image', img); setMeta('tw-image', img);
+    document.title = title;
+  }
+  document.getElementById('modal').addEventListener('click', function(e){ if(e.target.id === 'modal') closeModal(); });
+  _renderRT('en');
+});
+</script>
+
+<div style="background:#f5f5f5;border-top:1px solid #e0e0e0;padding:10px 44px;text-align:center;">
+  <p id="translation-note" style="font-size:9px;color:#999;letter-spacing:.05em;line-height:1.6;margin:0;"></p>
+</div>
+<script>
+(function(){
+  var notes = {
+    en: 'Translations are generated automatically by Google Translate. We apologize for any translation errors.',
+    pt: 'As traduções são geradas automaticamente pelo Google Translate. Pedimos desculpas por eventuais erros de tradução.',
+    ar: 'تمت الترجمة تلقائياً بواسطة Google Translate. نعتذر عن أي أخطاء في الترجمة.'
+  };
+  function updateNote() {
+    var el = document.getElementById('translation-note');
+    var lang = document.documentElement.lang || 'en';
+    if (el) el.textContent = notes[lang] || notes.en;
+  }
+  document.addEventListener('DOMContentLoaded', updateNote);
+  var orig = window.setLangRT;
+  window.setLangRT = function(l) { if(orig) orig(l); setTimeout(updateNote, 100); };
+})();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+</body>
+</html>
