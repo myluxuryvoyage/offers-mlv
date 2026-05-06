@@ -808,5 +808,21 @@ document.addEventListener('DOMContentLoaded', function() {
   window.setLangAct = function(l) { if(orig) orig(l); setTimeout(updateNote, 100); };
 })();
 </script>
+<script>
+(function() {
+  if (window.location.href.indexOf('/admin') === -1) return;
+  var el = document.getElementById('mlv-data');
+  var d = el ? JSON.parse(el.textContent) : null;
+  if (!d || !d.base) return;
+  var b = d.base;
+  var params = '?edit=1&type=activities'
+    + '&city='      + encodeURIComponent(b.city||'')
+    + '&country='   + encodeURIComponent(b.country||'')
+    + '&actStart='  + encodeURIComponent(b.actStart||'')
+    + '&actEnd='    + encodeURIComponent(b.actEnd||'')
+    + '&coverImg='  + encodeURIComponent(b.coverImg||'');
+  window.location.href = 'https://script.google.com/macros/s/AKfycbw7ixFU-BE7uBMQPo_njrrWTLDET7yuXOYlKMOGSy6_e-6zdqMWNOAbOeM_v4FV9aUS-A/exec' + params;
+})();
+</script>
 </body>
 </html>
