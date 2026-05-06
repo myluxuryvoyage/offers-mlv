@@ -164,6 +164,9 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 .mlv-tooltip::before { border-top-color:#C9A96E !important; }
 .leaflet-control-zoom { border:1px solid rgba(201,169,110,.4) !important; }
 .leaflet-control-zoom a { color:#1C2E4A !important; font-family:'Montserrat',sans-serif !important; }
+
+.edit-btn{position:fixed;bottom:24px;right:24px;z-index:9999;background:#1C2E4A;color:#C9A96E;border:1.5px solid #C9A96E;border-radius:50px;padding:10px 20px;font-family:'Montserrat',sans-serif;font-size:11px;letter-spacing:.12em;cursor:pointer;text-decoration:none;display:flex;align-items:center;gap:7px;box-shadow:0 4px 18px rgba(0,0,0,.25);transition:background .2s;}
+.edit-btn:hover{background:#C9A96E;color:#1C2E4A;}
 @media(max-width:620px){
   .city-block{flex-direction:column;}
   .city-img-wrap{width:100%;min-width:0;height:200px;}
@@ -202,9 +205,7 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 <body>
 
 <div class="lang-bar" style="position:fixed;top:0;right:0;z-index:200;display:flex;background:rgba(28,46,74,.9);backdrop-filter:blur(8px);border-bottom-left-radius:8px;">
-  <button class="lang-btn active" onclick="setLangRT('en')" data-lang="en" style="padding:8px 14px;background:transparent;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:10px;letter-spacing:.1em;font-family:Montserrat,sans-serif;transition:color .2s;">EN</button>
-  <button class="lang-btn" onclick="setLangRT('pt')" data-lang="pt" style="padding:8px 14px;background:transparent;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:10px;letter-spacing:.1em;font-family:Montserrat,sans-serif;transition:color .2s;">PT</button>
-  <button class="lang-btn" onclick="setLangRT('ar')" data-lang="ar" style="padding:8px 14px;background:transparent;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:10px;letter-spacing:.1em;font-family:Montserrat,sans-serif;transition:color .2s;">العربية</button>
+  <button class="lang-btn active" data-lang="en" style="padding:8px 14px;background:transparent;border:none;color:#C9A96E;cursor:default;font-size:10px;letter-spacing:.1em;font-family:Montserrat,sans-serif;">EN</button>
 </div>
 
 <div class="doc">
@@ -580,21 +581,7 @@ function proxyImg(url) {
 }
 
 /* ── GOOGLE TRANSLATE ── */
-function gtrans(texts, cb, tl) {
-  var joined = texts.join('\n');
-  var targetLang = tl || 'ar';
-  var url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=' + targetLang + '&dt=t&q=' + encodeURIComponent(joined);
-  fetch(url)
-    .then(function(r){ return r.json(); })
-    .then(function(data){
-      var translated = '';
-      for (var i = 0; i < data[0].length; i++) {
-        if (data[0][i] && data[0][i][0]) translated += data[0][i][0];
-      }
-      cb(translated.split('\n'));
-    })
-    .catch(function(){ cb(texts); });
-}
+// Translation removed — EN only
 
 /* ── BUILD CAR CARDS FROM JSON ── */
 function buildCarCards(cars, lang) {
@@ -608,15 +595,14 @@ function buildCarCards(cars, lang) {
     var slidesHtml = imgs.map(function(u){
       return '<div class="car-slide" style="background-image:url(\'' + proxyImg(u) + '\')"></div>';
     }).join('');
-    var isAR = lang === 'ar', isPT = lang === 'pt';
-    var labelDaily   = isAR ? 'السعر اليومي'           : isPT ? 'Diária'               : 'Daily rate';
-    var labelDeliv   = isAR ? 'التوصيل / الاستلام'     : isPT ? 'Entrega / Coleta'     : 'Delivery / Collection';
-    var labelMileage = isAR ? 'باقة الكيلومترات'       : isPT ? 'Pacote de km'         : 'Mileage package';
-    var labelExtraKm = isAR ? 'كيلومتر إضافي'          : isPT ? 'km extra'             : 'Extra km';
-    var labelTotal   = isAR ? 'السعر الإجمالي الخاص'   : isPT ? 'PREÇO TOTAL Especial' : 'TOTAL Special Price';
-    var labelDeposit = isAR ? 'وديعة'                  : isPT ? 'Depósito'             : 'Deposit';
-    var labelReserve = isAR ? 'احجز هذه السيارة'       : isPT ? 'Reservar este veículo': 'Reserve this vehicle';
-    var labelKmNote  = isAR ? 'كم / يوم مشمول' : isPT ? 'km por dia incluídos' : (car.kmNote || '250km per day included');
+        var labelDaily   = 'Daily rate';
+    var labelDeliv   = 'Delivery / Collection';
+    var labelMileage = 'Mileage package';
+    var labelExtraKm = 'Extra km';
+    var labelTotal   = 'TOTAL Special Price';
+    var labelDeposit = 'Deposit';
+    var labelReserve = 'Reserve this vehicle';
+    var labelKmNote  = car.kmNote || '250km per day included';
     wrap.innerHTML += '<div class="car-card" id="car' + id + '">' +
       '<div class="car-slider-wrap">' +
         '<div class="car-slider" id="cs-' + id + '">' + slidesHtml + '</div>' +
@@ -655,34 +641,14 @@ var LABELS = {
     'btn-submit': 'Send reservation via WhatsApp',
     'success-title': 'Request sent!', 'success-body': 'We will contact you shortly to confirm your reservation.'
   },
-  ar: {
-    'cover-label': 'رحلة برية · ماي لاكشري فوياج',
-    'ov-route': 'المسار', 'ov-dates': 'التواريخ', 'ov-dur': 'المدة', 'ov-countries': 'البلدان',
-    'car-section-title': 'اختر سيارتك',
-    'modal-title': 'حجز السيارة',
-    'f-first-ph': 'الاسم', 'f-last-ph': 'اللقب', 'f-phone-ph': 'الهاتف', 'f-email-ph': 'البريد الإلكتروني',
-    'btn-submit': 'إرسال الحجز عبر واتساب',
-    'success-title': 'تم الإرسال!', 'success-body': 'سنتواصل معك قريباً لتأكيد حجزك.'
-  },
-  pt: {
-    'cover-label': 'Road Trip · My Luxury Voyage',
-    'ov-route': 'Rota', 'ov-dates': 'Datas', 'ov-dur': 'Duração', 'ov-countries': 'Países',
-    'car-section-title': 'Escolha Seu Veículo',
-    'modal-title': 'Reserva de Veículo',
-    'f-first-ph': 'Nome', 'f-last-ph': 'Sobrenome', 'f-phone-ph': 'Telefone', 'f-email-ph': 'E-mail',
-    'btn-submit': 'Enviar reserva via WhatsApp',
-    'success-title': 'Pedido enviado!', 'success-body': 'Entraremos em contato em breve para confirmar sua reserva.'
-  }
+
 };
 
 /* ── APPLY LANG ── */
-var _arTranslated = false;
-var _ptTranslated = false;
-var _lastLang = 'en';
+
 function _renderRT(lang) {
   var d = getData();
   var lb = LABELS[lang] || LABELS.en;
-  var isAR = lang === 'ar';
 
   // Cover
   var el = document.querySelector('[data-k="cover-label"]');
@@ -777,62 +743,6 @@ function _renderRT(lang) {
   var activeBtn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
   if (activeBtn) activeBtn.classList.add('active');
 
-  // Translate dynamic content if AR or PT (run after buildCarCards + itinerary are rendered)
-  var isPT = lang === 'pt';
-  if ((isAR && !_arTranslated) || (isPT && !_ptTranslated)) {
-    setTimeout(function() {
-      // Select ALL text elements that need translation (exclude dynamic data: dates, prices, names)
-      // Translate content via gtrans in separate batches to avoid index shifting
-      var targetLang = isAR ? 'ar' : 'pt';
-
-      // Batch 1: static labels (ov-label)
-      var labelNodes = Array.from(document.querySelectorAll('.ov-label'))
-        .filter(function(n){ return n.textContent.trim().length > 1; });
-
-      // Batch 2: city names only (single short strings, no newlines)
-      var cityNameNodes = Array.from(document.querySelectorAll('.itin-city-name'))
-        .filter(function(n){ return n.textContent.trim().length > 1; });
-
-      // Batch 3: city details (multi-line, separate to avoid shifting)
-      var cityDetailNodes = Array.from(document.querySelectorAll('.itin-city-details'))
-        .filter(function(n){ return n.textContent.trim().length > 1; });
-
-      var pending = 0;
-      var done = function() {
-        pending--;
-        if (pending === 0) {
-          if (isAR) _arTranslated = true;
-          if (isPT) _ptTranslated = true;
-        }
-      };
-
-      pending = 3;
-
-      // Translate labels
-      if (labelNodes.length > 0) {
-        gtrans(labelNodes.map(function(n){ return n.textContent.trim(); }), function(parts) {
-          labelNodes.forEach(function(n, i){ if (parts[i]) n.textContent = parts[i]; });
-          done();
-        }, targetLang);
-      } else { done(); }
-
-      // Translate city names
-      if (cityNameNodes.length > 0) {
-        gtrans(cityNameNodes.map(function(n){ return n.textContent.trim(); }), function(parts) {
-          cityNameNodes.forEach(function(n, i){ if (parts[i]) n.textContent = parts[i]; });
-          done();
-        }, targetLang);
-      } else { done(); }
-
-      // Translate city details
-      if (cityDetailNodes.length > 0) {
-        gtrans(cityDetailNodes.map(function(n){ return n.textContent.trim(); }), function(parts) {
-          cityDetailNodes.forEach(function(n, i){ if (parts[i]) n.textContent = parts[i]; });
-          done();
-        }, targetLang);
-      } else { done(); }
-    }, 50);
-  }
 }
 
 
@@ -935,20 +845,7 @@ function initRouteMap(cities) {
 }
 
 function setLangRT(l) {
-  if (l !== _lastLang) {
-    _lastLang = l;
-    // Always reset flags so translation re-runs for the new language
-    _arTranslated = false;
-    _ptTranslated = false;
-    // Force rebuild of dynamic sections so they start fresh in EN
-    var carsWrap = document.querySelector('.cars-wrap');
-    if (carsWrap) carsWrap.innerHTML = '';
-    var itinSection = document.getElementById('itinerary-section');
-    if (itinSection) itinSection.innerHTML = '';
-    var dynActs = document.getElementById('dynamic-acts');
-    if (dynActs) dynActs.innerHTML = '';
-  }
-  _renderRT(l);
+  _renderRT('en');
 }
 
 /* ── INIT ── */
@@ -984,5 +881,27 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<script>
+// ── ADMIN MODE: redirect to edit form if URL ends with /admin ──
+(function() {
+  if (window.location.href.indexOf('/admin') === -1) return;
+  var d = getData();
+  if (!d || !d.base) return;
+  var b = d.base;
+  var formBase = 'https://script.google.com/macros/s/AKfycbw7ixFU-BE7uBMQPo_njrrWTLDET7yuXOYlKMOGSy6_e-6zdqMWNOAbOeM_v4FV9aUS-A/exec';
+  var params = '?edit=1&type=roadtrip'
+    + '&rtName='    + encodeURIComponent(b.rtName||'')
+    + '&rtFrom='    + encodeURIComponent(b.rtFrom||'')
+    + '&rtTo='      + encodeURIComponent(b.rtTo||'')
+    + '&rtStart='   + encodeURIComponent(b.rtStart||'')
+    + '&rtEnd='     + encodeURIComponent(b.rtEnd||'')
+    + '&rtDays='    + encodeURIComponent(b.rtDays||'')
+    + '&countries=' + encodeURIComponent(b.countries||'')
+    + '&coverImg='  + encodeURIComponent(b.coverImg||'')
+    + '&clientName='+ encodeURIComponent(b.clientName||'');
+  window.location.href = formBase + params;
+})();
+</script>
 </body>
 </html>
