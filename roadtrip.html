@@ -130,23 +130,30 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 .wa-svg{width:16px;height:16px;fill:#fff;}
 
 /* BOOKING MODAL */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.76);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+/* ── TYPEFORM BOOKING ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(14,24,38,.95);z-index:9000;align-items:center;justify-content:center;}
 .modal-bg.open{display:flex;}
-.modal{background:#fff;border-top:3px solid var(--gold);border-radius:2px;padding:38px;max-width:450px;width:90%;}
-.modal h2{font-family:'Playfair Display',serif;font-size:20px;color:var(--navy);margin-bottom:4px;}
-.modal .car-sel{font-size:12px;color:var(--gold);font-weight:600;margin-bottom:22px;}
-.form-row{margin-bottom:14px;}
-.form-row label{display:block;font-size:9px;letter-spacing:.15em;color:var(--gray);text-transform:uppercase;margin-bottom:5px;}
-.form-row input{width:100%;padding:10px 13px;border:1px solid #ddd;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--navy);outline:none;border-radius:1px;transition:border-color .2s;}
-.form-row input:focus{border-color:var(--gold);}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.btn-submit{width:100%;background:var(--gold);color:#fff;border:none;padding:13px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;margin-top:8px;border-radius:1px;transition:background .2s;}
-.btn-submit:hover{background:var(--gold2);}
-.btn-cancel{width:100%;background:transparent;color:var(--gray);border:1px solid #ddd;padding:10px;font-family:'Montserrat',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;margin-top:8px;border-radius:1px;}
-.success-msg{display:none;text-align:center;padding:16px 0;}
-.success-msg .check{font-size:36px;margin-bottom:10px;}
-.success-msg h3{font-family:'Playfair Display',serif;font-size:20px;color:var(--navy);margin-bottom:8px;}
-.success-msg p{font-size:12px;color:var(--gray);line-height:1.6;}
+.modal{background:var(--navy);width:100%;max-width:560px;border-radius:8px;padding:52px 56px;position:relative;min-height:300px;}
+.tf-close{position:absolute;top:16px;right:20px;background:none;border:none;color:rgba(255,255,255,.3);font-size:22px;cursor:pointer;line-height:1;padding:4px;}
+.tf-progress-bar{position:absolute;top:0;left:0;height:3px;background:var(--gold);border-radius:8px 0 0 0;transition:width .35s ease;}
+.tf-step{display:none;}
+.tf-step.active{display:block;animation:tfIn .3s ease;}
+@keyframes tfIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.tf-eyebrow{font-size:9px;letter-spacing:.25em;color:rgba(255,255,255,.3);font-family:'Montserrat',sans-serif;text-transform:uppercase;margin-bottom:14px;}
+.tf-car-name{font-size:11px;color:var(--gold);font-family:'Montserrat',sans-serif;letter-spacing:.08em;margin-bottom:20px;}
+.tf-q{font-family:'Playfair Display',serif;font-size:24px;color:#fff;margin-bottom:24px;line-height:1.35;}
+.tf-input{width:100%;background:transparent;border:none;border-bottom:1.5px solid rgba(255,255,255,.2);color:#fff;font-size:18px;padding:10px 0;outline:none;font-family:'Montserrat',sans-serif;transition:border-color .2s;box-sizing:border-box;}
+.tf-input:focus{border-bottom-color:var(--gold);}
+.tf-input::placeholder{color:rgba(255,255,255,.2);}
+.tf-btn{margin-top:28px;background:var(--gold);color:var(--navy);border:none;padding:13px 30px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;border-radius:2px;transition:opacity .2s;}
+.tf-btn:hover{opacity:.85;}
+.tf-back{display:block;background:none;border:none;color:rgba(255,255,255,.25);font-size:10px;font-family:'Montserrat',sans-serif;cursor:pointer;margin-top:14px;padding:0;letter-spacing:.1em;text-transform:uppercase;}
+.tf-back:hover{color:rgba(255,255,255,.5);}
+.tf-success{text-align:center;padding:10px 0;}
+.tf-check{font-size:52px;margin-bottom:16px;}
+.tf-success h3{font-family:'Playfair Display',serif;font-size:26px;color:#fff;margin-bottom:12px;}
+.tf-success p{color:rgba(255,255,255,.55);font-size:13px;line-height:1.75;}
+.tf-success .tf-btn{margin-top:24px;}
 
 /* FOOTER */
 .doc-footer{background:var(--navy);padding:22px 44px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;}
@@ -259,190 +266,9 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 
 <!-- CAR CARDS -->
 <div class="cars-wrap">
-
-  <!-- CAR 1 — Lamborghini Urus SE -->
-  <div class="car-card" id="car1">
-    <div class="car-slider-wrap">
-      <div class="car-slider" id="cs-1">
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=900&q=80')"></div>
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=900&q=80')"></div>
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=900&q=80')"></div>
-      </div>
-      <button class="cs-prev" onclick="cSlide(1,-1)">‹</button>
-      <button class="cs-next" onclick="cSlide(1,1)">›</button>
-      <div class="cs-dots" id="cd-1"></div>
-    </div>
-    <div class="car-body">
-      <div class="car-top">
-        <div class="car-name"><em>Lamborghini</em> Urus SE</div>
-        <div class="car-km-note">250km per day included</div>
-      </div>
-      <ul class="car-bullets">
-        <li><div class="cb-dot"></div><span><span class="cb-label">Daily rate:</span> 2 400 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Delivery / Collection:</span> 3 250 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Extra mileage pkg (750km):</span> 4 125 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Extra km:</span> 11 € / km</span></li>
-      </ul>
-      <div class="car-price-box">
-        <div class="cp-total">
-          <div class="cp-label">TOTAL Special Price</div>
-          <div class="cp-val">16 975 €</div>
-          <div class="cp-deposit">Deposit: <strong>30 000 €</strong></div>
-        </div>
-      </div>
-      <div class="btn-reserve-wrap">
-        <button class="btn-reserve" onclick="openModal('car1','Lamborghini Urus SE','16 975 €')">Reserve this vehicle</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CAR 2 — Lamborghini Urus Performante -->
-  <div class="car-card" id="car2">
-    <div class="car-slider-wrap">
-      <div class="car-slider" id="cs-2">
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1580274455191-1c62238fa333?w=900&q=80')"></div>
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=900&q=80')"></div>
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1617788138017-80ad40651399?w=900&q=80')"></div>
-      </div>
-      <button class="cs-prev" onclick="cSlide(2,-1)">‹</button>
-      <button class="cs-next" onclick="cSlide(2,1)">›</button>
-      <div class="cs-dots" id="cd-2"></div>
-    </div>
-    <div class="car-body">
-      <div class="car-top">
-        <div class="car-name"><em>Lamborghini</em> Urus Performante</div>
-        <div class="car-km-note">250km per day included</div>
-      </div>
-      <ul class="car-bullets">
-        <li><div class="cb-dot"></div><span><span class="cb-label">Daily rate:</span> 2 200 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Delivery / Collection:</span> 3 250 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Extra mileage pkg (750km):</span> 4 125 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Extra km:</span> 11 € / km</span></li>
-      </ul>
-      <div class="car-price-box">
-        <div class="cp-total">
-          <div class="cp-label">TOTAL Special Price</div>
-          <div class="cp-val">16 175 €</div>
-          <div class="cp-deposit">Deposit: <strong>30 000 €</strong></div>
-        </div>
-      </div>
-      <div class="btn-reserve-wrap">
-        <button class="btn-reserve" onclick="openModal('car2','Lamborghini Urus Performante','16 175 €')">Reserve this vehicle</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CAR 3 — Lamborghini Urus S -->
-  <div class="car-card" id="car3">
-    <div class="car-slider-wrap">
-      <div class="car-slider" id="cs-3">
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=900&q=80')"></div>
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1590000953851-b8c1721a0f89?w=900&q=80')"></div>
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1617788138017-80ad40651399?w=900&q=80')"></div>
-      </div>
-      <button class="cs-prev" onclick="cSlide(3,-1)">‹</button>
-      <button class="cs-next" onclick="cSlide(3,1)">›</button>
-      <div class="cs-dots" id="cd-3"></div>
-    </div>
-    <div class="car-body">
-      <div class="car-top">
-        <div class="car-name"><em>Lamborghini</em> Urus S</div>
-        <div class="car-km-note">250km per day included</div>
-      </div>
-      <ul class="car-bullets">
-        <li><div class="cb-dot"></div><span><span class="cb-label">Daily rate:</span> 1 900 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Delivery / Collection:</span> 3 250 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Extra mileage pkg (750km):</span> 4 125 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Extra km:</span> 11 € / km</span></li>
-      </ul>
-      <div class="car-price-box">
-        <div class="cp-total">
-          <div class="cp-label">TOTAL Special Price</div>
-          <div class="cp-val">14 975 €</div>
-          <div class="cp-deposit">Deposit: <strong>30 000 €</strong></div>
-        </div>
-      </div>
-      <div class="btn-reserve-wrap">
-        <button class="btn-reserve" onclick="openModal('car3','Lamborghini Urus S','14 975 €')">Reserve this vehicle</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CAR 4 — Aston Martin DBX 707 -->
-  <div class="car-card" id="car4">
-    <div class="car-slider-wrap">
-      <div class="car-slider" id="cs-4">
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1555652736-e92021d28a10?w=900&q=80')"></div>
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=900&q=80')"></div>
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1617788138017-80ad40651399?w=900&q=80')"></div>
-      </div>
-      <button class="cs-prev" onclick="cSlide(4,-1)">‹</button>
-      <button class="cs-next" onclick="cSlide(4,1)">›</button>
-      <div class="cs-dots" id="cd-4"></div>
-    </div>
-    <div class="car-body">
-      <div class="car-top">
-        <div class="car-name"><em>Aston Martin</em> DBX 707</div>
-        <div class="car-km-note">250km per day included</div>
-      </div>
-      <ul class="car-bullets">
-        <li><div class="cb-dot"></div><span><span class="cb-label">Daily rate:</span> 2 000 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Delivery / Collection:</span> 3 250 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Extra mileage pkg (750km):</span> 4 125 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Extra km:</span> 11 € / km</span></li>
-      </ul>
-      <div class="car-price-box">
-        <div class="cp-total">
-          <div class="cp-label">TOTAL Special Price</div>
-          <div class="cp-val">15 375 €</div>
-          <div class="cp-deposit">Deposit: <strong>30 000 €</strong></div>
-        </div>
-      </div>
-      <div class="btn-reserve-wrap">
-        <button class="btn-reserve" onclick="openModal('car4','Aston Martin DBX 707','15 375 €')">Reserve this vehicle</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CAR 5 — Mercedes GLS 600 Maybach -->
-  <div class="car-card" id="car5">
-    <div class="car-slider-wrap">
-      <div class="car-slider" id="cs-5">
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=900&q=80')"></div>
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=900&q=80')"></div>
-        <div class="car-slide" style="background-image:url('https://images.unsplash.com/photo-1590000953851-b8c1721a0f89?w=900&q=80')"></div>
-      </div>
-      <button class="cs-prev" onclick="cSlide(5,-1)">‹</button>
-      <button class="cs-next" onclick="cSlide(5,1)">›</button>
-      <div class="cs-dots" id="cd-5"></div>
-    </div>
-    <div class="car-body">
-      <div class="car-top">
-        <div class="car-name"><em>Mercedes</em> GLS 600 Maybach</div>
-        <div class="car-km-note">250km per day included</div>
-      </div>
-      <ul class="car-bullets">
-        <li><div class="cb-dot"></div><span><span class="cb-label">Daily rate:</span> 1 200 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Delivery / Collection:</span> 3 250 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Extra mileage pkg (750km):</span> 1 875 €</span></li>
-        <li><div class="cb-dot"></div><span><span class="cb-label">Extra km:</span> 5 € / km</span></li>
-      </ul>
-      <div class="car-price-box">
-        <div class="cp-total">
-          <div class="cp-label">TOTAL Special Price</div>
-          <div class="cp-val">9 925 €</div>
-          <div class="cp-deposit">Deposit: <strong>20 000 €</strong></div>
-        </div>
-      </div>
-      <div class="btn-reserve-wrap">
-        <button class="btn-reserve" onclick="openModal('car5','Mercedes GLS 600 Maybach','9 925 €')">Reserve this vehicle</button>
-      </div>
-    </div>
-  </div>
-
+  <!-- dynamically populated by buildCarCards() -->
 </div>
 
-<!-- CTA -->
 <div class="cta">
   <p>Any questions about this road trip or the vehicle selection? Our team is available immediately on WhatsApp.</p>
   <a class="btn-wa" href="https://wa.me/{{WA_NUMBER}}?text=Bonjour%20My%20Luxury%20Voyage%2C%20j'ai%20une%20question%20sur%20le%20Road%20Trip%20Jamon%20%26%20Hielo." target="_blank" rel="noopener">
@@ -450,7 +276,6 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
     Contact us on WhatsApp
   </a>
 </div>
-
 <!-- FOOTER -->
 <div class="doc-footer">
   <img class="footer-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png" alt="MLV" onerror="this.style.display='none'">
@@ -462,26 +287,63 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 
 </div>
 
-<!-- BOOKING MODAL -->
+<!-- BOOKING TYPEFORM -->
 <div class="modal-bg" id="modal">
   <div class="modal">
-    <div id="modal-form">
-      <h2>Reserve your vehicle</h2>
-      <div class="car-sel" id="modal-car-name"></div>
-      <div class="form-grid">
-        <div class="form-row"><label>First name</label><input type="text" id="f-first" placeholder="John"></div>
-        <div class="form-row"><label>Last name</label><input type="text" id="f-last" placeholder="Doe"></div>
-      </div>
-      <div class="form-row"><label>Mobile</label><input type="tel" id="f-phone" placeholder="+33 6 00 00 00 00"></div>
-      <div class="form-row"><label>Email</label><input type="email" id="f-email" placeholder="john@example.com"></div>
-      <button class="btn-submit" onclick="submitBooking()">Confirm reservation</button>
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+    <button class="tf-close" onclick="closeModal()">✕</button>
+    <div class="tf-progress-bar" id="tf-bar" style="width:25%"></div>
+
+    <!-- Step 1: First name -->
+    <div class="tf-step active" id="tf-s1">
+      <div class="tf-eyebrow">Step 1 of 4</div>
+      <div class="tf-car-name" id="tf-car-label"></div>
+      <div class="tf-q">What's your first name?</div>
+      <input class="tf-input" id="f-first" type="text" placeholder="John" autocomplete="given-name"
+             onkeydown="if(event.key==='Enter') tfNext(2)">
+      <button class="tf-btn" onclick="tfNext(2)">Next →</button>
     </div>
-    <div class="success-msg" id="modal-success">
-      <div class="check">✓</div>
-      <h3>Reservation confirmed!</h3>
-      <p>My Luxury Voyage will contact you within 24h to finalise your booking and arrange the deposit.</p>
-      <button class="btn-cancel" onclick="closeModal()" style="margin-top:16px;">Close</button>
+
+    <!-- Step 2: Last name -->
+    <div class="tf-step" id="tf-s2">
+      <div class="tf-eyebrow">Step 2 of 4</div>
+      <div class="tf-car-name" id="tf-car-label2"></div>
+      <div class="tf-q">And your last name?</div>
+      <input class="tf-input" id="f-last" type="text" placeholder="Doe" autocomplete="family-name"
+             onkeydown="if(event.key==='Enter') tfNext(3)">
+      <button class="tf-btn" onclick="tfNext(3)">Next →</button>
+      <button class="tf-back" onclick="tfNext(1)">← Back</button>
+    </div>
+
+    <!-- Step 3: Mobile -->
+    <div class="tf-step" id="tf-s3">
+      <div class="tf-eyebrow">Step 3 of 4</div>
+      <div class="tf-car-name" id="tf-car-label3"></div>
+      <div class="tf-q">Your mobile number?</div>
+      <input class="tf-input" id="f-phone" type="tel" placeholder="+33 6 00 00 00 00" autocomplete="tel"
+             onkeydown="if(event.key==='Enter') tfNext(4)">
+      <button class="tf-btn" onclick="tfNext(4)">Next →</button>
+      <button class="tf-back" onclick="tfNext(2)">← Back</button>
+    </div>
+
+    <!-- Step 4: Email -->
+    <div class="tf-step" id="tf-s4">
+      <div class="tf-eyebrow">Step 4 of 4</div>
+      <div class="tf-car-name" id="tf-car-label4"></div>
+      <div class="tf-q">Your email address?</div>
+      <input class="tf-input" id="f-email" type="email" placeholder="john@example.com" autocomplete="email"
+             onkeydown="if(event.key==='Enter') submitBooking()">
+      <button class="tf-btn" onclick="submitBooking()">Confirm reservation →</button>
+      <button class="tf-back" onclick="tfNext(3)">← Back</button>
+    </div>
+
+    <!-- Success -->
+    <div class="tf-step" id="tf-success">
+      <div class="tf-success">
+        <div class="tf-check">✓</div>
+        <h3>Request sent!</h3>
+        <p>My Luxury Voyage will contact you within 24h to finalise your booking and arrange the deposit.</p>
+        <button class="tf-btn" onclick="closeModal()">Close</button>
+      </div>
     </div>
   </div>
 </div>
@@ -521,40 +383,101 @@ function cGoTo(id, n) {
 }
 function cSlide(id, dir) { cGoTo(id, cCur[id] + dir); }
 
-/* ── MODAL ── */
+/* ── TYPEFORM BOOKING ── */
 var currentCar = null;
+var currentCarName = '';
+var currentCarPrice = '';
+var tfCurrentStep = 1;
+
+function tfNext(step) {
+  // Validate current step
+  if (step > tfCurrentStep) {
+    if (tfCurrentStep === 1 && !document.getElementById('f-first').value.trim()) {
+      document.getElementById('f-first').focus(); return;
+    }
+    if (tfCurrentStep === 2 && !document.getElementById('f-last').value.trim()) {
+      document.getElementById('f-last').focus(); return;
+    }
+    if (tfCurrentStep === 3 && !document.getElementById('f-phone').value.trim()) {
+      document.getElementById('f-phone').focus(); return;
+    }
+  }
+  // Hide all steps
+  document.querySelectorAll('.tf-step').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('tf-s' + step) && document.getElementById('tf-s' + step).classList.add('active');
+  tfCurrentStep = step;
+  // Update progress bar
+  var pct = Math.round((step / 4) * 100);
+  document.getElementById('tf-bar').style.width = pct + '%';
+  // Focus input
+  setTimeout(function() {
+    var inp = document.querySelector('#tf-s' + step + ' .tf-input');
+    if (inp) inp.focus();
+  }, 320);
+}
+
 function openModal(carId, carName, price) {
   currentCar = carId;
-  document.getElementById('modal-car-name').textContent = carName + ' — ' + price;
-  document.getElementById('modal-form').style.display = 'block';
-  document.getElementById('modal-success').style.display = 'none';
-  ['f-first','f-last','f-phone','f-email'].forEach(function(id){ document.getElementById(id).value = ''; });
+  currentCarName = carName;
+  currentCarPrice = price;
+  var label = carName + ' — ' + price;
+  ['', '2', '3', '4'].forEach(function(s) {
+    var el = document.getElementById('tf-car-label' + s);
+    if (el) el.textContent = label;
+  });
+  ['f-first','f-last','f-phone','f-email'].forEach(function(id){
+    var el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.querySelectorAll('.tf-step').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('tf-s1').classList.add('active');
+  document.getElementById('tf-bar').style.width = '25%';
+  tfCurrentStep = 1;
   document.getElementById('modal').classList.add('open');
+  setTimeout(function(){ var i = document.getElementById('f-first'); if(i) i.focus(); }, 100);
 }
-function closeModal() { document.getElementById('modal').classList.remove('open'); currentCar = null; }
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  currentCar = null;
+}
+
 function submitBooking() {
   var first = document.getElementById('f-first').value.trim();
   var last  = document.getElementById('f-last').value.trim();
   var phone = document.getElementById('f-phone').value.trim();
   var email = document.getElementById('f-email').value.trim();
-  var carName = document.getElementById('modal-car-name').textContent;
-  if (!first || !last || !phone || !email) { alert('Please fill in all fields.'); return; }
+  if (!email) { document.getElementById('f-email').focus(); return; }
+
+  // Mark car as booked
   var card = document.getElementById(currentCar);
   if (card) {
     card.classList.add('booked');
     var wrap = card.querySelector('.car-slider-wrap');
-    var ov = document.createElement('div');
-    ov.className = 'booked-overlay';
-    ov.innerHTML = '<div class="booked-badge-img">BOOKED</div>';
-    wrap.appendChild(ov);
+    if (wrap && !wrap.querySelector('.booked-overlay')) {
+      var ov = document.createElement('div');
+      ov.className = 'booked-overlay';
+      ov.innerHTML = '<div class="booked-badge-img">BOOKED</div>';
+      wrap.appendChild(ov);
+    }
   }
+
+  // Send WhatsApp
   var d = getData();
-  var waNum = (d && d.base && d.base.waNumber) ? d.base.waNumber : '33650505040';
-  var rtName = (d && d.base && d.base.rtName) ? d.base.rtName : 'Road Trip';
-  var msg = encodeURIComponent('New car reservation — ' + rtName + '\nVehicle: ' + carName + '\nName: ' + first + ' ' + last + '\nMobile: ' + phone + '\nEmail: ' + email);
+  var waNum  = (d && d.base && d.base.waNumber) ? d.base.waNumber : '33650505040';
+  var rtName = (d && d.base && d.base.rtName)   ? d.base.rtName   : 'Road Trip';
+  var msg = encodeURIComponent(
+    'New reservation — ' + rtName +
+    '\nVehicle: ' + currentCarName + ' (' + currentCarPrice + ')' +
+    '\nName: ' + first + ' ' + last +
+    '\nMobile: ' + phone +
+    '\nEmail: ' + email
+  );
   window.open('https://wa.me/' + waNum + '?text=' + msg, '_blank');
-  document.getElementById('modal-form').style.display = 'none';
-  document.getElementById('modal-success').style.display = 'block';
+
+  // Show success step
+  document.querySelectorAll('.tf-step').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('tf-success').classList.add('active');
+  document.getElementById('tf-bar').style.width = '100%';
 }
 
 /* ── READ DATA ── */
@@ -660,13 +583,20 @@ function _renderRT(lang) {
     if (titleEl) titleEl.innerHTML = d.base.rtName || 'Road Trip';
     if (routeEl) routeEl.textContent = (d.base.rtFrom || '') + ' → ' + (d.base.rtTo || '');
     if (datesEl) {
+      var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      function fmtDate(s) {
+        if (!s) return '';
+        var p = s.split('-');
+        if (p.length < 3) return s;
+        return parseInt(p[2]) + ' ' + months[parseInt(p[1])-1] + ' ' + p[0];
+      }
       var dayCount = '';
       if (d.base.rtStart && d.base.rtEnd) {
         var ms2 = Math.abs(new Date(d.base.rtEnd) - new Date(d.base.rtStart));
         var dc = Math.round(ms2 / 86400000);
         if (dc > 0) dayCount = dc + ' Day' + (dc > 1 ? 's' : '');
       }
-      datesEl.textContent = (d.base.rtStart || '') + ' – ' + (d.base.rtEnd || '') + (dayCount ? ' · ' + dayCount : '');
+      datesEl.textContent = fmtDate(d.base.rtStart) + ' – ' + fmtDate(d.base.rtEnd) + (dayCount ? ' · ' + dayCount : '');
     }
 
     // Cover image
@@ -681,7 +611,7 @@ function _renderRT(lang) {
     var ovDur   = document.getElementById('ov-dur-val');
     var ovCtry  = document.getElementById('ov-countries-val');
     if (ovRoute) ovRoute.textContent = (d.base.rtFrom || '') + ' → ' + (d.base.rtTo || '');
-    if (ovDates) ovDates.textContent = (d.base.rtStart || '') + ' – ' + (d.base.rtEnd || '');
+    if (ovDates) ovDates.textContent = (typeof fmtDate === 'function' ? fmtDate(d.base.rtStart) : d.base.rtStart||'') + ' – ' + (typeof fmtDate === 'function' ? fmtDate(d.base.rtEnd) : d.base.rtEnd||'');
     if (ovDur) {
       var dur = d.base.rtDays || '';
       if (!dur && d.base.rtStart && d.base.rtEnd) {
@@ -885,7 +815,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script>
 // ── ADMIN MODE: redirect to edit form if URL ends with /admin ──
 (function() {
-  if (window.location.href.indexOf('/admin') === -1) return;
+  if (window.location.hash !== '#admin') return;
   var d = getData();
   if (!d || !d.base) return;
   var b = d.base;
