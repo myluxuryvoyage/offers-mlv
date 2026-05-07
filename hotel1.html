@@ -148,6 +148,10 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
   <meta property="og:title" content="%%OG_TITLE%%">
   <meta property="og:description" content="%%OG_DESC%%">
   <meta property="og:image" content="%%OG_IMAGE%%">
+  <meta property="og:image:secure_url" content="%%OG_IMAGE%%">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:url" content="%%OG_URL%%">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="%%OG_TITLE%%">
@@ -412,6 +416,16 @@ function rGoTo(n) {
   document.querySelectorAll('.rdot').forEach(function(d, i){ d.classList.toggle('active', i === _rCur); });
 }
 function rSlide(dir) { rGoTo(_rCur + dir); }
+var _extraCurs = {};
+function _extraRSlide(roomIdx, dir) {
+  var id = 'rs-' + roomIdx;
+  var slider = document.getElementById(id);
+  if (!slider) return;
+  var slides = slider.querySelectorAll('.room-slide');
+  if (slides.length <= 1) return;
+  _extraCurs[roomIdx] = ((_extraCurs[roomIdx] || 0) + dir + slides.length) % slides.length;
+  slider.style.transform = 'translateX(-' + (_extraCurs[roomIdx] * 100) + '%)';
+}
 function _rSlide(dir) { rGoTo(_rCur + dir); } // alias for HTML onclick
 
 /* ── MODAL ── */
@@ -536,7 +550,13 @@ function _renderPage(d, lang) {
   initRoom();
 
   /* ── HERO ── */
-  setK('h-title', base.hotelName + '<br><em>' + t.roomName + '</em>', true);
+  // For multi-room: show only hotel name on hero (no room name)
+  var isMulti = d.type === 'hotelmulti' || (base.rooms && base.rooms.length > 1);
+  if (isMulti) {
+    setK('h-title', base.hotelName, false);
+  } else {
+    setK('h-title', base.hotelName + '<br><em>' + (base.rooms && base.rooms[0] ? (lang==='ar'?base.rooms[0].nameAr:lang==='en'?base.rooms[0].nameEn:base.rooms[0].nameFr) : '') + '</em>', true);
+  }
   var ci = fmtDate(base.checkIn, lang);
   var co = fmtDate(base.checkOut, lang);
   setK('h-sub',   base.hotelName + ' · ' + ci + ' – ' + co);
@@ -554,28 +574,88 @@ function _renderPage(d, lang) {
   setK('sb3v', base.travelers);
   setK('sb4v', base.nights || (base.nightsNum > 0 ? base.nightsNum + (lang === 'ar' ? ' ليالٍ' : ' nights') : ''));
 
-  /* ── ROOM ── */
-  setK('r-name',   t.roomName);
-  setK('r-type',   t.roomType);
-  setK('r-desc',   t.roomDesc);
+  /* ── ROOMS (supports 1 or multiple) ── */
+  var rooms = base.rooms || [];
+  // Update room 1 (existing static section)
+  var r0 = rooms[0] || {};
+  var r0name = lang==='ar' ? r0.nameAr : lang==='en' ? r0.nameEn : r0.nameFr;
+  var r0type = lang==='ar' ? r0.typeAr : lang==='en' ? r0.typeEn : r0.typeFr;
+  var r0desc = lang==='ar' ? r0.descAr : lang==='en' ? r0.descEn : r0.descFr;
+  var r0specs = lang==='ar' ? r0.specsAr : lang==='en' ? r0.specsEn : r0.specsFr;
+
+  setK('r-name', r0name || '');
+  setK('r-type', r0type || '');
+  setK('r-desc', r0desc || '');
   setK('r-pnight', lang === 'ar' ? 'السعر لليلة' : 'Price per night');
-  setK('r-nights', (lang === 'ar' ? 'الإجمالي : ' : 'Total: ') + base.priceTotal + ' — ' + base.nightsNum + ' ' + (lang === 'ar' ? 'ليالٍ' : 'nights'));
+  setK('r-nights', (lang === 'ar' ? 'الإجمالي : ' : 'Total: ') + (r0.priceTotal||base.priceTotal||'') + ' — ' + base.nightsNum + ' ' + (lang === 'ar' ? 'ليالٍ' : 'nights'));
 
   /* ── PRICE ── */
-  setId('price-night', base.priceNight);
+  setId('price-night', r0.priceNight || base.priceNight || '');
 
-  /* ── SPECS ── */
+  /* ── SPECS room 1 ── */
   var specsEl = document.getElementById('room-specs');
   if (specsEl) {
     specsEl.innerHTML = '';
-    (t.specs || []).forEach(function(s) {
+    (r0specs || []).forEach(function(s) {
       if (!s) return;
-      var div = document.createElement('div');
-      div.className = 'spec-tag';
-      div.textContent = s;
+      var div = document.createElement('div'); div.className = 'spec-tag'; div.textContent = s;
       specsEl.appendChild(div);
     });
   }
+
+  // Room 1 images
+  if (r0.imgs && r0.imgs.length > 0) buildSlides('rs-1', r0.imgs, 'room-slide');
+  initRoom();
+
+  /* ── EXTRA ROOMS (rooms 2, 3, 4...) ── */
+  var extraContainer = document.getElementById('extra-rooms-container');
+  if (!extraContainer) {
+    extraContainer = document.createElement('div');
+    extraContainer.id = 'extra-rooms-container';
+    // Insert after the main room section
+    var mainRoom = document.querySelector('.room-section') || document.querySelector('.room-wrap') || document.getElementById('rs-1');
+    if (mainRoom && mainRoom.parentNode) {
+      mainRoom.parentNode.insertBefore(extraContainer, mainRoom.nextSibling);
+    }
+  }
+  extraContainer.innerHTML = '';
+
+  rooms.slice(1).forEach(function(room, i) {
+    var rname = lang==='ar' ? room.nameAr : lang==='en' ? room.nameEn : room.nameFr;
+    var rtype = lang==='ar' ? room.typeAr : lang==='en' ? room.typeEn : room.typeFr;
+    var rdesc = lang==='ar' ? room.descAr : lang==='en' ? room.descEn : room.descFr;
+    var rspecs = lang==='ar' ? room.specsAr : lang==='en' ? room.specsEn : room.specsFr;
+    var rId = 'extra-room-' + (i+2);
+
+    var sec = document.createElement('div');
+    sec.className = 'room-section extra-room';
+    sec.style.cssText = 'border-top:3px solid rgba(201,169,110,.2);padding-top:0;';
+
+    // Build image slider HTML
+    var slidesHtml = '';
+    if (room.imgs && room.imgs.length > 0) { room.imgs.forEach(function(u) { slidesHtml += '<div class="room-slide" style="background-image:url(' + proxyImg(u) + ')"></div>'; }); } else { slidesHtml = '<div class="room-slide" style="background:linear-gradient(135deg,#1C2E4A,#2d4a6e)"></div>'; }
+
+
+    sec.innerHTML =
+      '<div class="room-img-wrap" style="position:relative;height:340px;overflow:hidden;">' +
+        '<div class="room-slider" id="rs-' + (i+2) + '" style="display:flex;height:100%;transition:transform .5s ease;">' + slidesHtml + '</div>' +
+        (room.imgs && room.imgs.length > 1 ?
+          '<button class="room-arrow room-prev" onclick="_extraRSlide(' + (i+2) + ',-1)" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);background:rgba(28,46,74,.7);border:none;color:#C9A96E;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;">‹</button>' +
+          '<button class="room-arrow room-next" onclick="_extraRSlide(' + (i+2) + ',1)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:rgba(28,46,74,.7);border:none;color:#C9A96E;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;">›</button>' : '') +
+      '</div>' +
+      '<div class="room-info" style="padding:32px 44px 28px;">' +
+        '<div class="room-eyebrow" style="font-size:9px;letter-spacing:.25em;color:#C9A96E;text-transform:uppercase;font-family:Montserrat,sans-serif;margin-bottom:10px;">Option ' + (i+2) + '</div>' +
+        '<h2 class="room-name" style="font-family:Georgia,serif;font-size:24px;color:#1C2E4A;margin-bottom:6px;">' + (rname||'') + '</h2>' +
+        '<div class="room-type" style="font-size:11px;color:#888;letter-spacing:.08em;font-family:Montserrat,sans-serif;margin-bottom:14px;">' + (rtype||'') + '</div>' +
+        '<div class="room-desc" style="font-size:13px;line-height:1.8;color:#555;margin-bottom:18px;">' + (rdesc||'') + '</div>' +
+        '<div class="room-specs" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;">' +
+          (rspecs||[]).map(function(s){ return '<div class="spec-tag">' + s + '</div>'; }).join('') +
+        '</div>' +
+        '<div style="font-size:13px;color:#1C2E4A;font-weight:600;">' + (room.priceNight ? (lang==='ar'?'السعر لليلة: ':'Price / night: ') + room.priceNight : '') + '</div>' +
+      '</div>';
+
+    extraContainer.appendChild(sec);
+  });
 
   /* ── SERVICES ── */
   var svcsEl = document.getElementById('room-svcs');
