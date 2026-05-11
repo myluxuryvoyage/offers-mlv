@@ -237,6 +237,9 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
   </div>
 </div>
 
+<!-- EXTRA ROOMS (populated dynamically for multi-room offers) -->
+<div id="extra-rooms-container"></div>
+
 <!-- EXTRAS -->
 <div class="section">
   <div class="sec-eye" data-k="ext-eye">Options supplémentaires</div>
@@ -609,15 +612,7 @@ function _renderPage(d, lang) {
 
   /* ── EXTRA ROOMS (rooms 2, 3, 4...) ── */
   var extraContainer = document.getElementById('extra-rooms-container');
-  if (!extraContainer) {
-    extraContainer = document.createElement('div');
-    extraContainer.id = 'extra-rooms-container';
-    // Insert after the main room section
-    var mainRoom = document.querySelector('.room-section') || document.querySelector('.room-wrap') || document.getElementById('rs-1');
-    if (mainRoom && mainRoom.parentNode) {
-      mainRoom.parentNode.insertBefore(extraContainer, mainRoom.nextSibling);
-    }
-  }
+  if (!extraContainer) return; // Safety check
   extraContainer.innerHTML = '';
 
   rooms.slice(1).forEach(function(room, i) {
