@@ -961,7 +961,10 @@ function openAdmin() {
 function closeAdmin() { document.getElementById('admin-panel').classList.remove('open'); }
 function adminGoEdit() {
   var offerId = getOfferId();
-  window.location.href = 'https://script.google.com/macros/s/AKfycbw7ixFU-BE7uBMQPo_njrrWTLDET7yuXOYlKMOGSy6_e-6zdqMWNOAbOeM_v4FV9aUS-A/exec?edit=1&offerId=' + encodeURIComponent(offerId);
+  // Store offerId separately so index.html can find the data without URL params
+  try { localStorage.setItem('mlv_edit_last_id', offerId); } catch(e) {}
+  // Apps Script URL cannot have query params (gets stripped on redirect) — just pass edit=1
+  window.location.href = 'https://script.google.com/macros/s/AKfycbw7ixFU-BE7uBMQPo_njrrWTLDET7yuXOYlKMOGSy6_e-6zdqMWNOAbOeM_v4FV9aUS-A/exec?edit=1';
 }
 function showToast(msg, isError) {
   var t = document.getElementById('admin-toast');
