@@ -16,7 +16,7 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 .lang-btn{padding:8px 14px;background:transparent;border:none;color:rgba(255,255,255,.5);cursor:pointer;font-size:10px;letter-spacing:.1em;font-family:'Montserrat',sans-serif;transition:color .2s;}
 .lang-btn.active,.lang-btn:hover{color:var(--gold);}
 
-/* ── HERO SLIDER (from prop1) ── */
+/* ── HERO SLIDER ── */
 .hero{position:relative;height:72vh;min-height:500px;max-height:820px;overflow:hidden;}
 .hero-slider{position:absolute;inset:0;display:flex;transition:transform .6s ease;}
 .hero-slide{min-width:100%;height:100%;background-size:cover;background-position:center;filter:brightness(.48);}
@@ -43,7 +43,7 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 .sb-label{font-size:8px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:4px;}
 .sb-val{font-size:11px;font-weight:500;color:#fff;line-height:1.3;}
 
-/* ROOM CARD (single) */
+/* ROOM CARD */
 .rooms{padding:32px 44px;}
 .room-card{border:1px solid rgba(201,169,110,.25);}
 
@@ -120,12 +120,9 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 [dir="rtl"] .room-price{text-align:left;}
 [dir="rtl"] .extras-table th,[dir="rtl"] .extras-table td{text-align:right;}
 [dir="rtl"] .extras-table .amt{text-align:left;}
-/* Keep numbers LTR */
 [dir="rtl"] .room-price-total,
 [dir="rtl"] .sb-val{direction:ltr;unicode-bidi:embed;}
-/* But date values containing Arabic month names must be RTL */
 [dir="rtl"] .sb-val.date-val{direction:rtl;unicode-bidi:embed;}
-/* Increase small gold text sizes for Arabic readability */
 [dir="rtl"] .hero-eyebrow{font-size:13px;letter-spacing:.1em;}
 [dir="rtl"] .hero-sub{font-size:14px;letter-spacing:.05em;}
 [dir="rtl"] .sb-label{font-size:11px;letter-spacing:.06em;}
@@ -169,9 +166,7 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 <!-- ══ HERO WITH SLIDER ══ -->
 <div class="hero" id="hero">
   <div class="hero-slider" id="slider">
-    <!-- HERO_SLIDES -->
     <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1400&q=80')"></div>
-    <!-- /HERO_SLIDES -->
   </div>
   <div class="hero-overlay"></div>
   <img class="hero-mlv-logo"
@@ -191,30 +186,26 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 
 <!-- SUMMARY BAR -->
 <div class="sum-bar">
-  <div class="sb-item"><div class="sb-label" data-k="sb1">Arrivée</div><div class="sb-val date-val" data-k="sb1v" id="sb-checkin"><span class="d-checkin"></span></div></div>
-  <div class="sb-item"><div class="sb-label" data-k="sb2">Départ</div><div class="sb-val date-val" data-k="sb2v" id="sb-checkout"><span class="d-checkout"></span></div></div>
-  <div class="sb-item"><div class="sb-label" data-k="sb3">Voyageurs</div><div class="sb-val" data-k="sb3v" id="sb-travelers"><span id="d-travelers"></span></div></div>
-  <div class="sb-item"><div class="sb-label" data-k="sb4">Nuits</div><div class="sb-val" data-k="sb4v" id="sb-nights"><span id="d-nights"></span></div></div>
+  <div class="sb-item"><div class="sb-label" data-k="sb1">Arrivée</div><div class="sb-val date-val" data-k="sb1v" id="sb-checkin"></div></div>
+  <div class="sb-item"><div class="sb-label" data-k="sb2">Départ</div><div class="sb-val date-val" data-k="sb2v" id="sb-checkout"></div></div>
+  <div class="sb-item"><div class="sb-label" data-k="sb3">Voyageurs</div><div class="sb-val" data-k="sb3v" id="sb-travelers"></div></div>
+  <div class="sb-item"><div class="sb-label" data-k="sb4">Nuits</div><div class="sb-val" data-k="sb4v" id="sb-nights"></div></div>
   <div class="sb-item"><div class="sb-label" data-k="sb5">Hôtel</div><div class="sb-val"><span id="d-hotel3" dir="ltr"></span></div></div>
 </div>
 
-<!-- ROOM CARD (single) -->
+<!-- ROOM CARD -->
 <div class="rooms">
   <div class="room-card">
 
-    <!-- Photos slider -->
     <div class="room-media">
       <div class="room-slider" id="rs-1">
-        <!-- ROOM_SLIDES -->
         <div class="room-slide" style="background-image:url('https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80')"></div>
-        <!-- /ROOM_SLIDES -->
       </div>
       <button class="room-prev" onclick="_rSlide(-1)">‹</button>
       <button class="room-next" onclick="_rSlide(1)">›</button>
       <div class="room-dots" id="rd-1"></div>
     </div>
 
-    <!-- Room details -->
     <div class="room-body">
       <div class="room-header">
         <div>
@@ -229,15 +220,13 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
       </div>
 
       <div class="room-specs" id="room-specs"></div>
-
       <div class="room-desc" data-k="r-desc"></div>
-
       <div class="room-svcs" id="room-svcs"></div>
     </div>
   </div>
 </div>
 
-<!-- EXTRA ROOMS (populated dynamically for multi-room offers) -->
+<!-- EXTRA ROOMS -->
 <div id="extra-rooms-container"></div>
 
 <!-- EXTRAS -->
@@ -251,9 +240,7 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
         <th class="amt" data-k="et-h2">Tarif</th>
       </tr>
     </thead>
-    <tbody id="extras-tbody">
-      
-    </tbody>
+    <tbody id="extras-tbody"></tbody>
   </table>
 </div>
 
@@ -288,7 +275,7 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
   <img class="footer-logo" src="https://myluxuryvoyage.com/wp-content/uploads/2023/09/MLV-logo-white-menu.png" alt="MLV" onerror="this.style.display='none'">
   <div class="footer-txt">
     66 av. Valéry Giscard D'Estaing, 06200 Nice · 14 rue Pasteur, 06400 Cannes<br>
-    <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b4d7dbdac0d5d7c0f4d9cdd8c1ccc1c6cdc2dbcdd5d3d19ad7dbd9">[email&#160;protected]</a> · myluxuryvoyage.com
+    contact@myluxuryvoyage.com · myluxuryvoyage.com
   </div>
 </div>
 
@@ -297,45 +284,43 @@ body{background:#E5E3DE;font-family:'Montserrat',sans-serif;color:var(--navy);}
 <!-- MODAL -->
 <div class="modal-bg" id="modal">
   <div class="modal">
-    <div class="modal-icon">✦</div>
-    <div class="modal-title" data-k="modal-title">Merci pour votre confiance</div>
-    <div class="modal-body" data-k="modal-body">Votre accord a bien été enregistré. Un conseiller My Luxury Voyage vous contactera dans les prochaines heures pour finaliser votre réservation et organiser votre acompte.</div>
-    <button class="modal-close" onclick="closeModal()" data-k="modal-close">Fermer</button>
+    <div id="modal-step-rooms" style="display:none;">
+      <div class="modal-icon">✦</div>
+      <div class="modal-title">Choose your room(s)</div>
+      <div class="modal-body" style="margin-bottom:16px;">Select one or more options:</div>
+      <div id="modal-room-list" style="margin-bottom:20px;"></div>
+      <button class="btn-accept" style="width:100%;margin:0;" onclick="modalRoomsNext()">Continue →</button>
+      <button class="modal-close" style="margin-top:10px;background:none;border:none;color:#aaa;width:100%;cursor:pointer;font-size:12px;" onclick="closeModal()">Cancel</button>
+    </div>
+    <div id="modal-step-confirm">
+      <div class="modal-icon">✦</div>
+      <div class="modal-title" data-k="modal-title">Merci pour votre confiance</div>
+      <div class="modal-body" data-k="modal-body">Votre accord a bien été enregistré. Un conseiller My Luxury Voyage vous contactera dans les prochaines heures pour finaliser votre réservation et organiser votre acompte.</div>
+      <div id="modal-selected-rooms" style="margin-bottom:16px;font-size:12px;color:#C9A96E;font-family:Montserrat,sans-serif;"></div>
+      <button class="modal-close" onclick="closeModal()" data-k="modal-close">Fermer</button>
+    </div>
   </div>
 </div>
 
-
-<!-- MLV_DATA_PLACEHOLDER -->
 <script id="mlv-data" type="application/json">%%MLV_JSON%%</script>
 
 <script>
-/* ══════════════════════════════════════════════════════════
-   MLV PRO — Hotel template v4.0
-   Data-driven, EN/AR bilingual
-   ══════════════════════════════════════════════════════════ */
-
 var _cur = 0, _rCur = 0;
 
-/* ── PROXY IMAGE ── */
 function proxyImg(url) {
   if (!url || url.length < 8) return '';
-  // These work directly - no proxy needed
   if (url.indexOf('unsplash.com') > -1) return url;
   if (url.indexOf('i.imgur.com') > -1) return url;
   if (url.indexOf('imgur.com') > -1 && url.match(/\.(jpg|jpeg|png|gif|webp)/i)) return url;
-  // Google Drive direct link
   if (url.indexOf('drive.google.com/file') > -1) {
     var m = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
     if (m) return 'https://drive.google.com/uc?export=view&id=' + m[1];
   }
   if (url.indexOf('drive.google.com/uc') > -1) return url;
-  // Already proxied
   if (url.indexOf('weserv.nl') > -1) return url;
-  // Everything else - OneDrive, hotel sites, etc.
   return 'https://images.weserv.nl/?url=' + encodeURIComponent(url) + '&w=1400&output=jpg&q=85';
 }
 
-/* ── READ DATA ── */
 function getData() {
   try {
     var el = document.getElementById('mlv-data');
@@ -344,7 +329,6 @@ function getData() {
   } catch(e) { console.error('MLV parse error:', e); return null; }
 }
 
-/* ── BUILD SLIDES ── */
 function buildSlides(containerId, urls, cssClass) {
   var c = document.getElementById(containerId);
   if (!c) return;
@@ -361,13 +345,11 @@ function buildSlides(containerId, urls, cssClass) {
   });
 }
 
-/* ── HERO SLIDER INIT ── */
 var _heroInterval = null;
 function initHero() {
   var slides = document.querySelectorAll('.hero-slide');
   var dotsEl = document.getElementById('dots');
   if (!dotsEl || slides.length === 0) return;
-  // Reset position and clear old interval
   _cur = 0;
   var sliderEl = document.getElementById('slider');
   if (sliderEl) sliderEl.style.transform = 'translateX(0%)';
@@ -390,15 +372,12 @@ function goTo(n) {
   if (el) el.style.transform = 'translateX(-' + (_cur * 100) + '%)';
   document.querySelectorAll('.dot').forEach(function(d, i){ d.classList.toggle('active', i === _cur); });
 }
-function slide(dir) { goTo(_cur + dir); }
-function _slide(dir) { goTo(_cur + dir); } // alias for HTML onclick
+function _slide(dir) { goTo(_cur + dir); }
 
-/* ── ROOM SLIDER INIT ── */
 function initRoom() {
   var slides = document.querySelectorAll('#rs-1 .room-slide');
   var dotsEl = document.getElementById('rd-1');
   if (!dotsEl || slides.length === 0) return;
-  // Reset position
   _rCur = 0;
   var rsEl = document.getElementById('rs-1');
   if (rsEl) rsEl.style.transform = 'translateX(0%)';
@@ -418,7 +397,6 @@ function rGoTo(n) {
   if (el) el.style.transform = 'translateX(' + (isRTL ? '' : '-') + (_rCur * 100) + '%)';
   document.querySelectorAll('.rdot').forEach(function(d, i){ d.classList.toggle('active', i === _rCur); });
 }
-function rSlide(dir) { rGoTo(_rCur + dir); }
 var _extraCurs = {};
 function _extraRSlide(roomIdx, dir) {
   var id = 'rs-' + roomIdx;
@@ -429,28 +407,75 @@ function _extraRSlide(roomIdx, dir) {
   _extraCurs[roomIdx] = ((_extraCurs[roomIdx] || 0) + dir + slides.length) % slides.length;
   slider.style.transform = 'translateX(-' + (_extraCurs[roomIdx] * 100) + '%)';
 }
-function _rSlide(dir) { rGoTo(_rCur + dir); } // alias for HTML onclick
+function _rSlide(dir) { rGoTo(_rCur + dir); }
 
-/* ── MODAL ── */
-function openModal() { document.getElementById('modal').classList.add('open'); }
+function openModal() {
+  var d = getData();
+  var rooms = d && d.base && d.base.rooms ? d.base.rooms : [];
+  var isMulti = rooms.length > 1;
+  var stepRooms = document.getElementById('modal-step-rooms');
+  var stepConfirm = document.getElementById('modal-step-confirm');
+
+  if (isMulti) {
+    var list = document.getElementById('modal-room-list');
+    list.innerHTML = '';
+    rooms.forEach(function(room, i) {
+      var lang = document.documentElement.lang || 'en';
+      var name = lang==='ar' ? room.nameAr : lang==='en' ? room.nameEn : room.nameFr;
+      var price = room.priceNight ? ' — ' + room.priceNight + ' / night' : '';
+      var label = document.createElement('label');
+      label.style.cssText = 'display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid rgba(201,169,110,.25);border-radius:4px;margin-bottom:8px;cursor:pointer;font-family:Montserrat,sans-serif;font-size:13px;color:#1C2E4A;';
+      label.innerHTML = '<input type="checkbox" value="' + i + '" style="accent-color:#C9A96E;width:16px;height:16px;flex-shrink:0;">' +
+        '<span><strong>' + (name||room.name||'Room '+(i+1)) + '</strong>' + price + '</span>';
+      list.appendChild(label);
+    });
+    stepRooms.style.display = 'block';
+    stepConfirm.style.display = 'none';
+  } else {
+    stepRooms.style.display = 'none';
+    stepConfirm.style.display = 'block';
+    sendWAConfirm([0]);
+  }
+  document.getElementById('modal').classList.add('open');
+}
+
+function modalRoomsNext() {
+  var checked = Array.from(document.querySelectorAll('#modal-room-list input[type=checkbox]:checked'));
+  if (checked.length === 0) { alert('Please select at least one room.'); return; }
+  var indices = checked.map(function(c){ return parseInt(c.value); });
+  sendWAConfirm(indices);
+  document.getElementById('modal-step-rooms').style.display = 'none';
+  document.getElementById('modal-step-confirm').style.display = 'block';
+}
+
+function sendWAConfirm(roomIndices) {
+  var d = getData();
+  if (!d) return;
+  var rooms = d.base.rooms || [];
+  var lang = document.documentElement.lang || 'en';
+  var selectedNames = roomIndices.map(function(i){
+    var r = rooms[i] || {};
+    return lang==='ar' ? r.nameAr : lang==='en' ? r.nameEn : r.nameFr;
+  }).filter(Boolean).join(', ');
+  var selEl = document.getElementById('modal-selected-rooms');
+  if (selEl && selectedNames) selEl.textContent = 'Selected: ' + selectedNames;
+  var t = d.translations && d.translations[lang] ? d.translations[lang] : {};
+  var waNum = d.base.waNumber || '33650505040';
+  var msg = (t.waMsg || 'Hello My Luxury Voyage,') + (selectedNames ? ' — Room(s): ' + selectedNames : '');
+  window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
-/* ── FORMAT DATE PAR LANGUE ── */
 function fmtDate(raw, lang) {
   if (!raw) return '';
-  // raw = 'YYYY-MM-DD'
   var p = raw.split('-');
   if (p.length !== 3) return raw;
   var y = p[0], m = parseInt(p[1]), d = parseInt(p[2]);
-  if (lang === 'ar') {
-    // Format arabe : YYYY/MM/DD
-    return y + '/' + p[1] + '/' + p[2];
-  }
-  // Format anglais : DD Mon YYYY
+  if (lang === 'ar') return y + '/' + p[1] + '/' + p[2];
   var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return d + ' ' + (months[m-1] || p[1]) + ' ' + y;
 }
-
 
 function setText(sel, val, isHtml) {
   var el = typeof sel === 'string' ? document.querySelector(sel) : sel;
@@ -461,17 +486,13 @@ function setText(sel, val, isHtml) {
 function setId(id, val, isHtml) { setText(document.getElementById(id), val, isHtml); }
 function setK(k, val, isHtml)   { setText('[data-k="' + k + '"]', val, isHtml); }
 
-/* ── TRADUCTION AR — Google Translate (sans clé API) ── */
 function gtrans(texts, cb) {
-  // Google Translate unofficial endpoint - gratuit, sans clé, sans quota
   var joined = texts.join('\n');
   var url = 'https://translate.googleapis.com/translate_a/single'
     + '?client=gtx&sl=en&tl=ar&dt=t&q=' + encodeURIComponent(joined);
   fetch(url)
     .then(function(r){ return r.json(); })
     .then(function(data){
-      // data[0] = array de [translated, original, ...]
-      // On reconstruit le texte traduit complet puis on resplit par \n
       var translated = '';
       for (var i = 0; i < data[0].length; i++) {
         if (data[0][i] && data[0][i][0]) translated += data[0][i][0];
@@ -483,55 +504,58 @@ function gtrans(texts, cb) {
 }
 
 function ensureAR(d, cb) {
-  var en = d.translations.en, ar = d.translations.ar;
-  // Check if AR is already properly translated (contains Arabic characters)
-  var hasArabic = /[\u0600-\u06FF]/.test(ar.roomName || '');
-  if (hasArabic) { cb(); return; }
+  var en  = d.translations.en;
+  var ar  = d.translations.ar;
+  var rooms = d.base.rooms || [];
+  var extras = d.base.extras || [];
 
-  var extras   = d.base.extras  || [];
-  var specs    = en.specs       || [];
-  var services = en.services    || [];
-  var extraPrices = extras.map(function(ex){ return ex.priceEn || ex.price || ''; });
+  var texts = [];
+  var map   = [];
 
-  // Tableau plat - 1 texte par ligne
-  var extraLabels = extras.map(function(ex){ return ex.labelEn || ex.labelFr || ''; });
-  var texts = [
-    en.roomName  || '',
-    en.roomType  || '',
-    en.roomDesc  || '',
-    en.condTarif || '',
-    en.condAnnul || '',
-    en.ctaText   || ''
-  ].concat(specs).concat(services).concat(extraLabels).concat(extraPrices).concat([d.base.hotelName || '']);
+  texts.push(en.condTarif || ''); map.push({t:'ar', f:'condTarif'});
+  texts.push(en.condAnnul || ''); map.push({t:'ar', f:'condAnnul'});
+  texts.push(en.ctaText   || ''); map.push({t:'ar', f:'ctaText'});
+  (en.services || []).forEach(function(s, i) {
+    texts.push(s); map.push({t:'ar_svc', i:i});
+  });
+
+  rooms.forEach(function(room, ri) {
+    texts.push(room.nameEn || room.name || '');  map.push({t:'room', ri:ri, f:'nameAr'});
+    texts.push(room.typeEn || room.typeFr || ''); map.push({t:'room', ri:ri, f:'typeAr'});
+    texts.push(room.descEn || room.descFr || ''); map.push({t:'room', ri:ri, f:'descAr'});
+    var specs = room.specsEn || room.specsFr || [];
+    specs.forEach(function(s, si) {
+      texts.push(s); map.push({t:'room_spec', ri:ri, si:si});
+    });
+  });
+
+  extras.forEach(function(ex, i) {
+    texts.push(ex.labelEn || ex.labelFr || ''); map.push({t:'extra_lbl', i:i});
+  });
+
+  texts.push(d.base.hotelName || ''); map.push({t:'hotel_name'});
 
   gtrans(texts, function(parts) {
-    var n = 6;
-    ar.roomName  = parts[0] || en.roomName;
-    ar.roomType  = parts[1] || en.roomType;
-    ar.roomDesc  = parts[2] || en.roomDesc;
-    ar.condTarif = parts[3] || en.condTarif;
-    ar.condAnnul = parts[4] || en.condAnnul;
-    ar.ctaText   = parts[5] || en.ctaText;
-    specs.forEach(function(_, i)   { ar.specs[i]    = parts[n + i] || specs[i]; });
-    services.forEach(function(_, i){ ar.services[i] = parts[n + specs.length + i] || services[i]; });
-    var labOff = n + specs.length + services.length;
-    extraLabels.forEach(function(_, i) {
-      if (extras[i]) extras[i].labelAr = parts[labOff + i] || extraLabels[i];
+    map.forEach(function(m, i) {
+      var val = parts[i];
+      if (!val || !val.trim()) return;
+      if (m.t === 'ar') { ar[m.f] = val; }
+      else if (m.t === 'ar_svc') {
+        if (!ar.services) ar.services = [];
+        ar.services[m.i] = val;
+      }
+      else if (m.t === 'room') { rooms[m.ri][m.f] = val; }
+      else if (m.t === 'room_spec') {
+        if (!rooms[m.ri].specsAr) rooms[m.ri].specsAr = (rooms[m.ri].specsEn || rooms[m.ri].specsFr || []).slice();
+        rooms[m.ri].specsAr[m.si] = val;
+      }
+      else if (m.t === 'extra_lbl') { if (extras[m.i]) extras[m.i].labelAr = val; }
+      else if (m.t === 'hotel_name') { if (val) d.base.hotelNameAr = val; }
     });
-    var priceOff = labOff + extraLabels.length;
-    extraPrices.forEach(function(_, i) {
-      if (extras[i]) extras[i].priceAr = parts[priceOff + i] || extraPrices[i];
-    });
-    // Hotel name transliteration (last item in texts)
-    var hnIdx = 6 + specs.length + services.length + extraLabels.length + extraPrices.length;
-    if (parts[hnIdx] && parts[hnIdx].trim()) d.base.hotelNameAr = parts[hnIdx].trim();
     cb();
   });
 }
 
-/* ══════════════════════════════════════════════════════════
-   APPLY DATA — langue = 'en' ou 'ar'
-   ══════════════════════════════════════════════════════════ */
 function applyData(lang) {
   var d = getData();
   if (!d) { console.error('No MLV data'); return; }
@@ -546,14 +570,11 @@ function _renderPage(d, lang) {
   var base = d.base;
   var t    = d.translations[lang] || d.translations['en'];
 
-  /* ── IMAGES ── */
   buildSlides('slider', base.heroImgs, 'hero-slide');
   buildSlides('rs-1',   base.roomImgs, 'room-slide');
   initHero();
   initRoom();
 
-  /* ── HERO ── */
-  // For multi-room: show only hotel name on hero (no room name)
   var isMulti = d.type === 'hotelmulti' || (base.rooms && base.rooms.length > 1);
   if (isMulti) {
     setK('h-title', base.hotelName, false);
@@ -565,7 +586,6 @@ function _renderPage(d, lang) {
   setK('h-sub',   base.hotelName + ' · ' + ci + ' – ' + co);
   setK('h-eye',   lang === 'ar' ? 'عرض حصري · ماي لاكشري فوياج' : 'Exclusive proposal · My Luxury Voyage');
 
-  /* ── SUMMARY BAR ── */
   setK('sb1',  lang === 'ar' ? 'الوصول'     : 'Check-in');
   setK('sb2',  lang === 'ar' ? 'المغادرة'   : 'Check-out');
   setK('sb3',  lang === 'ar' ? 'المسافرون'  : 'Guests');
@@ -575,15 +595,14 @@ function _renderPage(d, lang) {
   setK('sb1v', ci);
   setK('sb2v', co);
   setK('sb3v', base.travelers);
-  setK('sb4v', base.nights || (base.nightsNum > 0 ? base.nightsNum + (lang === 'ar' ? ' ليالٍ' : ' nights') : ''));
+  // ── FIX : afficher uniquement le chiffre ──
+  setK('sb4v', base.nightsNum > 0 ? String(base.nightsNum) : (base.nights || ''));
 
-  /* ── ROOMS (supports 1 or multiple) ── */
   var rooms = base.rooms || [];
-  // Update room 1 (existing static section)
   var r0 = rooms[0] || {};
-  var r0name = lang==='ar' ? r0.nameAr : lang==='en' ? r0.nameEn : r0.nameFr;
-  var r0type = lang==='ar' ? r0.typeAr : lang==='en' ? r0.typeEn : r0.typeFr;
-  var r0desc = lang==='ar' ? r0.descAr : lang==='en' ? r0.descEn : r0.descFr;
+  var r0name  = lang==='ar' ? r0.nameAr  : lang==='en' ? r0.nameEn  : r0.nameFr;
+  var r0type  = lang==='ar' ? r0.typeAr  : lang==='en' ? r0.typeEn  : r0.typeFr;
+  var r0desc  = lang==='ar' ? r0.descAr  : lang==='en' ? r0.descEn  : r0.descFr;
   var r0specs = lang==='ar' ? r0.specsAr : lang==='en' ? r0.specsEn : r0.specsFr;
 
   setK('r-name', r0name || '');
@@ -592,10 +611,8 @@ function _renderPage(d, lang) {
   setK('r-pnight', lang === 'ar' ? 'السعر لليلة' : 'Price per night');
   setK('r-nights', (lang === 'ar' ? 'الإجمالي : ' : 'Total: ') + (r0.priceTotal||base.priceTotal||'') + ' — ' + base.nightsNum + ' ' + (lang === 'ar' ? 'ليالٍ' : 'nights'));
 
-  /* ── PRICE ── */
   setId('price-night', r0.priceNight || base.priceNight || '');
 
-  /* ── SPECS room 1 ── */
   var specsEl = document.getElementById('room-specs');
   if (specsEl) {
     specsEl.innerHTML = '';
@@ -606,53 +623,66 @@ function _renderPage(d, lang) {
     });
   }
 
-  // Room 1 images
   if (r0.imgs && r0.imgs.length > 0) buildSlides('rs-1', r0.imgs, 'room-slide');
   initRoom();
 
-  /* ── EXTRA ROOMS (rooms 2, 3, 4...) ── */
   var extraContainer = document.getElementById('extra-rooms-container');
-  if (!extraContainer) return; // Safety check
+  if (!extraContainer) return;
   extraContainer.innerHTML = '';
 
   rooms.slice(1).forEach(function(room, i) {
-    var rname = lang==='ar' ? room.nameAr : lang==='en' ? room.nameEn : room.nameFr;
-    var rtype = lang==='ar' ? room.typeAr : lang==='en' ? room.typeEn : room.typeFr;
-    var rdesc = lang==='ar' ? room.descAr : lang==='en' ? room.descEn : room.descFr;
+    var rIdx   = i + 2;
+    var rname  = lang==='ar' ? room.nameAr  : lang==='en' ? room.nameEn  : room.nameFr;
+    var rtype  = lang==='ar' ? room.typeAr  : lang==='en' ? room.typeEn  : room.typeFr;
+    var rdesc  = lang==='ar' ? room.descAr  : lang==='en' ? room.descEn  : room.descFr;
     var rspecs = lang==='ar' ? room.specsAr : lang==='en' ? room.specsEn : room.specsFr;
-    var rId = 'extra-room-' + (i+2);
 
-    var sec = document.createElement('div');
-    sec.className = 'room-section extra-room';
-    sec.style.cssText = 'border-top:3px solid rgba(201,169,110,.2);padding-top:0;';
-
-    // Build image slider HTML
     var slidesHtml = '';
-    if (room.imgs && room.imgs.length > 0) { room.imgs.forEach(function(u) { slidesHtml += '<div class="room-slide" style="background-image:url(' + proxyImg(u) + ')"></div>'; }); } else { slidesHtml = '<div class="room-slide" style="background:linear-gradient(135deg,#1C2E4A,#2d4a6e)"></div>'; }
+    if (room.imgs && room.imgs.length > 0) {
+      room.imgs.forEach(function(u) { slidesHtml += '<div class="room-slide" style="background-image:url(' + proxyImg(u) + ')"></div>'; });
+    } else {
+      slidesHtml = '<div class="room-slide" style="background:linear-gradient(135deg,#1C2E4A,#2d4a6e)"></div>';
+    }
 
+    var dotsHtml = '';
+    if (room.imgs && room.imgs.length > 1) {
+      room.imgs.forEach(function(_, di) { dotsHtml += '<div class="rdot' + (di===0?' active':'') + '"></div>'; });
+    }
 
-    sec.innerHTML =
-      '<div class="room-img-wrap" style="position:relative;height:340px;overflow:hidden;">' +
-        '<div class="room-slider" id="rs-' + (i+2) + '" style="display:flex;height:100%;transition:transform .5s ease;">' + slidesHtml + '</div>' +
-        (room.imgs && room.imgs.length > 1 ?
-          '<button class="room-arrow room-prev" onclick="_extraRSlide(' + (i+2) + ',-1)" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);background:rgba(28,46,74,.7);border:none;color:#C9A96E;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;">‹</button>' +
-          '<button class="room-arrow room-next" onclick="_extraRSlide(' + (i+2) + ',1)" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:rgba(28,46,74,.7);border:none;color:#C9A96E;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;">›</button>' : '') +
-      '</div>' +
-      '<div class="room-info" style="padding:32px 44px 28px;">' +
-        '<div class="room-eyebrow" style="font-size:9px;letter-spacing:.25em;color:#C9A96E;text-transform:uppercase;font-family:Montserrat,sans-serif;margin-bottom:10px;">Option ' + (i+2) + '</div>' +
-        '<h2 class="room-name" style="font-family:Georgia,serif;font-size:24px;color:#1C2E4A;margin-bottom:6px;">' + (rname||'') + '</h2>' +
-        '<div class="room-type" style="font-size:11px;color:#888;letter-spacing:.08em;font-family:Montserrat,sans-serif;margin-bottom:14px;">' + (rtype||'') + '</div>' +
-        '<div class="room-desc" style="font-size:13px;line-height:1.8;color:#555;margin-bottom:18px;">' + (rdesc||'') + '</div>' +
-        '<div class="room-specs" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;">' +
-          (rspecs||[]).map(function(s){ return '<div class="spec-tag">' + s + '</div>'; }).join('') +
+    var priceLine = '';
+    if (room.priceNight) {
+      var pLabel = lang==='ar' ? 'السعر لليلة' : 'Price per night';
+      var tLabel = lang==='ar' ? 'الإجمالي' : 'Total';
+      priceLine = '<div class="room-price-night">' + pLabel + '</div>' +
+        '<div class="room-price-total">' + room.priceNight + '</div>' +
+        (room.priceTotal ? '<div class="room-price-night" style="margin-top:5px;font-size:10px;opacity:.7;">' + tLabel + ': ' + room.priceTotal + '</div>' : '');
+    }
+
+    var specsHtml = (rspecs||[]).map(function(s){ return '<div class="spec-tag">' + s + '</div>'; }).join('');
+
+    var wrap = document.createElement('div');
+    wrap.className = 'rooms';
+    wrap.style.borderTop = '3px solid rgba(201,169,110,.15)';
+    wrap.innerHTML =
+      '<div class="room-card">' +
+        '<div class="room-media">' +
+          '<div class="room-slider" id="rs-' + rIdx + '">' + slidesHtml + '</div>' +
+          '<button class="room-prev" onclick="_extraRSlide(' + rIdx + ',-1)">&#8249;</button>' +
+          '<button class="room-next" onclick="_extraRSlide(' + rIdx + ',1)">&#8250;</button>' +
+          '<div class="room-dots" id="rd-' + rIdx + '">' + dotsHtml + '</div>' +
         '</div>' +
-        '<div style="font-size:13px;color:#1C2E4A;font-weight:600;">' + (room.priceNight ? (lang==='ar'?'السعر لليلة: ':'Price / night: ') + room.priceNight : '') + '</div>' +
+        '<div class="room-body">' +
+          '<div class="room-header">' +
+            '<div><div class="room-name">' + (rname||'') + '</div><div class="room-type">' + (rtype||'') + '</div></div>' +
+            '<div class="room-price">' + priceLine + '</div>' +
+          '</div>' +
+          '<div class="room-specs">' + specsHtml + '</div>' +
+          '<div class="room-desc">' + (rdesc||'') + '</div>' +
+        '</div>' +
       '</div>';
-
-    extraContainer.appendChild(sec);
+    extraContainer.appendChild(wrap);
   });
 
-  /* ── SERVICES ── */
   var svcsEl = document.getElementById('room-svcs');
   if (svcsEl) {
     svcsEl.innerHTML = '';
@@ -662,7 +692,6 @@ function _renderPage(d, lang) {
     });
   }
 
-  /* ── EXTRAS ── */
   setK('ext-eye',   lang === 'ar' ? 'خيارات إضافية'    : 'Additional options');
   setK('ext-title', lang === 'ar' ? 'الإضافات المتاحة' : 'Available extras');
   setK('et-h1', lang === 'ar' ? 'الخدمة' : 'Service');
@@ -679,7 +708,6 @@ function _renderPage(d, lang) {
     });
   }
 
-  /* ── CONDITIONS ── */
   setK('cond-eye',   lang === 'ar' ? 'الشروط والأحكام'               : 'Terms');
   setK('cond-title', lang === 'ar' ? 'الشروط السعرية وسياسة الإلغاء' : 'Rate conditions & cancellation');
   setK('ct1', lang === 'ar' ? 'الشروط السعرية'   : 'Rate conditions');
@@ -687,12 +715,10 @@ function _renderPage(d, lang) {
   setK('ct2', lang === 'ar' ? 'سياسة الإلغاء'    : 'Cancellation policy');
   setK('cc2', t.condAnnul || '');
 
-  /* ── CTA ── */
   setK('cta-p',      t.ctaText || '');
   setK('btn-accept', lang === 'ar' ? '✓ قبول هذا العرض'          : '✓ Accept this proposal');
   setK('btn-wa',     lang === 'ar' ? 'تواصل معنا عبر واتساب'     : 'Contact us on WhatsApp');
 
-  /* ── WHATSAPP LINK ── */
   var waLink = document.querySelector('.btn-wa');
   if (waLink) {
     var msg = lang === 'ar'
@@ -701,33 +727,28 @@ function _renderPage(d, lang) {
     waLink.href = 'https://wa.me/' + base.waNumber + '?text=' + encodeURIComponent(msg);
   }
 
-  /* ── MODAL ── */
   setK('modal-title', lang === 'ar' ? 'شكراً لثقتكم'   : 'Thank you for your trust');
   setK('modal-body',  lang === 'ar'
     ? 'تم تسجيل موافقتكم. سيتواصل معكم مستشار قريباً.'
     : 'Your acceptance has been recorded. An advisor will contact you shortly.');
   setK('modal-close', lang === 'ar' ? 'إغلاق' : 'Close');
 
-  /* ── RTL / LTR ── */
   document.documentElement.lang = lang;
   document.documentElement.dir  = lang === 'ar' ? 'rtl' : 'ltr';
 
-  /* ── ACTIVE LANG BUTTON ── */
   document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
   var activeBtn = document.querySelector('.lang-btn[data-lang="' + lang + '"]');
   if (activeBtn) activeBtn.classList.add('active');
 }
 
-/* ── LANG SWITCH ── */
 function setLang(l) { applyData(l); }
 
-/* ── INIT ── */
 document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('modal').addEventListener('click', function(e) {
     if (e.target.id === 'modal') closeModal();
   });
   var _d = getData();
-  if (_d) { buildSlides('slider', _d.base.heroImgs, 'hero-slide'); buildSlides('rs-1', _d.base.roomImgs, 'room-slide'); _renderPage(_d, 'en'); } // Default to EN
+  if (_d) { buildSlides('slider', _d.base.heroImgs, 'hero-slide'); buildSlides('rs-1', _d.base.roomImgs, 'room-slide'); _renderPage(_d, 'en'); }
 });
 </script>
 
